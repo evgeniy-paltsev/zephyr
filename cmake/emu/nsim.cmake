@@ -11,6 +11,8 @@ elseif(${CONFIG_SOC_NSIM_SEM})
  set(NSIM_PROPS nsim_sem.props)
 elseif(${CONFIG_SOC_NSIM_HS})
  set(NSIM_PROPS nsim_hs.props)
+elseif(${CONFIG_SOC_NSIM_HS_NIRQ})
+ set(NSIM_PROPS nsim_hs_nirq.props)
 endif()
 
 add_custom_target(run
