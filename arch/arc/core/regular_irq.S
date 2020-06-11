@@ -220,7 +220,7 @@ SECTION_FUNC(TEXT, _rirq_enter)
 
 	_get_curr_cpu_irq_stack sp
 rirq_nest:
-	push_s r0
+	pushl_s r0
 
 	seti
 	j _isr_demux
