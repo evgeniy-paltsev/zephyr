@@ -264,7 +264,7 @@ _skip_sys_power_save_idle_exit:
 
 /* when getting here, r3 contains the interrupt exit stub to call */
 SECTION_FUNC(TEXT, _isr_demux)
-	push_s r3
+	pushl_s r3
 
 /* according to ARCv2 ISA, r25, r30, r58, r59 are caller-saved
  * scratch registers, possibly used by interrupt handlers
@@ -323,6 +323,6 @@ irq_hint_handled:
 	pop r25
 
 	/* back from ISR, jump to exit stub */
-	pop_s r3
+	popl_s r3
 	j_s [r3]
 	nop_s
