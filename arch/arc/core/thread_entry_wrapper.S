@@ -30,9 +30,13 @@ GTEXT(z_thread_entry_wrapper1)
 SECTION_FUNC(TEXT, z_thread_entry_wrapper)
 	seti _ARC_V2_INIT_IRQ_LOCK_KEY
 z_thread_entry_wrapper1:
-	pop_s r3
-	pop_s r2
-	pop_s r1
-	pop_s r0
+;	pop_s r3
+;	pop_s r2
+;	pop_s r1
+;	pop_s r0
+	popl_s r3
+	popl_s r2
+	popl_s r1
+	popl_s r0
 	j z_thread_entry
 	nop
