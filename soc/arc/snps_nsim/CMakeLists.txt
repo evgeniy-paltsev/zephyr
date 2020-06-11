@@ -2,9 +2,12 @@
 
 if(COMPILER STREQUAL gcc)
   # GNU compiler options
-  zephyr_compile_options(-mcpu=${GCC_M_CPU} -mno-sdata)
+  zephyr_compile_options(-mcpu=${GCC_M_CPU})
+  if(NOT CONFIG_64BIT)
+    zephyr_compile_options(-mno-sdata)
+    zephyr_compile_options_ifdef(CONFIG_CPU_ARCHS -mmpy-option=plus_qmacw)
+  endif()
   zephyr_compile_options_ifdef(CONFIG_CPU_ARCEM -mmpy-option=wlh1)
-  zephyr_compile_options_ifdef(CONFIG_CPU_ARCHS -mmpy-option=plus_qmacw)
   if(CONFIG_CPU_ARCHS)
     zephyr_compile_options_ifdef(CONFIG_FPU -mfpu=fpud_all)
   else()
