@@ -478,10 +478,10 @@
 
 /* macro to get next switch handle in assembly */
 .macro _get_next_switch_handle
-	push_s r2
+	pushl_s r2
 	mov r0, sp
 	bl z_arch_get_next_switch_handle
-	pop_s  r2
+	popl_s  r2
 .endm
 
 /* macro to disable stack checking in assembly, need a GPR
