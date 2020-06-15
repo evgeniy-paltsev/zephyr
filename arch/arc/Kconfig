@@ -29,6 +29,9 @@ config CPU_ARCHS
 
 endchoice
 
+config 64BIT
+	default y
+
 config CPU_EM4
 	bool
 	help
