@@ -19,6 +19,8 @@
 extern "C" {
 #endif
 
+#ifndef CONFIG_64BIT
+
 /* Implementation of sys_io.h's documented functions */
 
 static ALWAYS_INLINE
@@ -300,6 +302,8 @@ static ALWAYS_INLINE
 
 	return ret;
 }
+
+#endif
 
 #ifdef __cplusplus
 }
