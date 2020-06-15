@@ -32,6 +32,9 @@ endchoice
 config 64BIT
 	default y
 
+config GEN_IRQ_VECTOR_TABLE
+	default n
+
 config CPU_EM4
 	bool
 	help
