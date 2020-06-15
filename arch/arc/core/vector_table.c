@@ -27,6 +27,48 @@
 #include <toolchain.h>
 #include "vector_table.h"
 
+#ifdef CONFIG_64BIT
+
+struct vector_table {
+	uint64_t reset;
+	uint64_t memory_error;
+	uint64_t instruction_error;
+	uint64_t ev_machine_check;
+	uint64_t ev_tlb_miss_i;
+	uint64_t ev_tlb_miss_d;
+	uint64_t ev_prot_v;
+	uint64_t ev_privilege_v;
+	uint64_t ev_swi;
+	uint64_t ev_trap;
+	uint64_t ev_extension;
+	uint64_t ev_div_zero;
+	uint64_t ev_dc_error;
+	uint64_t ev_maligned;
+	uint64_t unused_1;
+	uint64_t unused_2;
+};
+
+struct vector_table _VectorTable Z_GENERIC_SECTION(.exc_vector_table) = {
+	(uint64_t)__reset,
+	(uint64_t)__memory_error,
+	(uint64_t)__instruction_error,
+	(uint64_t)__ev_machine_check,
+	(uint64_t)__ev_tlb_miss_i,
+	(uint64_t)__ev_tlb_miss_d,
+	(uint64_t)__ev_prot_v,
+	(uint64_t)__ev_privilege_v,
+	(uint64_t)__ev_swi,
+	(uint64_t)__ev_trap,
+	(uint64_t)__ev_extension,
+	(uint64_t)__ev_div_zero,
+	0, /* Unused in ARCv3 */
+	(uint64_t)__ev_maligned,
+	0,
+	0
+};
+
+#else
+
 struct vector_table {
 	uint32_t reset;
 	uint32_t memory_error;
@@ -64,3 +106,5 @@ struct vector_table _VectorTable Z_GENERIC_SECTION(.exc_vector_table) = {
 	0,
 	0
 };
+
+#endif
