@@ -20,6 +20,8 @@
 extern "C" {
 #endif
 
+#ifndef CONFIG_64BIT
+
 /* Implementation of sys_io.h's documented functions */
 
 static ALWAYS_INLINE
@@ -125,6 +127,8 @@ static ALWAYS_INLINE
 
 	return ret;
 }
+
+#endif /* CONFIG_64BIT */
 
 static ALWAYS_INLINE uint8_t sys_read8(mem_addr_t addr)
 {
