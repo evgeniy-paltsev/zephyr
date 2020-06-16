@@ -158,13 +158,13 @@
 	ld fp,  [sp, ___callee_saved_stack_t_fp_OFFSET]
 	ld r30, [sp, ___callee_saved_stack_t_r30_OFFSET]
 
-	add_s sp, sp, ___callee_saved_stack_t_SIZEOF
+	addl_s sp, sp, ___callee_saved_stack_t_SIZEOF
 
 .endm
 
 /* discard callee regs */
 .macro _discard_callee_saved_regs
-	add_s sp, sp, ___callee_saved_stack_t_SIZEOF
+	addl_s sp, sp, ___callee_saved_stack_t_SIZEOF
 .endm
 
 /*
@@ -261,7 +261,7 @@
 	 * status32 differently depending on the execution context they are
 	 * running in (arch_switch(), firq or exception).
 	 */
-	add_s sp, sp, ___isf_t_SIZEOF
+	addl_s sp, sp, ___isf_t_SIZEOF
 
 .endm
 
