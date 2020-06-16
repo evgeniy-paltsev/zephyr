@@ -229,10 +229,10 @@
 	sr r2, [_ARC_V2_EI_BASE]
 #endif
 
-	ld_s r0, [sp, ___isf_t_lp_count_OFFSET]
+	ld r0, [sp, ___isf_t_lp_count_OFFSET] // del me
 	mov lp_count, r0
-	ld_s r1, [sp, ___isf_t_lp_start_OFFSET]
-	ld_s r0, [sp, ___isf_t_lp_end_OFFSET]
+	ld r1, [sp, ___isf_t_lp_start_OFFSET] // del me
+	ld r0, [sp, ___isf_t_lp_end_OFFSET]   // del me
 	sr r1, [_ARC_V2_LP_START]
 	sr r0, [_ARC_V2_LP_END]
 
