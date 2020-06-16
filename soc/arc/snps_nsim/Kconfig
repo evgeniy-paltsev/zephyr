@@ -23,7 +23,6 @@ config SOC_NSIM_HS
 
 config SOC_NSIM_HS_NIRQ
 	bool "Synopsys ARC HS in nSIM, 1 register bank, no FIRQ"
-	select CPU_HAS_FPU
 
 config SOC_NSIM_HS_SMP
 	bool "Multi-core Synopsys ARC HS in nSIM"
