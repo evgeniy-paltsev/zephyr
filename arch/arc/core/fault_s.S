@@ -44,9 +44,9 @@ GTEXT(z_irq_do_offload);
 	st_s r0, [sp, ___isf_t_sec_stat_OFFSET]
 #endif
 	lr r0,[_ARC_V2_ERET]
-	st_s r0, [sp, ___isf_t_pc_OFFSET]
+	st r0, [sp, ___isf_t_pc_OFFSET]
 	lr r0,[_ARC_V2_ERSTATUS]
-	st_s r0, [sp, ___isf_t_status32_OFFSET]
+	st r0, [sp, ___isf_t_status32_OFFSET]
 .endm
 
 /*
@@ -183,7 +183,7 @@ _exc_return_from_exc:
 	/* exception handler may change return address.
 	 * reload it
 	 */
-	ld_s r0, [sp, ___isf_t_pc_OFFSET]
+	ld r0, [sp, ___isf_t_pc_OFFSET]
 	sr r0, [_ARC_V2_ERET]
 
 	_pop_irq_stack_frame
