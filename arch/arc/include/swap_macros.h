@@ -19,7 +19,7 @@
 /* save callee regs of current thread in r2 */
 .macro _save_callee_saved_regs
 
-	sub_s sp, sp, ___callee_saved_stack_t_SIZEOF
+	subl_s sp, sp, ___callee_saved_stack_t_SIZEOF
 
 	/* save regs on stack */
 	st_s r13, [sp, ___callee_saved_stack_t_r13_OFFSET]
@@ -173,7 +173,7 @@
  */
 .macro _create_irq_stack_frame
 
-	sub_s sp, sp, ___isf_t_SIZEOF
+	subl_s sp, sp, ___isf_t_SIZEOF
 
 	st blink, [sp, ___isf_t_blink_OFFSET]
 
