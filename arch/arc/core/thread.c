@@ -22,15 +22,15 @@
 
 /*  initial stack frame */
 struct init_stack_frame {
-	uint32_t pc;
+	uintptr_t pc;
 #ifdef CONFIG_ARC_HAS_SECURE
-	uint32_t sec_stat;
+	uintptr_t sec_stat;
 #endif
-	uint32_t status32;
-	uint32_t r3;
-	uint32_t r2;
-	uint32_t r1;
-	uint32_t r0;
+	uintptr_t status32;
+	uintptr_t r3;
+	uintptr_t r2;
+	uintptr_t r1;
+	uintptr_t r0;
 };
 
 /*
@@ -165,17 +165,17 @@ void arch_new_thread(struct k_thread *thread, k_thread_stack_t *stack,
 		sizeof(struct init_stack_frame));
 
 	pInitCtx->status32 = 0U;
-	pInitCtx->pc = ((uint32_t)z_thread_entry_wrapper);
+	pInitCtx->pc = ((uintptr_t)z_thread_entry_wrapper);
 #endif
 
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
 	pInitCtx->sec_stat = z_arc_v2_aux_reg_read(_ARC_V2_SEC_STAT);
 #endif
 
-	pInitCtx->r0 = (uint32_t)pEntry;
-	pInitCtx->r1 = (uint32_t)parameter1;
-	pInitCtx->r2 = (uint32_t)parameter2;
-	pInitCtx->r3 = (uint32_t)parameter3;
+	pInitCtx->r0 = (uintptr_t)pEntry;
+	pInitCtx->r1 = (uintptr_t)parameter1;
+	pInitCtx->r2 = (uintptr_t)parameter2;
+	pInitCtx->r3 = (uintptr_t)parameter3;
 
 /* stack check configuration */
 #ifdef CONFIG_ARC_STACK_CHECKING
@@ -211,7 +211,7 @@ void arch_new_thread(struct k_thread *thread, k_thread_stack_t *stack,
 	thread->switch_handle = thread;
 	thread->arch.relinquish_cause = _CAUSE_COOP;
 	thread->callee_saved.sp =
-		(uint32_t)pInitCtx - ___callee_saved_stack_t_SIZEOF;
+		(uintptr_t)pInitCtx - ___callee_saved_stack_t_SIZEOF;
 
 	/* initial values in all other regs/k_thread entries are irrelevant */
 }
