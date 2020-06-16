@@ -24,16 +24,16 @@ LOG_MODULE_DECLARE(os);
 #ifdef CONFIG_ARC_EXCEPTION_DEBUG
 static void dump_arc_esf(const z_arch_esf_t *esf)
 {
-	LOG_ERR(" r0: 0x%08x  r1: 0x%08x  r2: 0x%08x  r3: 0x%08x",
+	LOG_ERR(" r0: 0x%zx  r1: 0x%zx  r2: 0x%zx  r3: 0x%zx",
 		esf->r0, esf->r1, esf->r2, esf->r3);
-	LOG_ERR(" r4: 0x%08x  r5: 0x%08x  r6: 0x%08x  r7: 0x%08x",
+	LOG_ERR(" r4: 0x%zx  r5: 0x%zx  r6: 0x%zx  r7: 0x%zx",
 		esf->r4, esf->r5, esf->r6, esf->r7);
-	LOG_ERR(" r8: 0x%08x  r9: 0x%08x r10: 0x%08x r11: 0x%08x",
+	LOG_ERR(" r8: 0x%zx  r9: 0x%zx r10: 0x%zx r11: 0x%zx",
 		esf->r8, esf->r9, esf->r10, esf->r11);
-	LOG_ERR("r12: 0x%08x r13: 0x%08x  pc: 0x%08x",
+	LOG_ERR("r12: 0x%zx r13: 0x%zx  pc: 0x%zx",
 		esf->r12, esf->r13, esf->pc);
-	LOG_ERR(" blink: 0x%08x status32: 0x%08x", esf->blink, esf->status32);
-	LOG_ERR("lp_end: 0x%08x lp_start: 0x%08x lp_count: 0x%08x",
+	LOG_ERR(" blink: 0x%zx status32: 0x%zx", esf->blink, esf->status32);
+	LOG_ERR("lp_end: 0x%zx lp_start: 0x%zx lp_count: 0x%zx",
 		esf->lp_end, esf->lp_start, esf->lp_count);
 }
 #endif
