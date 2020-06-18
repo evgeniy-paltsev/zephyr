@@ -7,14 +7,8 @@
 #define DT_DRV_COMPAT snps_nsim_uart
 
 #include <errno.h>
-
 #include <kernel.h>
 #include <arch/cpu.h>
-#include <linker/sections.h>
-#include <sys/__assert.h>
-#include <zephyr/types.h>
-#include <sys/util.h>
-#include <string.h>
 #include <init.h>
 #include <drivers/uart.h>
 
@@ -52,8 +46,8 @@
 	((const struct uart_device_config * const)(dev)->config_info)
 
 
-#define UART_REG_SET(u, r, v) ((*(uint8_t *)(u + r)) = v)
-#define UART_REG_GET(u, r)    (*(uint8_t *)(u + r))
+#define UART_REG_SET(u, r, v) ((*(u + r)) = v)
+#define UART_REG_GET(u, r)    (*(u + r))
 
 #define UART_REG_OR(u, r, v)  UART_REG_SET(u, r, UART_REG_GET(u, r) | (v))
 #define UART_REG_CLR(u, r, v) UART_REG_SET(u, r, UART_REG_GET(u, r) & ~(v))
@@ -89,9 +83,9 @@ static int uart_nsim_init(struct device *dev)
  */
 static void uart_nsim_poll_out(struct device *dev, unsigned char c)
 {
-	uint32_t regs = DEV_CFG(dev)->regs;
-	/* wait for transmitter to ready to accept a character */
+	uint8_t *regs = DEV_CFG(dev)->base;
 
+	/* wait for transmitter to ready to accept a character */
 	while (!(UART_GET_STATUS(regs) & TXEMPTY)) {
 	}
 
@@ -101,7 +95,6 @@ static void uart_nsim_poll_out(struct device *dev, unsigned char c)
 static int uart_nsim_poll_in(struct device *dev, unsigned char *c)
 {
 	return -ENOTSUP;
-
 }
 
 static const struct uart_driver_api uart_nsim_driver_api = {
@@ -110,7 +103,7 @@ static const struct uart_driver_api uart_nsim_driver_api = {
 };
 
 static struct uart_device_config uart_nsim_dev_cfg_0 = {
-	.regs = DT_INST_REG_ADDR(0),
+	.base = (uint8_t *)DT_INST_REG_ADDR(0),
 };
 
 DEVICE_AND_API_INIT(uart_nsim0, DT_INST_LABEL(0), &uart_nsim_init,
