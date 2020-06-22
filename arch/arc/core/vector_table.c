@@ -42,10 +42,10 @@ struct vector_table {
 	uint64_t ev_trap;
 	uint64_t ev_extension;
 	uint64_t ev_div_zero;
-	uint64_t ev_dc_error;
-	uint64_t ev_maligned;
 	uint64_t unused_1;
+	uint64_t ev_maligned;
 	uint64_t unused_2;
+	uint64_t unused_3;
 };
 
 struct vector_table _VectorTable Z_GENERIC_SECTION(.exc_vector_table) = {
