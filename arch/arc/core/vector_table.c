@@ -69,6 +69,11 @@ struct vector_table _VectorTable Z_GENERIC_SECTION(.exc_vector_table) = {
 };
 #endif
 
+#include <toolchain.h>
+#include <linker/sections.h>
+#include <sw_isr_table.h>
+#include <arch/cpu.h>
+
 struct vector_table {
 	uint32_t reset;
 	uint32_t memory_error;
@@ -86,6 +91,9 @@ struct vector_table {
 	uint32_t ev_maligned;
 	uint32_t unused_2;
 	uint32_t unused_3;
+	/* interrupts */
+	uint32_t isr_timer0;
+	uint32_t isr_timer1;
 };
 
 struct vector_table _VectorTable Z_GENERIC_SECTION(.exc_vector_table) = {
@@ -104,7 +112,10 @@ struct vector_table _VectorTable Z_GENERIC_SECTION(.exc_vector_table) = {
 	0, /* Unused in ARCv3 */
 	(uint32_t)0x12345678,
 	0,
-	0
+	0,
+	/* interrupts */
+	(uint32_t)0x12345678,
+	(uint32_t)0x12345678,
 };
 
 void set_arcv3_vector_hack(void)
@@ -125,6 +136,9 @@ void set_arcv3_vector_hack(void)
 	_VectorTable.ev_maligned = (uint32_t)(uint64_t)__ev_maligned;
 	_VectorTable.unused_2 = 0x23456789;
 	_VectorTable.unused_3 = 0x23456789;
+	/* interrupts */
+	_VectorTable.isr_timer0 = (uint32_t)(uint64_t)&_isr_wrapper;
+	_VectorTable.isr_timer1 = (uint32_t)(uint64_t)&_isr_wrapper;
 }
 
 #else
