@@ -73,6 +73,8 @@ static void invalidate_dcache(void)
 }
 #endif
 
+extern void set_arcv3_vector_hack(void);
+
 extern FUNC_NORETURN void z_cstart(void);
 /**
  *
@@ -88,6 +90,7 @@ void _PrepC(void)
 	z_icache_setup();
 	z_bss_zero();
 	z_data_copy();
+	set_arcv3_vector_hack();
 	z_cstart();
 	CODE_UNREACHABLE;
 }
