@@ -22,21 +22,21 @@
 	subl_s sp, sp, ___callee_saved_stack_t_SIZEOF
 
 	/* save regs on stack */
-	st_s r13, [sp, ___callee_saved_stack_t_r13_OFFSET]
-	st_s r14, [sp, ___callee_saved_stack_t_r14_OFFSET]
-	st_s r15, [sp, ___callee_saved_stack_t_r15_OFFSET]
-	st r16, [sp, ___callee_saved_stack_t_r16_OFFSET]
-	st r17, [sp, ___callee_saved_stack_t_r17_OFFSET]
-	st r18, [sp, ___callee_saved_stack_t_r18_OFFSET]
-	st r19, [sp, ___callee_saved_stack_t_r19_OFFSET]
-	st r20, [sp, ___callee_saved_stack_t_r20_OFFSET]
-	st r21, [sp, ___callee_saved_stack_t_r21_OFFSET]
-	st r22, [sp, ___callee_saved_stack_t_r22_OFFSET]
-	st r23, [sp, ___callee_saved_stack_t_r23_OFFSET]
-	st r24, [sp, ___callee_saved_stack_t_r24_OFFSET]
-	st r25, [sp, ___callee_saved_stack_t_r25_OFFSET]
-	st r26, [sp, ___callee_saved_stack_t_r26_OFFSET]
-	st fp,  [sp, ___callee_saved_stack_t_fp_OFFSET]
+	stl r13, [sp, ___callee_saved_stack_t_r13_OFFSET]
+	stl r14, [sp, ___callee_saved_stack_t_r14_OFFSET]
+	stl r15, [sp, ___callee_saved_stack_t_r15_OFFSET]
+	stl r16, [sp, ___callee_saved_stack_t_r16_OFFSET]
+	stl r17, [sp, ___callee_saved_stack_t_r17_OFFSET]
+	stl r18, [sp, ___callee_saved_stack_t_r18_OFFSET]
+	stl r19, [sp, ___callee_saved_stack_t_r19_OFFSET]
+	stl r20, [sp, ___callee_saved_stack_t_r20_OFFSET]
+	stl r21, [sp, ___callee_saved_stack_t_r21_OFFSET]
+	stl r22, [sp, ___callee_saved_stack_t_r22_OFFSET]
+	stl r23, [sp, ___callee_saved_stack_t_r23_OFFSET]
+	stl r24, [sp, ___callee_saved_stack_t_r24_OFFSET]
+	stl r25, [sp, ___callee_saved_stack_t_r25_OFFSET]
+	stl r26, [sp, ___callee_saved_stack_t_r26_OFFSET]
+	stl fp,  [sp, ___callee_saved_stack_t_fp_OFFSET]
 
 #ifdef CONFIG_USERSPACE
 #ifdef CONFIG_ARC_HAS_SECURE
@@ -54,16 +54,18 @@
 #else
 	lr r13, [_ARC_V2_USER_SP]
 	st_s r13, [sp, ___callee_saved_stack_t_user_sp_OFFSET]
-#endif
-#endif
-	st r30, [sp, ___callee_saved_stack_t_r30_OFFSET]
+#endif /* CONFIG_ARC_HAS_SECURE */
+#endif /* CONFIG_USERSPACE */
+	stl r30, [sp, ___callee_saved_stack_t_r30_OFFSET]
 
 #ifdef CONFIG_ARC_HAS_ACCL_REGS
-	st r58, [sp, ___callee_saved_stack_t_r58_OFFSET]
-	st r59, [sp, ___callee_saved_stack_t_r59_OFFSET]
+#error "[RFF] need to revisit"
+	stl r58, [sp, ___callee_saved_stack_t_r58_OFFSET]
+	stl r59, [sp, ___callee_saved_stack_t_r59_OFFSET]
 #endif
 
 #ifdef CONFIG_FPU_SHARING
+#error "[RFF] need to revisit"
 	ld_s r13, [r2, ___thread_base_t_user_options_OFFSET]
 	/* K_FP_REGS is bit 1 */
 	bbit0 r13, 1, 1f
@@ -86,20 +88,22 @@
 #endif
 
 	/* save stack pointer in struct k_thread */
-	st sp, [r2, _thread_offset_to_sp]
+	stl sp, [r2, _thread_offset_to_sp]
 .endm
 
 /* load the callee regs of thread (in r2)*/
 .macro _load_callee_saved_regs
 	/* restore stack pointer from struct k_thread */
-	ld sp, [r2, _thread_offset_to_sp]
+	ldl sp, [r2, _thread_offset_to_sp]
 
 #ifdef CONFIG_ARC_HAS_ACCL_REGS
+#error "[RFF] need to revisit"
 	ld r58, [sp, ___callee_saved_stack_t_r58_OFFSET]
 	ld r59, [sp, ___callee_saved_stack_t_r59_OFFSET]
 #endif
 
 #ifdef CONFIG_FPU_SHARING
+#error "[RFF] need to revisit"
 	ld_s r13, [r2, ___thread_base_t_user_options_OFFSET]
 	/* K_FP_REGS is bit 1 */
 	bbit0 r13, 1, 2f
@@ -138,25 +142,25 @@
 #else
 	ld_s r13, [sp, ___callee_saved_stack_t_user_sp_OFFSET]
 	sr r13, [_ARC_V2_USER_SP]
-#endif
-#endif
+#endif /* CONFIG_ARC_HAS_SECURE */
+#endif /* CONFIG_USERSPACE */
 
-	ld_s r13, [sp, ___callee_saved_stack_t_r13_OFFSET]
-	ld_s r14, [sp, ___callee_saved_stack_t_r14_OFFSET]
-	ld_s r15, [sp, ___callee_saved_stack_t_r15_OFFSET]
-	ld r16, [sp, ___callee_saved_stack_t_r16_OFFSET]
-	ld r17, [sp, ___callee_saved_stack_t_r17_OFFSET]
-	ld r18, [sp, ___callee_saved_stack_t_r18_OFFSET]
-	ld r19, [sp, ___callee_saved_stack_t_r19_OFFSET]
-	ld r20, [sp, ___callee_saved_stack_t_r20_OFFSET]
-	ld r21, [sp, ___callee_saved_stack_t_r21_OFFSET]
-	ld r22, [sp, ___callee_saved_stack_t_r22_OFFSET]
-	ld r23, [sp, ___callee_saved_stack_t_r23_OFFSET]
-	ld r24, [sp, ___callee_saved_stack_t_r24_OFFSET]
-	ld r25, [sp, ___callee_saved_stack_t_r25_OFFSET]
-	ld r26, [sp, ___callee_saved_stack_t_r26_OFFSET]
-	ld fp,  [sp, ___callee_saved_stack_t_fp_OFFSET]
-	ld r30, [sp, ___callee_saved_stack_t_r30_OFFSET]
+	ldl r13, [sp, ___callee_saved_stack_t_r13_OFFSET]
+	ldl r14, [sp, ___callee_saved_stack_t_r14_OFFSET]
+	ldl r15, [sp, ___callee_saved_stack_t_r15_OFFSET]
+	ldl r16, [sp, ___callee_saved_stack_t_r16_OFFSET]
+	ldl r17, [sp, ___callee_saved_stack_t_r17_OFFSET]
+	ldl r18, [sp, ___callee_saved_stack_t_r18_OFFSET]
+	ldl r19, [sp, ___callee_saved_stack_t_r19_OFFSET]
+	ldl r20, [sp, ___callee_saved_stack_t_r20_OFFSET]
+	ldl r21, [sp, ___callee_saved_stack_t_r21_OFFSET]
+	ldl r22, [sp, ___callee_saved_stack_t_r22_OFFSET]
+	ldl r23, [sp, ___callee_saved_stack_t_r23_OFFSET]
+	ldl r24, [sp, ___callee_saved_stack_t_r24_OFFSET]
+	ldl r25, [sp, ___callee_saved_stack_t_r25_OFFSET]
+	ldl r26, [sp, ___callee_saved_stack_t_r26_OFFSET]
+	ldl fp,  [sp, ___callee_saved_stack_t_fp_OFFSET]
+	ldl r30, [sp, ___callee_saved_stack_t_r30_OFFSET]
 
 	addl_s sp, sp, ___callee_saved_stack_t_SIZEOF
 
@@ -175,33 +179,36 @@
 
 	subl_s sp, sp, ___isf_t_SIZEOF
 
-	st blink, [sp, ___isf_t_blink_OFFSET]
+	stl blink, [sp, ___isf_t_blink_OFFSET]
 
 	/* store these right away so we can use them if needed */
 
-	st   r13, [sp, ___isf_t_r13_OFFSET]
-	st   r12, [sp, ___isf_t_r12_OFFSET]
-	st   r11, [sp, ___isf_t_r11_OFFSET]
-	st   r10, [sp, ___isf_t_r10_OFFSET]
-	st   r9,  [sp, ___isf_t_r9_OFFSET]
-	st   r8,  [sp, ___isf_t_r8_OFFSET]
-	st   r7,  [sp, ___isf_t_r7_OFFSET]
-	st   r6,  [sp, ___isf_t_r6_OFFSET]
-	st   r5,  [sp, ___isf_t_r5_OFFSET]
-	st   r4,  [sp, ___isf_t_r4_OFFSET]
-	st_s r3,  [sp, ___isf_t_r3_OFFSET]
-	st_s r2,  [sp, ___isf_t_r2_OFFSET]
-	st_s r1,  [sp, ___isf_t_r1_OFFSET]
-	st_s r0,  [sp, ___isf_t_r0_OFFSET]
+	stl   r13, [sp, ___isf_t_r13_OFFSET]
+	stl   r12, [sp, ___isf_t_r12_OFFSET]
+	stl   r11, [sp, ___isf_t_r11_OFFSET]
+	stl   r10, [sp, ___isf_t_r10_OFFSET]
+	stl   r9,  [sp, ___isf_t_r9_OFFSET]
+	stl   r8,  [sp, ___isf_t_r8_OFFSET]
+	stl   r7,  [sp, ___isf_t_r7_OFFSET]
+	stl   r6,  [sp, ___isf_t_r6_OFFSET]
+	stl   r5,  [sp, ___isf_t_r5_OFFSET]
+	stl   r4,  [sp, ___isf_t_r4_OFFSET]
+	stl   r3,  [sp, ___isf_t_r3_OFFSET]
+	stl   r2,  [sp, ___isf_t_r2_OFFSET]
+	stl   r1,  [sp, ___isf_t_r1_OFFSET]
+	stl   r0,  [sp, ___isf_t_r0_OFFSET]
 
-	mov r0, lp_count
-	st r0, [sp, ___isf_t_lp_count_OFFSET]
-	lr r1, [_ARC_V2_LP_START]
-	lr r0, [_ARC_V2_LP_END]
-	st r1, [sp, ___isf_t_lp_start_OFFSET]
-	st r0, [sp, ___isf_t_lp_end_OFFSET]
+	mov r0, 0
+//	mov r0, lp_count	/* [RFF] lp_count FIXME */
+	stl r0, [sp, ___isf_t_lp_count_OFFSET]
+	mov r1, 0
+//	lr r1, [_ARC_V2_LP_START]
+//	lr r0, [_ARC_V2_LP_END]
+	stl r1, [sp, ___isf_t_lp_start_OFFSET]
+	stl r0, [sp, ___isf_t_lp_end_OFFSET]
 
 #ifdef CONFIG_CODE_DENSITY
+#error "[RFF] need to revisit"
 	lr r1, [_ARC_V2_JLI_BASE]
 	lr r0, [_ARC_V2_LDI_BASE]
 	lr r2, [_ARC_V2_EI_BASE]
@@ -218,7 +225,7 @@
  */
 .macro _pop_irq_stack_frame
 
-	ld blink, [sp, ___isf_t_blink_OFFSET]
+	ldl blink, [sp, ___isf_t_blink_OFFSET]
 
 #ifdef CONFIG_CODE_DENSITY
 	ld_s r1, [sp, ___isf_t_jli_base_OFFSET]
@@ -229,27 +236,27 @@
 	sr r2, [_ARC_V2_EI_BASE]
 #endif
 
-	ld r0, [sp, ___isf_t_lp_count_OFFSET] // del me
-	mov lp_count, r0
-	ld r1, [sp, ___isf_t_lp_start_OFFSET] // del me
-	ld r0, [sp, ___isf_t_lp_end_OFFSET]   // del me
-	sr r1, [_ARC_V2_LP_START]
-	sr r0, [_ARC_V2_LP_END]
+	ldl r0, [sp, ___isf_t_lp_count_OFFSET] // del me
+//	mov lp_count, r0
+	ldl r1, [sp, ___isf_t_lp_start_OFFSET] // del me
+	ldl r0, [sp, ___isf_t_lp_end_OFFSET]   // del me
+//	sr r1, [_ARC_V2_LP_START]
+//	sr r0, [_ARC_V2_LP_END]
 
-	ld_s r13, [sp, ___isf_t_r13_OFFSET]
-	ld_s r12, [sp, ___isf_t_r12_OFFSET]
-	ld   r11, [sp, ___isf_t_r11_OFFSET]
-	ld   r10, [sp, ___isf_t_r10_OFFSET]
-	ld   r9,  [sp, ___isf_t_r9_OFFSET]
-	ld   r8,  [sp, ___isf_t_r8_OFFSET]
-	ld   r7,  [sp, ___isf_t_r7_OFFSET]
-	ld   r6,  [sp, ___isf_t_r6_OFFSET]
-	ld   r5,  [sp, ___isf_t_r5_OFFSET]
-	ld   r4,  [sp, ___isf_t_r4_OFFSET]
-	ld_s r3,  [sp, ___isf_t_r3_OFFSET]
-	ld_s r2,  [sp, ___isf_t_r2_OFFSET]
-	ld_s r1,  [sp, ___isf_t_r1_OFFSET]
-	ld_s r0,  [sp, ___isf_t_r0_OFFSET]
+	ldl   r13, [sp, ___isf_t_r13_OFFSET]
+	ldl   r12, [sp, ___isf_t_r12_OFFSET]
+	ldl   r11, [sp, ___isf_t_r11_OFFSET]
+	ldl   r10, [sp, ___isf_t_r10_OFFSET]
+	ldl   r9,  [sp, ___isf_t_r9_OFFSET]
+	ldl   r8,  [sp, ___isf_t_r8_OFFSET]
+	ldl   r7,  [sp, ___isf_t_r7_OFFSET]
+	ldl   r6,  [sp, ___isf_t_r6_OFFSET]
+	ldl   r5,  [sp, ___isf_t_r5_OFFSET]
+	ldl   r4,  [sp, ___isf_t_r4_OFFSET]
+	ldl   r3,  [sp, ___isf_t_r3_OFFSET]
+	ldl   r2,  [sp, ___isf_t_r2_OFFSET]
+	ldl   r1,  [sp, ___isf_t_r1_OFFSET]
+	ldl   r0,  [sp, ___isf_t_r0_OFFSET]
 
 
 	/*
@@ -300,6 +307,7 @@
  * the result will be EQ bit of status32
  * two temp regs are needed
  */
+/* [RFF] nested is declared as 'u32_t nested' so ld/st are OK */
 .macro _check_and_inc_int_nest_counter reg1 reg2
 #ifdef CONFIG_SMP
 	_get_cpu_id \reg1
@@ -322,6 +330,7 @@
  * the counter > 0, interrupt stack is used, or
  * not used
  */
+/* [RFF] nested is declared as 'u32_t nested' so ld/st are OK */
 .macro _dec_int_nest_counter reg1 reg2
 #ifdef CONFIG_SMP
 	_get_cpu_id \reg1
@@ -369,25 +378,28 @@
  */
 .macro _get_curr_cpu_irq_stack irq_sp
 #ifdef CONFIG_SMP
+#error "[RFF] need to revisit"
 	_get_cpu_id \irq_sp
 	ld.as \irq_sp, [@_curr_cpu, \irq_sp]
 	ld \irq_sp, [\irq_sp, ___cpu_t_irq_stack_OFFSET]
 #else
 	mov \irq_sp, _kernel
-	ld \irq_sp, [\irq_sp, _kernel_offset_to_irq_stack]
+	ldl \irq_sp, [\irq_sp, _kernel_offset_to_irq_stack]
 #endif
 .endm
 
 /* macro to push aux reg through reg */
+/* [RFF] used for ilink only so switched to 64 bit AUX and MEM operations */
 .macro PUSHAX reg aux
-	lr \reg, [\aux]
-	st.a \reg, [sp, -4]
+	lrl \reg, [\aux]
+	stl.a \reg, [sp, -4]
 .endm
 
 /* macro to pop aux reg through reg */
+/* [RFF] used for ilink only so switched to 64 bit AUX and MEM operations */
 .macro POPAX reg aux
-	ld.ab \reg, [sp, 4]
-	sr \reg, [\aux]
+	ldl.ab \reg, [sp, 4]
+	srl \reg, [\aux]
 .endm
 
 
@@ -416,6 +428,7 @@
  * restored when thread switched back
  *
  */
+#error "[RFF] need to revisit"
 	lr r1, [_ARC_V2_AUX_IRQ_ACT]
 	and r3, r1, 0x80000000
 	push_s r3
@@ -438,11 +451,13 @@
 	_load_callee_saved_regs
 
 #if defined(CONFIG_MPU_STACK_GUARD) || defined(CONFIG_USERSPACE)
+#error "[RFF] need to revisit"
 	push_s r2
 	bl configure_mpu_thread
 	pop_s r2
 #endif
 
+	/* [RFF] relinquish_cause is 32 bit 'int relinquish_cause' so ld is OK */
 	ld r3, [r2, _thread_offset_to_relinquish_cause]
 .endm
 
