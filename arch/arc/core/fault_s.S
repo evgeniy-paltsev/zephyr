@@ -43,10 +43,10 @@ GTEXT(z_irq_do_offload);
 	lr r0,[_ARC_V2_ERSEC_STAT]
 	st_s r0, [sp, ___isf_t_sec_stat_OFFSET]
 #endif
-	lr r0,[_ARC_V2_ERET]
-	st r0, [sp, ___isf_t_pc_OFFSET]
-	lr r0,[_ARC_V2_ERSTATUS]
-	st r0, [sp, ___isf_t_status32_OFFSET]
+	lrl r0,[_ARC_V2_ERET]
+	stl r0, [sp, ___isf_t_pc_OFFSET]
+	lrl r0,[_ARC_V2_ERSTATUS]
+	stl r0, [sp, ___isf_t_status32_OFFSET]
 .endm
 
 /*
@@ -183,8 +183,8 @@ _exc_return_from_exc:
 	/* exception handler may change return address.
 	 * reload it
 	 */
-	ld r0, [sp, ___isf_t_pc_OFFSET]
-	sr r0, [_ARC_V2_ERET]
+	ldl r0, [sp, ___isf_t_pc_OFFSET]
+	srl r0, [_ARC_V2_ERET]
 
 	_pop_irq_stack_frame
 	mov_s sp, ilink
@@ -193,7 +193,7 @@ _exc_return_from_exc:
 /* separated entry for trap which may be used by irq_offload, USERPSACE */
 SECTION_SUBSEC_FUNC(TEXT,__fault,__ev_trap)
 	/* get the id of trap_s */
-	lr ilink, [_ARC_V2_ECR]
+	lrl ilink, [_ARC_V2_ECR]
 	and ilink, ilink, 0x3f
 #ifdef CONFIG_USERSPACE
 	cmp ilink, _TRAP_S_CALL_SYSTEM_CALL
