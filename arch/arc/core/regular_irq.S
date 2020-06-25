@@ -299,7 +299,8 @@ _rirq_switch_from_coop:
 
 
 	/* reset zero-overhead loops */
-	st 0, [sp, ___isf_t_lp_end_OFFSET]
+	/* [RFF] LP: FIXME */
+	stl 0, [sp, ___isf_t_lp_end_OFFSET]
 
 	/*
 	 * r13 is part of both the callee and caller-saved register sets because
@@ -307,7 +308,7 @@ _rirq_switch_from_coop:
 	 * IRQ prologue. r13 thus has to be set to its correct value in the IRQ
 	 * stack frame.
 	 */
-	st_s r13, [sp, ___isf_t_r13_OFFSET]
+	stl r13, [sp, ___isf_t_r13_OFFSET]
 
 	/* stack now has the IRQ stack frame layout, pointing to sp */
 	/* rtie will pop the rest from the stack */
