@@ -208,20 +208,20 @@ SECTION_FUNC(TEXT, _isr_wrapper)
  * in fact is an action like nop.
  * for firq,  r0 will be restored later
  */
-	st_s r0, [sp]
+	stl r0, [sp]
 #endif
 	lr r0, [_ARC_V2_AUX_IRQ_ACT]
 	ffs r0, r0
 	cmp r0, 0
 #if CONFIG_RGF_NUM_BANKS == 1
 	bnz rirq_path
-	ld_s r0, [sp]
+	ldl r0, [sp]
 	/* 1-register bank FIRQ handling must save registers on stack */
 	_create_irq_stack_frame
 	lr r0, [_ARC_V2_STATUS32_P0]
-	st_s r0, [sp, ___isf_t_status32_OFFSET]
+	stl r0, [sp, ___isf_t_status32_OFFSET]
 	lr r0, [_ARC_V2_ERET]
-	st_s r0, [sp, ___isf_t_pc_OFFSET]
+	stl r0, [sp, ___isf_t_pc_OFFSET]
 
 	mov_s r3, _firq_exit
 	mov_s r2, _firq_enter
@@ -247,9 +247,11 @@ rirq_path:
 .macro exit_tickless_idle
 	clri r0 /* do not interrupt exiting tickless idle operations */
 	mov_s r1, _kernel
+	/* [RFF] looks like need to be 32 bit: 'int32_t idle' */
 	ld_s r0, [r1, _kernel_offset_to_idle] /* requested idle duration */
 	breq r0, 0, _skip_sys_power_save_idle_exit
 
+	/* [RFF] looks like need to be 32 bit: 'int32_t idle' */
 	st 0, [r1, _kernel_offset_to_idle] /* zero idle duration */
 	push_s blink
 	jl z_sys_power_save_idle_exit
@@ -300,7 +302,7 @@ irq_hint_handled:
 	add3 r0, r1, r0   /* table entries are 8-bytes wide (32bit) or 16-bytes wide (64bit) [RFF] */
 
 #ifdef CONFIG_64BIT
-	ld_s r1, [r0, 8] /* ISR into r1 */
+	ldl r1, [r0, 8] /* ISR into r1 */
 #else
 	ld_s r1, [r0, 4] /* ISR is in second cell (_isr_table_entry.isr) */
 #endif
@@ -312,7 +314,7 @@ irq_hint_handled:
 	pop_s r0
 #endif
 	jl_s.d [r1]
-	ld_s r0, [r0] /* delay slot: ISR parameter into r0  */
+	ldl r0, [r0] /* delay slot: ISR parameter into r0  */
 
 #ifdef CONFIG_TRACING_ISR
 	bl sys_trace_isr_exit
