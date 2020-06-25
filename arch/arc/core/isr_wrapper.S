@@ -297,9 +297,13 @@ irq_hint_handled:
 	sub r0, r0, 16
 
 	mov_s r1, _sw_isr_table
-	add3 r0, r1, r0   /* table entries are 8-bytes wide */
+	add3 r0, r1, r0   /* table entries are 8-bytes wide (32bit) or 16-bytes wide (64bit) [RFF] */
 
-	ld_s r1, [r0, 4] /* ISR into r1 */
+#ifdef CONFIG_64BIT
+	ld_s r1, [r0, 8] /* ISR into r1 */
+#else
+	ld_s r1, [r0, 4] /* ISR is in second cell (_isr_table_entry.isr) */
+#endif
 #ifdef CONFIG_EXECUTION_BENCHMARKING
 	push_s r0
 	push_s r1
