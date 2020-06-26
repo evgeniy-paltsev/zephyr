@@ -255,7 +255,7 @@ exc_nest_handle:
 
 	jl z_irq_do_offload
 
-	pop sp
+	popl sp
 
 	_dec_int_nest_counter r0, r1
 
