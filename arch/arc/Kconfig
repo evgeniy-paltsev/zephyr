@@ -137,6 +137,7 @@ config ARC_FIRQ_STACK_SIZE
 
 config ARC_HAS_STACK_CHECKING
 	bool "ARC has STACK_CHECKING"
+	depends on !64BIT
 	default y
 	help
 	  ARC is configured with STACK_CHECKING which is a mechanism for
