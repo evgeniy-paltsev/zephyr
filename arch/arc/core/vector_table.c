@@ -94,6 +94,8 @@ struct vector_table {
 	/* interrupts */
 	uint32_t isr_timer0;
 	uint32_t isr_timer1;
+	uint32_t isr_2;
+	uint32_t isr_3;
 };
 
 struct vector_table _VectorTable Z_GENERIC_SECTION(.exc_vector_table) = {
@@ -114,6 +116,8 @@ struct vector_table _VectorTable Z_GENERIC_SECTION(.exc_vector_table) = {
 	0,
 	0,
 	/* interrupts */
+	(uint32_t)0x12345678,
+	(uint32_t)0x12345678,
 	(uint32_t)0x12345678,
 	(uint32_t)0x12345678,
 };
@@ -139,6 +143,8 @@ void set_arcv3_vector_hack(void)
 	/* interrupts */
 	_VectorTable.isr_timer0 = (uint32_t)(uint64_t)&_isr_wrapper;
 	_VectorTable.isr_timer1 = (uint32_t)(uint64_t)&_isr_wrapper;
+	_VectorTable.isr_2 = (uint32_t)(uint64_t)&_isr_wrapper;
+	_VectorTable.isr_3 = (uint32_t)(uint64_t)&_isr_wrapper;
 }
 
 #else
