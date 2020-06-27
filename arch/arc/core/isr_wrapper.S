@@ -209,7 +209,7 @@ SECTION_FUNC(TEXT, _isr_wrapper)
  * for firq,  r0 will be restored later
  */
 	stl r0, [sp]
-#endif
+#endif /* CONFIG_RGF_NUM_BANKS == 1 */
 	lr r0, [_ARC_V2_AUX_IRQ_ACT]
 	ffs r0, r0
 	cmp r0, 0
@@ -230,18 +230,18 @@ rirq_path:
 	mov_s r3, _rirq_exit
 	mov_s r2, _rirq_enter
 	j_s [r2]
-#else
+#else  /* CONFIG_RGF_NUM_BANKS == 1 */
 	mov.z r3, _firq_exit
 	mov.z r2, _firq_enter
 	mov.nz r3, _rirq_exit
 	mov.nz r2, _rirq_enter
 	j_s [r2]
-#endif
-#else
-	mov_s r3, _rirq_exit
-	mov_s r2, _rirq_enter
+#endif  /* CONFIG_RGF_NUM_BANKS == 1 */
+#else /* defined(CONFIG_ARC_FIRQ) */
+	mov_s r3, _rirq_exit@u32
+	mov_s r2, _rirq_enter@u32
 	j_s [r2]
-#endif
+#endif /* defined(CONFIG_ARC_FIRQ) */
 
 #if defined(CONFIG_SYS_POWER_MANAGEMENT)
 .macro exit_tickless_idle
