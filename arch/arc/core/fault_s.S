@@ -236,7 +236,7 @@ _do_non_syscall_trap:
 	 * so its entry is different with normal exception handling, it is
 	 * handled in isr stack
 	 */
-	cmp ilink, _TRAP_S_SCALL_IRQ_OFFLOAD
+	cmpl ilink, _TRAP_S_SCALL_IRQ_OFFLOAD
 	bne _exc_entry
 	/* save caller saved registers */
 	_create_irq_stack_frame
@@ -247,11 +247,11 @@ _do_non_syscall_trap:
 	_check_and_inc_int_nest_counter r0, r1
 
 	bne.d exc_nest_handle
-	mov_s r0, sp
+	movl_s r0, sp
 
 	_get_curr_cpu_irq_stack sp
 exc_nest_handle:
-	push_s r0
+	pushl_s r0
 
 	jl z_irq_do_offload
 
