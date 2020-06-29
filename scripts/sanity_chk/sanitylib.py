@@ -1565,11 +1565,15 @@ class TestInstance(DisablePyTestCollectionMixin):
 
         runnable = bool(self.testcase.type == "unit" or \
                         self.platform.type == "native" or \
-                        self.platform.simulation in ["nsim", "renode", "qemu"] or \
+                        self.platform.simulation in ["nsim", "mdb", "renode", "qemu"] or \
                         device_testing)
 
         if self.platform.simulation == "nsim":
             if not find_executable("nsimdrv"):
+                runnable = False
+
+        if self.platform.simulation == "mdb":
+            if not find_executable("mdb"):
                 runnable = False
 
         if self.platform.simulation == "renode":
@@ -1945,6 +1949,10 @@ class ProjectBuilder(FilterBuilder):
         elif instance.platform.simulation == "nsim":
             if find_executable("nsimdrv"):
                 instance.handler = BinaryHandler(instance, "nsim")
+                instance.handler.call_make_run = True
+        elif instance.platform.simulation == "mdb":
+            if find_executable("mdb"):
+                instance.handler = BinaryHandler(instance, "mdb")
                 instance.handler.call_make_run = True
         elif instance.platform.simulation == "renode":
             if find_executable("renode"):
