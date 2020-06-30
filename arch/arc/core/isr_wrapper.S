@@ -243,8 +243,8 @@ rirq_path:
 	j_s [r2]
 #endif /* defined(CONFIG_ARC_FIRQ) */
 
-#if defined(CONFIG_SYS_POWER_MANAGEMENT)
 .macro exit_tickless_idle
+#if defined(CONFIG_SYS_POWER_MANAGEMENT)
 	clri r0 /* do not interrupt exiting tickless idle operations */
 	mov_s r1, _kernel
 	/* [RFF] looks like need to be 32 bit: 'int32_t idle' */
@@ -259,10 +259,8 @@ rirq_path:
 
 _skip_sys_power_save_idle_exit:
 	seti r0
-.endm
-#else
-	#define exit_tickless_idle
 #endif
+.endm
 
 /* when getting here, r3 contains the interrupt exit stub to call */
 SECTION_FUNC(TEXT, _isr_demux)
