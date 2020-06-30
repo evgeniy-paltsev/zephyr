@@ -246,16 +246,16 @@ rirq_path:
 .macro exit_tickless_idle
 #if defined(CONFIG_SYS_POWER_MANAGEMENT)
 	clri r0 /* do not interrupt exiting tickless idle operations */
-	mov_s r1, _kernel
+	mov_s r1, _kernel@u32
 	/* [RFF] looks like need to be 32 bit: 'int32_t idle' */
 	ld_s r0, [r1, _kernel_offset_to_idle] /* requested idle duration */
 	breq r0, 0, _skip_sys_power_save_idle_exit
 
 	/* [RFF] looks like need to be 32 bit: 'int32_t idle' */
 	st 0, [r1, _kernel_offset_to_idle] /* zero idle duration */
-	push_s blink
+	pushl blink
 	jl z_sys_power_save_idle_exit
-	pop_s blink
+	popl blink
 
 _skip_sys_power_save_idle_exit:
 	seti r0
