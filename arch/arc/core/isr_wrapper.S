@@ -307,11 +307,11 @@ irq_hint_handled:
 	ld_s r1, [r0, 4] /* ISR is in second cell (_isr_table_entry.isr) */
 #endif
 #ifdef CONFIG_EXECUTION_BENCHMARKING
-	push_s r0
-	push_s r1
+	pushl_s r0
+	pushl_s r1
 	bl read_timer_end_of_isr
-	pop_s r1
-	pop_s r0
+	popl_s r1
+	popl_s r0
 #endif
 	jl_s.d [r1]
 	ldl r0, [r0] /* delay slot: ISR parameter into r0  */
