@@ -19,7 +19,9 @@
 extern "C" {
 #endif
 
-#ifndef CONFIG_64BIT
+#ifdef CONFIG_64BIT
+#include <arch/common/sys_io.h>
+#else
 
 /* Implementation of sys_io.h's documented functions */
 
