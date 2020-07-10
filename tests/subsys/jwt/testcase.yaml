@@ -3,3 +3,4 @@ tests:
     min_ram: 96
     min_flash: 72
     tags: jwt
+    timeout: 250
