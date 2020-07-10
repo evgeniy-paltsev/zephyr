@@ -64,7 +64,7 @@ extern "C" {
 	#endif
 
 #else  /* CONFIG_MPU_STACK_GUARD  || CONFIG_USERSPACE */
-	#define STACK_ALIGN  4
+	#define STACK_ALIGN  8
 #endif
 
 #if defined(CONFIG_MPU_STACK_GUARD)
