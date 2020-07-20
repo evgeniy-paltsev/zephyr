@@ -33,4 +33,16 @@ config 64BIT
 config GEN_IRQ_VECTOR_TABLE
 	default n
 
+config TEST_EXTRA_STACKSIZE
+	default 512
+
+config CMSIS_THREAD_MAX_STACK_SIZE
+	default 4096
+
+config CMSIS_V2_THREAD_MAX_STACK_SIZE
+	default 4096
+
+config CMSIS_V2_THREAD_DYNAMIC_STACK_SIZE
+	default 4096
+
 endif # SOC_NSIM_HS
