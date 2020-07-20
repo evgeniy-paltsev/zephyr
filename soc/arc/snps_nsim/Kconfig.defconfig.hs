@@ -30,4 +30,16 @@ config CACHE_FLUSHING
 config 64BIT
 	default y
 
+config TEST_EXTRA_STACKSIZE
+	default 512
+
+config CMSIS_THREAD_MAX_STACK_SIZE
+	default 4096
+
+config CMSIS_V2_THREAD_MAX_STACK_SIZE
+	default 4096
+
+config CMSIS_V2_THREAD_DYNAMIC_STACK_SIZE
+	default 4096
+
 endif # SOC_NSIM_HS
