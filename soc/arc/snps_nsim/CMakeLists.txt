@@ -2,6 +2,7 @@
 #zephyr_compile_options(-mcpu=${GCC_M_CPU} -mno-sdata)
 zephyr_compile_options_ifdef(CONFIG_CPU_ARCEM -mmpy-option=wlh1)
 #zephyr_compile_options_ifdef(CONFIG_CPU_ARCHS -mmpy-option=plus_qmacw)
+zephyr_compile_options(-ffixed-r13)
 if(CONFIG_CPU_ARCHS)
 zephyr_compile_options_ifdef(CONFIG_FPU -mfpu=fpud_all)
 else()
