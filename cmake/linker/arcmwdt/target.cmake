@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
-find_program(CMAKE_LINKER ${CROSS_COMPILE}ldac PATH ${TOOLCHAIN_HOME} NO_DEFAULT_PATH)
+find_program(CMAKE_LINKER ${CROSS_COMPILE}lldac PATH ${TOOLCHAIN_HOME} NO_DEFAULT_PATH)
 
 # the prefix to transfer ld options from compiler
-set_ifndef(LINKERFLAGPREFIX -Hldopt=)
+set_ifndef(LINKERFLAGPREFIX -Wl,)
 
 # Run $LINKER_SCRIPT file through the C preprocessor, producing ${linker_script_gen}
 # NOTE: ${linker_script_gen} will be produced at build-time; not at configure-time
@@ -86,13 +86,14 @@ function(toolchain_ld_link_elf)
   target_link_libraries(
     ${TOOLCHAIN_LD_LINK_ELF_TARGET_ELF}
     ${TOOLCHAIN_LD_LINK_ELF_LIBRARIES_PRE_SCRIPT}
-    ${TOOLCHAIN_LD_LINK_ELF_LINKER_SCRIPT}
+    ${LINKERFLAGPREFIX}-T${TOOLCHAIN_LD_LINK_ELF_LINKER_SCRIPT}
     ${TOOLCHAIN_LD_LINK_ELF_LIBRARIES_POST_SCRIPT}
-    ${LINKERFLAGPREFIX}-m
-    ${LINKERFLAGPREFIX}-Coutput=${TOOLCHAIN_LD_LINK_ELF_OUTPUT_MAP}
-    ${LINKERFLAGPREFIX}-Ball_archive
+    ${LINKERFLAGPREFIX}--entry=__start
+    ${LINKERFLAGPREFIX}--C
+    ${LINKERFLAGPREFIX}--Map=${TOOLCHAIN_LD_LINK_ELF_OUTPUT_MAP}
+    ${LINKERFLAGPREFIX}--whole-archive
     ${ZEPHYR_LIBS_PROPERTY}
-    ${LINKERFLAGPREFIX}-Bno_all_archive
+    ${LINKERFLAGPREFIX}--no-whole-archive
     kernel
     $<TARGET_OBJECTS:${OFFSETS_LIB}>
     ${LIB_INCLUDE_DIR}
@@ -106,6 +107,7 @@ endfunction(toolchain_ld_link_elf)
 # ld options of temporary linkage for code generation
 macro(toolchain_ld_baremetal)
   zephyr_ld_options(
+    -Hlld
     -Hnocopyr
     -Hnosdata
     -Hnocrt
@@ -115,8 +117,8 @@ macro(toolchain_ld_baremetal)
     -Hcl
     -Hheap=0
     -Hnoivt
-    ${LINKERFLAGPREFIX}-zpurge
-    ${LINKERFLAGPREFIX}-Blstrip
+    # ${LINKERFLAGPREFIX}-zpurge
+    # ${LINKERFLAGPREFIX}-Blstrip
   )
 
   # Funny thing is if this is set to =error, some architectures will
