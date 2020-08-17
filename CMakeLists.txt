@@ -687,6 +687,7 @@ zephyr_get_include_directories_for_lang(C ZEPHYR_INCLUDES)
 add_subdirectory(kernel)
 
 # Read list content
+get_property(ZEPHYR_NO_WHOLE_ARCHIVE_LIBS_PROPERTY GLOBAL PROPERTY ZEPHYR_NO_WHOLE_ARCHIVE_LIBS)
 get_property(ZEPHYR_LIBS_PROPERTY GLOBAL PROPERTY ZEPHYR_LIBS)
 
 foreach(zephyr_lib ${ZEPHYR_LIBS_PROPERTY})

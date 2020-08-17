@@ -69,3 +69,5 @@ target_include_directories(kernel PRIVATE
 add_dependencies(kernel zephyr_generated_headers)
 
 target_link_libraries(kernel zephyr_interface)
+
+set_property(GLOBAL APPEND PROPERTY ZEPHYR_NO_WHOLE_ARCHIVE_LIBS kernel)

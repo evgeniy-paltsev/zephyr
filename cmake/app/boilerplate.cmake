@@ -42,6 +42,12 @@ define_property(GLOBAL PROPERTY ZEPHYR_LIBS
 zephyr_library() appends libs to this list.")
 set_property(GLOBAL PROPERTY ZEPHYR_LIBS "")
 
+define_property(GLOBAL PROPERTY ZEPHYR_NO_WHOLE_ARCHIVE_LIBS
+    BRIEF_DOCS "Global list of all CMake libs that shouldn't be whole-archive'd"
+    FULL_DOCS  "Global list of all CMake libs that should be linked in but
+should not be --whole-archive'd.")
+set_property(GLOBAL PROPERTY ZEPHYR_NO_WHOLE_ARCHIVE_LIBS "")
+
 define_property(GLOBAL PROPERTY ZEPHYR_INTERFACE_LIBS
     BRIEF_DOCS "Global list of all Zephyr interface libs that should be linked in."
     FULL_DOCS  "Global list of all Zephyr interface libs that should be linked in.
