@@ -23,8 +23,8 @@ zephyr_compile_options(-arcv2em -core3 -Xcode_density -Xdiv_rem=radix2 -Xswap
 		       -Xdsp2 -Xdsp_complex -Xdsp_divsqrt=radix2 -Xdsp_accshift=limited
 		       -Xtimer0 -Xtimer1 -Xsec_timer0 -Xstack_check -Xsec_modes -Xdmac)
 elseif(CONFIG_SOC_NSIM_HS)
-zephyr_compile_options(-arcv2hs -core3 -Xatomic -Xunaligned -Xcode_density -Xswap
-		       -Xbitscan -Xmpy_option=mpy -Xshift_assist -Xbarrel_shifter
+zephyr_compile_options(-arcv2hs -core2 -Xatomic -Xunaligned -Xcode_density -Xswap
+		       -Xbitscan -Xmpy_option=qmpyh -Xshift_assist -Xbarrel_shifter
 		       -Xtimer0 -Xtimer1)
 elseif(CONFIG_SOC_NSIM_HS_SMP)
 zephyr_compile_options(-arcv2hs -core2 -Xatomic -Xll64 -Xdiv_rem=radix4 -Xunaligned
