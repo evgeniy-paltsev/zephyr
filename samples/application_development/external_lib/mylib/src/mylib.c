@@ -9,6 +9,6 @@
 
 int mylib_hello_world(void)
 {
-	printf("mylib says: Hello World!\n");
+	puts("mylib says: Hello World!\n");
 	return 0;
 }

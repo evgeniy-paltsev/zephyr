@@ -14,6 +14,6 @@
 
 void main(void)
 {
-	printf("Hello World!\n");
+	puts("Hello World!\n");
 	mylib_hello_world();
 }
