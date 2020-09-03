@@ -2,6 +2,12 @@
 
 # Configures CMake for using ccac
 
+find_program(CMAKE_DTS_PREPROCESS_C_COMPILER arc-elf32-gcc)
+
+if(CMAKE_DTS_PREPROCESS_C_COMPILER STREQUAL CMAKE_DTS_PREPROCESS_C_COMPILER-NOTFOUND)
+  message(FATAL_ERROR "Zephyr was unable to find the ARC GNU compiler for DTS preprocessing")
+endif()
+
 find_program(CMAKE_C_COMPILER ${CROSS_COMPILE}ccac PATH ${TOOLCHAIN_HOME} NO_DEFAULT_PATH)
 
 if(CMAKE_C_COMPILER STREQUAL CMAKE_C_COMPILER-NOTFOUND)
