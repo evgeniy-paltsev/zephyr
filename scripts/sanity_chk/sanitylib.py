@@ -1672,6 +1672,7 @@ class TestInstance(DisablePyTestCollectionMixin):
         if self.platform.simulation == "mdb-nsim":
             if not find_executable("mdb"):
                 target_ready = False
+                print(" > RFF: mdb missing")
 
         if self.platform.simulation == "renode":
             if not find_executable("renode"):
@@ -2034,6 +2035,8 @@ class ProjectBuilder(FilterBuilder):
 
         instance = self.instance
         args = []
+
+        print(" > RFF: platform.simulation: " + instance.platform.simulation)
 
         # FIXME: Needs simplification
         if instance.platform.simulation == "qemu":
