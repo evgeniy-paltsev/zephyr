@@ -50,3 +50,4 @@
 	-noprofile
 	-nogoifmain
 	-instrs_per_pass=10
+	-on=nsim_isa_host_timer
