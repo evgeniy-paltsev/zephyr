@@ -297,10 +297,11 @@ _rirq_switch_from_coop:
 	/* carve fake stack */
 	subl sp, sp, ___isf_t_pc_OFFSET
 
-
+#ifndef CONFIG_64BIT
 	/* reset zero-overhead loops */
 	/* [RFF] LP: FIXME */
 	stl 0, [sp, ___isf_t_lp_end_OFFSET]
+#endif /* !CONFIG_64BIT */
 
 	/*
 	 * r13 is part of both the callee and caller-saved register sets because
