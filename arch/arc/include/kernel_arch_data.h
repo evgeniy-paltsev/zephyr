@@ -86,9 +86,11 @@ struct _irq_stack_frame {
 	uintptr_t r12;
 	uintptr_t r13;
 	uintptr_t blink;
+#ifndef CONFIG_64BIT
 	uintptr_t lp_end;
 	uintptr_t lp_start;
 	uintptr_t lp_count;
+#endif /* !CONFIG_64BIT */
 #ifdef CONFIG_CODE_DENSITY
 	/*
 	 * Currently unsupported. This is where those registers are

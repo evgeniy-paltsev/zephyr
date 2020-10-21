@@ -54,7 +54,10 @@ extern "C" {
 static ALWAYS_INLINE void z_irq_setup(void)
 {
 	uint32_t aux_irq_ctrl_value = (
+/* we don't have loop registers in ARCv3 64 */
+#ifndef CONFIG_64BIT
 		_ARC_V2_AUX_IRQ_CTRL_LOOP_REGS | /* save lp_xxx registers */
+#endif
 #ifdef CONFIG_CODE_DENSITY
 		_ARC_V2_AUX_IRQ_CTRL_LP | /* save code density registers */
 #endif
