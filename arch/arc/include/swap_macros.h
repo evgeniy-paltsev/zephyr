@@ -199,6 +199,7 @@
 	stl   r1,  [sp, ___isf_t_r1_OFFSET]
 	stl   r0,  [sp, ___isf_t_r0_OFFSET]
 
+#ifndef CONFIG_64BIT
 	mov r0, 0
 //	mov r0, lp_count        /* [RFF] lp_count FIXME */
 	stl r0, [sp, ___isf_t_lp_count_OFFSET]
@@ -207,6 +208,7 @@
 //	lr r0, [_ARC_V2_LP_END]
 	stl r1, [sp, ___isf_t_lp_start_OFFSET]
 	stl r0, [sp, ___isf_t_lp_end_OFFSET]
+#endif /* CONFIG_64BIT */
 
 #ifdef CONFIG_CODE_DENSITY
 #error "[RFF] need to revisit"
@@ -237,12 +239,14 @@
 	sr r2, [_ARC_V2_EI_BASE]
 #endif
 
+#ifndef CONFIG_64BIT
 	ldl r0, [sp, ___isf_t_lp_count_OFFSET] // del me
 //	mov lp_count, r0
 	ldl r1, [sp, ___isf_t_lp_start_OFFSET] // del me
 	ldl r0, [sp, ___isf_t_lp_end_OFFSET]   // del me
 //	sr r1, [_ARC_V2_LP_START]
 //	sr r0, [_ARC_V2_LP_END]
+#endif /* !CONFIG_64BIT */
 
 	ldl   r13, [sp, ___isf_t_r13_OFFSET]
 	ldl   r12, [sp, ___isf_t_r12_OFFSET]
