@@ -13,7 +13,7 @@ config NUM_IRQS
 	default 30
 
 config RGF_NUM_BANKS
-	default 2
+	default 1
 
 config SYS_CLOCK_HW_CYCLES_PER_SEC
 	default 5000000
@@ -22,7 +22,7 @@ config HARVARD
 	default y
 
 config ARC_FIRQ
-	default y
+	default n
 
 config CACHE_FLUSHING
 	default y

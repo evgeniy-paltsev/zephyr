@@ -1,7 +1,6 @@
 	-arcv2hs
 	-core2
-	-rgf_num_banks=2
-	-rgf_banked_regs=32
+	-rgf_num_banks=1
 	-rgf_num_wr_ports=2
 	-Xatomic
 	-Xll64
@@ -23,7 +22,6 @@
 	-action_points=8
 	-Xstack_check
 	-interrupts=72
-	-firq
 	-interrupt_priorities=2
 	-ext_interrupts=70
 	-interrupt_base=0x0
