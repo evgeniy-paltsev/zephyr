@@ -30,4 +30,7 @@ config CACHE_FLUSHING
 config 64BIT
 	default y
 
+config GEN_IRQ_VECTOR_TABLE
+	default n
+
 endif # SOC_NSIM_HS

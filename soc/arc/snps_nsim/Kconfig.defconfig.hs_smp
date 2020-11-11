@@ -37,4 +37,7 @@ config 64BIT
 config MP_NUM_CPUS
 	default 2
 
+config GEN_IRQ_VECTOR_TABLE
+	default n
+
 endif # SOC_NSIM_HS_SMP
