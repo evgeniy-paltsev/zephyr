@@ -31,6 +31,9 @@ config CACHE_FLUSHING
 config ARC_CONNECT
 	default y
 
+config 64BIT
+	default y
+
 config MP_NUM_CPUS
 	default 2
 

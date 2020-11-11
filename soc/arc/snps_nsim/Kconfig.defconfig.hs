@@ -27,4 +27,7 @@ config ARC_FIRQ
 config CACHE_FLUSHING
 	default y
 
+config 64BIT
+	default y
+
 endif # SOC_NSIM_HS
