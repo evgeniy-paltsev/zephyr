@@ -249,9 +249,11 @@ rirq_path:
 #if defined(CONFIG_SYS_POWER_MANAGEMENT)
 	clri r0 /* do not interrupt exiting tickless idle operations */
 	mov_s r1, _kernel
+	/* [RFF] looks like need to be 32 bit: 'int32_t idle' */
 	ld_s r3, [r1, _kernel_offset_to_idle] /* requested idle duration */
 	breq r3, 0, _skip_sys_power_save_idle_exit
 
+	/* [RFF] looks like need to be 32 bit: 'int32_t idle' */
 	st 0, [r1, _kernel_offset_to_idle] /* zero idle duration */
 	push_s blink
 	jl z_sys_power_save_idle_exit
@@ -303,7 +305,7 @@ irq_hint_handled:
 #endif
 
 	jl_s.d [r1]
-	ld_s r0, [r0] /* delay slot: ISR parameter into r0  */
+	ldl r0, [r0] /* delay slot: ISR parameter into r0  */
 
 #if defined(CONFIG_TRACING_ISR)
 	bl sys_trace_isr_exit
