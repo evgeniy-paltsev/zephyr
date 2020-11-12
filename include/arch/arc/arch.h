@@ -45,7 +45,7 @@
 extern "C" {
 #endif
 
-#define ARCH_STACK_PTR_ALIGN	4
+#define ARCH_STACK_PTR_ALIGN	8
 
 /* Indicate, for a minimally sized MPU region, how large it must be and what
  * its base address must be aligned to.
