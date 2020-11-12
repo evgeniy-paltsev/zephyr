@@ -315,7 +315,7 @@
 	ld.as MACRO_ARG(reg1), [@_curr_cpu, MACRO_ARG(reg1)]
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), ___cpu_t_nested_OFFSET]
 #else
-	mov MACRO_ARG(reg1), _kernel
+	mov MACRO_ARG(reg1), _kernel@u32
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), _kernel_offset_to_nested]
 #endif
 	add MACRO_ARG(reg2), MACRO_ARG(reg2), 1
@@ -338,7 +338,7 @@
 	ld.as MACRO_ARG(reg1), [@_curr_cpu, MACRO_ARG(reg1)]
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), ___cpu_t_nested_OFFSET]
 #else
-	mov MACRO_ARG(reg1), _kernel
+	mov MACRO_ARG(reg1), _kernel@u32
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), _kernel_offset_to_nested]
 #endif
 	sub MACRO_ARG(reg2), MACRO_ARG(reg2), 1
@@ -378,13 +378,14 @@
  * the result will be in irq_sp (a reg)
  */
 .macro _get_curr_cpu_irq_stack, irq_sp
+/* [RFF] we need to rework 'kernel' loading as a 64bit value but keep it u32bit for now */
 #ifdef CONFIG_SMP
 #error "[RFF] need to revisit"
 	_get_cpu_id MACRO_ARG(irq_sp)
 	ld.as MACRO_ARG(irq_sp), [@_curr_cpu, MACRO_ARG(irq_sp)]
 	ld MACRO_ARG(irq_sp), [MACRO_ARG(irq_sp), ___cpu_t_irq_stack_OFFSET]
 #else
-	mov MACRO_ARG(irq_sp), _kernel
+	mov MACRO_ARG(irq_sp), _kernel@u32
 	ldl MACRO_ARG(irq_sp), [MACRO_ARG(irq_sp), _kernel_offset_to_irq_stack]
 #endif
 .endm
@@ -495,7 +496,7 @@
 /* macro to get next switch handle in assembly */
 .macro _get_next_switch_handle
 	pushl_s r2
-	mov r0, sp
+	movl r0, sp
 	bl z_arch_get_next_switch_handle
 	popl_s  r2
 .endm
