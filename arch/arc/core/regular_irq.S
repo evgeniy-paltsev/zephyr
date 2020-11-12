@@ -263,7 +263,11 @@ SECTION_FUNC(TEXT, _rirq_exit)
 	/* r2 is old thread */
 	_irq_store_old_thread_callee_regs
 
-	st _CAUSE_RIRQ, [r2, _thread_offset_to_relinquish_cause]
+	/* As thread struct is bloated we can't simply use
+	 * st _CAUSE_RIRQ, [r2, _thread_offset_to_relinquish_cause]
+	 * as it overflows u9 operand in 'st' */
+	add r2, r2, _thread_offset_to_relinquish_cause
+	st _CAUSE_RIRQ, [r2]
 
 	/* mov new thread (r0) to r2 */
 	movl r2, r0
