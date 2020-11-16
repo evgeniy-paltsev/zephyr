@@ -60,14 +60,14 @@ SECTION_FUNC(TEXT, z_arc_switch)
 	 * get old_thread from r1
 	 */
 
-	sub r2, r1, ___thread_t_switch_handle_OFFSET
+	subl r2, r1, ___thread_t_switch_handle_OFFSET
 
 
 	/* As thread struct is bloated we can't simply use
 	 * st _CAUSE_RIRQ, [r2, _thread_offset_to_relinquish_cause]
 	 * as it overflows u9 operand in 'st'
 	 * NOTE the r2 value is used later, so pick r3 as scratch */
-	add r3, r2, _thread_offset_to_relinquish_cause
+	addl r3, r2, _thread_offset_to_relinquish_cause
 	st _CAUSE_COOP, [r3]
 
 	/*
