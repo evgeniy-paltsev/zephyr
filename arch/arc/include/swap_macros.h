@@ -384,10 +384,11 @@
 .macro _get_curr_cpu_irq_stack, irq_sp
 /* [RFF] we need to rework 'kernel' loading as a 64bit value but keep it u32bit for now */
 #ifdef CONFIG_SMP
-#error "[RFF] need to revisit"
 	_get_cpu_id MACRO_ARG(irq_sp)
-	ld.as MACRO_ARG(irq_sp), [@_curr_cpu, MACRO_ARG(irq_sp)]
-	ld MACRO_ARG(irq_sp), [MACRO_ARG(irq_sp), ___cpu_t_irq_stack_OFFSET]
+	asl MACRO_ARG(irq_sp), MACRO_ARG(irq_sp), 3
+	//extract pointer to this cpu from _curr_cpu
+	ldl MACRO_ARG(irq_sp), [MACRO_ARG(irq_sp), @_curr_cpu]
+	ldl MACRO_ARG(irq_sp), [MACRO_ARG(irq_sp), ___cpu_t_irq_stack_OFFSET]
 #else
 	mov MACRO_ARG(irq_sp), _kernel@u32
 	ldl MACRO_ARG(irq_sp), [MACRO_ARG(irq_sp), _kernel_offset_to_irq_stack]
@@ -417,7 +418,7 @@
 	/* save old thread into switch handle which is required by
 	 * wait_for_switch
 	 */
-	st r2, [r2, ___thread_t_switch_handle_OFFSET]
+	stl r2, [r2, ___thread_t_switch_handle_OFFSET]
 #endif
 .endm
 
