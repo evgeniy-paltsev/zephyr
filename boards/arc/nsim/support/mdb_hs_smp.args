@@ -23,4 +23,6 @@
 	-connect_ici=2
 	-prop=nsim_mem-dev=uart0,kind=dwuart,base=0xf0000000,irq=0,use_connect=1
 	-on=nsim_print-sys-arch
-	-instrs_per_pass=10
+	-noprofile
+	-nogoifmain
+	-instrs_per_pass=512
