@@ -4,7 +4,7 @@ tests:
     extra_configs:
       - CONFIG_TIMESLICING=y
     tags: kernel threads sched userspace
-    timeout: 100
+    timeout: 200
   kernel.scheduler.no_timeslicing:
     filter: not CONFIG_SCHED_MULTIQ
     extra_configs:
@@ -16,7 +16,7 @@ tests:
     extra_configs:
       - CONFIG_TIMESLICING=y
     tags: kernel threads sched userspace
-    timeout: 100
+    timeout: 200
   kernel.scheduler.multiq_no_timeslicing:
     extra_args: CONF_FILE=prj_multiq.conf
     extra_configs:
