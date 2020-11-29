@@ -451,7 +451,13 @@ class BinaryHandler(Handler):
         # FIXME: This is needed when killing the simulator, the console is
         # garbled and needs to be reset. Did not find a better way to do that.
 
-        subprocess.call(["stty", "sane"])
+        if sys.stdout.isatty():
+            subprocess.call(["stty", "sane"])
+            print("stdout is a tty")
+        else:
+            sys.stdout.flush()
+        if sys.stdin.isatty():
+            print("stdin is a tty")
         self.instance.results = harness.tests
 
         if not self.terminated and self.returncode != 0:
