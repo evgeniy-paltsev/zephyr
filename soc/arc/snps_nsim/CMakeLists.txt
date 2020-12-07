@@ -26,10 +26,14 @@ else()
 			       -Xdsp_accshift=limited -Xtimer0 -Xtimer1
 			       -Xsec_timer0 -Xstack_check -Xsec_modes -Xdmac)
 
-  zephyr_compile_options_ifdef(CONFIG_SOC_NSIM_HS -arcv2hs -core2 -Xatomic
-			       -Xunaligned -Xcode_density -Xswap -Xbitscan
-			       -Xmpy_option=qmpyh -Xshift_assist -Xbarrel_shifter
-			       -Xtimer0 -Xtimer1)
+  zephyr_compile_options_ifdef(CONFIG_SOC_NSIM_HS -arcv2hs -core4 -uarch_rev=1:2
+	-Xcode_density -Xatomic -Xll64 -Xunaligned -Xdiv_rem=radix4 -Xswap
+	-Xbitscan -Xmpy_option=qmpyh -Xshift_assist -Xbarrel_shifter -Xfpud_div
+	-Xfpu_mac -Xtimer0 -Xrtc -Xstack_check -dcache=16384,64,2,a
+	-Xstu=3 -Xvdsp3 -Xvec_width=512 -Xvec_max_fetch_size=16 -Xvec_num_slots=3
+	-Xvec_super_with_scalar -Xvec_regs=32 -Xvec_num_rd_ports=6 -Xvec_num_acc=8
+	-Xvec_num_mpy=2 -Xvec_mpy32 -Xvec_num_alu=3 -Xvec_guard_bit_option=0
+	-DVEC_MEM_SYS_BASE_CORE0=0xb1000000 )
 
   zephyr_compile_options_ifdef(CONFIG_SOC_NSIM_HS_SMP -arcv2hs -core2 -Xatomic
 			       -Xll64 -Xdiv_rem=radix4 -Xunaligned -Xcode_density
