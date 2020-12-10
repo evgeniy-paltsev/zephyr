@@ -516,7 +516,7 @@ def find_kobjects(elf, syms):
     user_stack_start = syms["z_user_stacks_start"]
     user_stack_end = syms["z_user_stacks_end"]
 
-    di = elf.get_dwarf_info()
+    di = elf.get_dwarf_info(False)
 
     variables = []
 
