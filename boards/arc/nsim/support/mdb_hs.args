@@ -1,11 +1,36 @@
 	-arc64
-	-nogoifmain
-	-Xatomic
+	-core0
+	-uarch_rev=1:0
+	-rgf_num_banks=1
+	-rgf_num_wr_ports=2
+	-Xatomic=1
+	-Xmpy_cycles=4
 	-Xtimer0
+	-Xtimer0_level=1
 	-Xtimer1
-	-Xdiv_rem
-	-Xunaligned
-	-prop=nsim_isa_addr_size=64
-	-prop=nsim_isa_pc_size=64
-	-noprofile
+	-Xtimer1_level=0
+	-Xrtc
+	-volatile_base=12
+	-volatile_limit=0
+	-volatile_strict_ordering
+	-bpu_bc_entries=512
+	-bpu_pt_entries=8192
+	-bpu_rs_entries=4
+	-bpu_bc_full_tag=1
+	-bpu_tosq_entries=8
+	-bpu_fb_entries=2
+	-interrupts=207
+	-interrupt_priorities=8
+	-ext_interrupts=160
+	-firq
+	-interrupt_base=0x0
+	-dcache=16384,64,2,a
+	-dcache_version=5
+	-dcache_feature=2
+	-dcache_mem_cycles=1
+	-icache=16384,64,4,a
+	-icache_version=6
+	-icache_feature=2
+	-Xpct_counters=32
 	-prop=nsim_mem-dev=uart0,kind=dwuart,base=0xf0000000,irq=24
+	-noprofile
