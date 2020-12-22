@@ -8,9 +8,16 @@
 	nsim_isa_rgf_num_wr_ports=2
 	nsim_isa_big_endian=0
 	nsim_isa_atomic_option=1
+	nsim_isa_mpy_option=9
 	nsim_isa_pc_size=64
 	nsim_isa_addr_size=64
-	nsim_isa_shift_option=0
+	nsim_isa_shift_option=3
+	nsim_isa_fast_irq=0
+	nsim_isa_code_density_option=2
+	nsim_isa_div_rem_option=2
+	nsim_isa_div64_option=1
+	nsim_isa_mpy64=1
+	nsim_isa_mpy_option=9
 	nsim_isa_enable_timer_0=1
 	nsim_isa_timer_0_int_level=1
 	nsim_isa_enable_timer_1=1
@@ -29,7 +36,7 @@
 	nsim_isa_number_of_interrupts=207
 	nsim_isa_number_of_levels=8
 	nsim_isa_number_of_external_interrupts=160
-	nsim_isa_fast_irq=1
+	nsim_isa_fast_irq=0
 	nsim_isa_intvbase_preset=0x0
 	dcache=16384,64,2,a
 	nsim_isa_dc_version=5
@@ -38,6 +45,7 @@
 	icache=16384,64,4,a
 	nsim_isa_ic_version=6
 	nsim_isa_ic_feature_level=2
+	store_cache_data=0
 	nsim_isa_error_prot=0
 	nsim_isa_pct_counters=32
 	nsim_mem-dev=uart0,kind=dwuart,base=0xf0000000,irq=24
