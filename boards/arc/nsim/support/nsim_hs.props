@@ -45,7 +45,7 @@
 	icache=16384,64,4,a
 	nsim_isa_ic_version=6
 	nsim_isa_ic_feature_level=2
-	store_cache_data=0
+	store_cache_data=1
 	nsim_isa_error_prot=0
 	nsim_isa_pct_counters=32
 	nsim_mem-dev=uart0,kind=dwuart,base=0xf0000000,irq=24
