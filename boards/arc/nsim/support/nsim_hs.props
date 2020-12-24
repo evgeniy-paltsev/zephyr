@@ -20,4 +20,5 @@
 	gverbose=0
 	nsim_isa_addr_size=64
 	nsim_isa_pc_size=64
+	nsim_isa_vec64=1
 	nsim_mem-dev=uart0,kind=dwuart,base=0xf0000000,irq=24
