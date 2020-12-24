@@ -229,6 +229,46 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 #define UART_REG_ADDR_INTERVAL (1<<DT_INST_PROP(0, reg_shift))
 #endif
 
+
+#define arc_read_uncached_32(ptr)	\
+({					\
+	unsigned int __ret;		\
+	__asm__ __volatile__(		\
+	"	ld.di %0, [%1]	\n"	\
+	: "=r"(__ret)			\
+	: "r"(ptr));			\
+	__ret;				\
+})
+
+#define arc_read_uncached_8(ptr)	\
+({					\
+	unsigned int __ret;		\
+	__asm__ __volatile__(		\
+	"	ldb.di %0, [%1]	\n"	\
+	: "=r"(__ret)			\
+	: "r"(ptr));			\
+	__ret;				\
+})
+
+#define arc_write_uncached_8(ptr, data)\
+({					\
+	__asm__ __volatile__(		\
+	"	stb.di %0, [%1]	\n"	\
+	:				\
+	: "r"(data), "r"(ptr));		\
+})
+
+#define arc_write_uncached_32(ptr, data)\
+({					\
+	__asm__ __volatile__(		\
+	"	st.di %0, [%1]	\n"	\
+	:				\
+	: "r"(data), "r"(ptr));		\
+})
+
+//#define arc_read_uncached_8 (uint8_t)arc_read_uncached_32
+
+
 #ifdef UART_NS16550_ACCESS_IOPORT
 #define INBYTE(x) sys_in8(x)
 #define INWORD(x) sys_in32(x)
@@ -238,10 +278,10 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 #define UART_REG_ADDR_INTERVAL 1 /* address diff of adjacent regs. */
 #endif /* UART_REG_ADDR_INTERVAL */
 #else
-#define INBYTE(x) sys_read8(x)
-#define INWORD(x) sys_read32(x)
-#define OUTBYTE(x, d) sys_write8(d, x)
-#define OUTWORD(x, d) sys_write32(d, x)
+#define INBYTE(x) arc_read_uncached_8(x)
+#define INWORD(x) arc_read_uncached_32(x)
+#define OUTBYTE(x, d) arc_write_uncached_8(x, d)
+#define OUTWORD(x, d) arc_write_uncached_32(x, d)
 #ifndef UART_REG_ADDR_INTERVAL
 #define UART_REG_ADDR_INTERVAL 4 /* address diff of adjacent regs. */
 #endif
