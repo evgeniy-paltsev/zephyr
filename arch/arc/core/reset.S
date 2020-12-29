@@ -76,11 +76,11 @@ SECTION_FUNC(TEXT,__start)
 	/* set the vector table base early,
 	 * so that exception vectors can be handled.
 	 */
-	mov_s r0, _VectorTable
+	movl_s r0, _VectorTable
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
 	sr r0, [_ARC_V2_IRQ_VECT_BASE_S]
 #else
-	sr r0, [_ARC_V2_IRQ_VECT_BASE]
+	srl r0, [_ARC_V2_IRQ_VECT_BASE]
 #endif
 
 #if defined(CONFIG_USERSPACE)
