@@ -639,7 +639,7 @@ class DeviceHandler(Handler):
         post_script = hardware.get('post_script')
 
         if pre_script:
-            self.run_custom_script(pre_script, 30)
+            self.run_custom_script(pre_script, 100)
 
         try:
             ser = serial.Serial(
@@ -701,7 +701,7 @@ class DeviceHandler(Handler):
             os.write(write_pipe, b'x')  # halt the thread
 
         if post_flash_script:
-            self.run_custom_script(post_flash_script, 30)
+            self.run_custom_script(post_flash_script, 100)
 
         t.join(self.timeout)
         if t.is_alive():
@@ -738,7 +738,7 @@ class DeviceHandler(Handler):
             self.set_state(out_state, handler_time)
 
         if post_script:
-            self.run_custom_script(post_script, 30)
+            self.run_custom_script(post_script, 100)
 
         self.make_device_available(serial_device)
 
