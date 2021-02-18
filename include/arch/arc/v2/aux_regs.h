@@ -185,6 +185,24 @@
 #endif /* __CCAC__ */
 #endif /* _ASMLANGUAGE */
 
+#ifdef CONFIG_64BIT
+
+#define z_arc_aux_reg_read_64(r)			\
+({							\
+	uint64_t v;					\
+	__asm__ __volatile__("lrl %0, [%1]"		\
+	: "=r"(v) : "r"(r));				\
+	v;						\
+})
+
+#define z_arc_aux_reg_write_64(r, v)			\
+({							\
+	__asm__ __volatile__("srl %0, [%1]"		\
+	: : "r"(v), "r"(r));				\
+})
+
+#endif /* CONFIG_64BIT */
+
 #define z_arc_v2_core_id() \
 	({                                               \
 		unsigned int __ret;                      \
