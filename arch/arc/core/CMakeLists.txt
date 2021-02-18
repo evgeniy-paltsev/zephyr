@@ -22,6 +22,7 @@ zephyr_library_sources(
   reset.S
   vector_table.c
   arcv3-mmu.c
+  cache-entire.c
   )
 
 zephyr_library_sources_ifdef(CONFIG_CACHE_FLUSHING cache.c)

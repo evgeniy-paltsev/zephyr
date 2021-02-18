@@ -148,11 +148,14 @@ static void k_page_table_init_main(void);
 static void k_page_table_init_io(void);
 static void k_mmu_init_enable(void);
 static void k_mmu_sanitycheck_prepare(void);
+void flush_l1_dcache_all(void);
 
 static void k_page_table_init(void)
 {
 	k_page_table_init_main();
 	k_page_table_init_io();
+
+	flush_l1_dcache_all();
 }
 
 // translated area (main memory)
@@ -250,10 +253,10 @@ static void k_mmu_init_enable(void)
 	ttbc.t1sz = 16;	/* Not relevant since kernel linked under 4GB hits T0SZ */
 	ttbc.t0sh = __SHR_INNER;
 	ttbc.t1sh = __SHR_INNER;
-//	ttbc.t0c = 0; /* uncached */
-//	ttbc.t1c = 0; /* uncached */
-	ttbc.t0c = 1; /* cached */
-	ttbc.t1c = 1; /* cached */
+	ttbc.t0c = 0; /* uncached */
+	ttbc.t1c = 0; /* uncached */
+//	ttbc.t0c = 1; /* cached */
+//	ttbc.t1c = 1; /* cached */
 	ttbc.a1 = 0;  /* ASID used is from MMU_RTP0 */
 
 	z_arc_v2_aux_reg_write(ARC_REG_MMU_TTBC, ttbc.word);
