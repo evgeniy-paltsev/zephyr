@@ -39,7 +39,7 @@
 
 	ddr0: memory@90000000 {
 		device_type = "memory";
-		reg = <0x80000000 0x40000000>;
+		reg = <0x80000000 DT_SIZE_M(2)>;
 	};
 
 	iccm0: iccm@ICCM_ADDR {
