@@ -28,4 +28,7 @@
 	icache=16384,64,4,a
 	nsim_isa_ic_version=6
 	nsim_isa_ic_feature_level=2
+	mmu_version=6
+	mmu_pagesize=4096
+	mmu_address_space=48
 	nsim_mem-dev=uart0,kind=dwuart,base=0xf0000000,irq=24
