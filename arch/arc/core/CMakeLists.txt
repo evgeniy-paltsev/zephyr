@@ -34,3 +34,5 @@ add_subdirectory_ifdef(CONFIG_ARC_CORE_MPU mpu)
 add_subdirectory_ifdef(CONFIG_ARC_SECURE_FIRMWARE secureshield)
 
 zephyr_linker_sources(ROM_START SORT_KEY 0x0vectors vector_table.ld)
+
+zephyr_sources_ifdef(CONFIG_ISA_ARCV3 arcv3-mmu.c)

@@ -1,0 +1,29 @@
+#ifndef _ASM_ARC_MMUV6_H
+#define _ASM_ARC_MMUV6_H
+
+#define ARC_REG_MMU_CTRL	0x468
+
+#define ARC_REG_MMU_CTRL_EN     BIT(0)
+#define ARC_REG_MMU_CTRL_KU     BIT(1)
+#define ARC_REG_MMU_CTRL_WX     BIT(2)
+#define ARC_REG_MMU_CTRL_TCE    BIT(3)
+
+#define ARC_REG_MMU_TTBC	0x469
+#define ARC_REG_MMU_FAULT_STS	0x46b
+
+#define ARC_REG_MMU_MEM_ATTR    0x46a
+#define ARC_REG_MMU_MEM_ATTR_LO 0x46a
+#define ARC_REG_MMU_MEM_ATTR_HI 0x46b
+
+#define ARC_REG_MMU_RTP0        0x460
+#define ARC_REG_MMU_RTP1        0x462
+#define ARC_REG_MMU_RTP0_LO     0x460
+#define ARC_REG_MMU_RTP0_HI     0x461
+#define ARC_REG_MMU_RTP1_LO     0x462
+#define ARC_REG_MMU_RTP1_HI     0x463
+
+#define ARC_REG_MMU_TLB_CMD	0x465
+#define ARC_REG_MMU_TLB_DATA0	0x466
+#define ARC_REG_MMU_TLB_DATA1	0x467
+
+#endif
