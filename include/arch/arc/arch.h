@@ -30,10 +30,9 @@
 #include <arch/arc/v2/arcv2_irq_unit.h>
 #include <arch/arc/v2/asm_inline.h>
 #include <arch/common/addr_types.h>
-
-#ifdef CONFIG_ISA_ARCV2
 #include <arch/arc/v2/error.h>
 
+#ifdef CONFIG_ISA_ARCV2
 #include "v2/sys_io.h"
 #ifdef CONFIG_ARC_CONNECT
 #include <arch/arc/v2/arc_connect.h>
