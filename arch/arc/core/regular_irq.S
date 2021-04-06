@@ -20,6 +20,7 @@
 #include <linker/sections.h>
 #include <arch/cpu.h>
 #include <swap_macros.h>
+#include <arch/arc/asm-compat/assembler.h>
 
 GTEXT(_rirq_enter)
 GTEXT(_rirq_exit)
@@ -220,7 +221,7 @@ SECTION_FUNC(TEXT, _rirq_enter)
 
 	_get_curr_cpu_irq_stack sp
 rirq_nest:
-	push_s r0
+	PUSHR r0
 
 	seti
 	j _isr_demux
