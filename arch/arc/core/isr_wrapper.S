@@ -299,7 +299,8 @@ irq_hint_handled:
 	/* ISR into r1 */
 	LDR r1, r0, ARC_REGSZ
 	jl_s.d [r1]
-	ld_s r0, [r0] /* delay slot: ISR parameter into r0  */
+	/* delay slot: ISR parameter into r0 */
+	LDR r0, r0
 
 #ifdef CONFIG_TRACING_ISR
 	bl sys_trace_isr_exit
