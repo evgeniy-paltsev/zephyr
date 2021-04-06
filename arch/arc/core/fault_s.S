@@ -44,9 +44,9 @@ GTEXT(z_irq_do_offload);
 	lr r0,[_ARC_V2_ERSEC_STAT]
 	st_s r0, [sp, ___isf_t_sec_stat_OFFSET]
 #endif
-	lr r0,[_ARC_V2_ERET]
+	LRR r0, [_ARC_V2_ERET]
 	STR r0, sp, ___isf_t_pc_OFFSET
-	lr r0,[_ARC_V2_ERSTATUS]
+	LRR r0, [_ARC_V2_ERSTATUS]
 	STR r0, sp, ___isf_t_status32_OFFSET
 .endm
 
@@ -185,7 +185,7 @@ _exc_return_from_exc:
 	 * reload it
 	 */
 	LDR r0, sp, ___isf_t_pc_OFFSET
-	sr r0, [_ARC_V2_ERET]
+	SRR r0, [_ARC_V2_ERET]
 
 	_pop_irq_stack_frame
 	mov sp, ilink
@@ -194,7 +194,7 @@ _exc_return_from_exc:
 /* separated entry for trap which may be used by irq_offload, USERPSACE */
 SECTION_SUBSEC_FUNC(TEXT,__fault,__ev_trap)
 	/* get the id of trap_s */
-	lr ilink, [_ARC_V2_ECR]
+	LRR ilink, [_ARC_V2_ECR]
 	and ilink, ilink, 0x3f
 #ifdef CONFIG_USERSPACE
 	cmp ilink, _TRAP_S_CALL_SYSTEM_CALL
