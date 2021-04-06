@@ -21,6 +21,7 @@
 #include <arch/cpu.h>
 #include <v2/irq.h>
 #include <swap_macros.h>
+#include <arch/arc/asm-compat/assembler.h>
 
 GTEXT(z_arc_switch)
 
@@ -70,7 +71,7 @@ SECTION_FUNC(TEXT, z_arc_switch)
 	 * This is the same layout as the start of an IRQ stack frame.
 	 */
 	lr r3, [_ARC_V2_STATUS32]
-	push_s r3
+	PUSHR r3
 
 #ifdef CONFIG_ARC_HAS_SECURE
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
@@ -81,7 +82,7 @@ SECTION_FUNC(TEXT, z_arc_switch)
 	push_s r3
 #endif
 
-	push_s blink
+	PUSHR blink
 
 	_store_old_thread_callee_regs
 
@@ -104,14 +105,14 @@ SECTION_FUNC(TEXT, z_arc_switch)
 .align 4
 _switch_return_from_coop:
 
-	pop_s blink /* pc into blink */
+	POPR blink /* pc into blink */
 #ifdef CONFIG_ARC_HAS_SECURE
 	pop_s r3    /* pop SEC_STAT */
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
 	sflag r3
 #endif
 #endif
-	pop_s r3    /* status32 into r3 */
+	POPR r3    /* status32 into r3 */
 	kflag r3    /* write status32 */
 
 #ifdef CONFIG_INSTRUMENT_THREAD_SWITCHING
