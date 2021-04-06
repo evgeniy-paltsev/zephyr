@@ -237,7 +237,7 @@ rirq_nest:
 SECTION_FUNC(TEXT, _rirq_exit)
 	clri
 
-	pop sp
+	POPR sp
 
 	_dec_int_nest_counter r0, r1
 
