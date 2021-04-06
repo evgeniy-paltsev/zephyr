@@ -300,7 +300,7 @@ _rirq_switch_from_coop:
 
 
 	/* reset zero-overhead loops */
-	st 0, [sp, ___isf_t_lp_end_OFFSET]
+	STR 0, sp, ___isf_t_lp_end_OFFSET
 
 	/*
 	 * r13 is part of both the callee and caller-saved register sets because
@@ -308,7 +308,7 @@ _rirq_switch_from_coop:
 	 * IRQ prologue. r13 thus has to be set to its correct value in the IRQ
 	 * stack frame.
 	 */
-	st_s r13, [sp, ___isf_t_r13_OFFSET]
+	STR r13, sp, ___isf_t_r13_OFFSET
 
 #ifdef CONFIG_INSTRUMENT_THREAD_SWITCHING
 	push_s blink
