@@ -269,8 +269,8 @@ SECTION_FUNC(TEXT, _isr_demux)
 /* according to ARCv2 ISA, r25, r30, r58, r59 are caller-saved
  * scratch registers, possibly used by interrupt handlers
  */
-	push r25
-	push r30
+	PUSHR r25
+	PUSHR r30
 #ifdef CONFIG_ARC_HAS_ACCL_REGS
 	push r58
 	push r59
@@ -311,8 +311,8 @@ irq_hint_handled:
 	pop r58
 #endif
 
-	pop r30
-	pop r25
+	POPR r30
+	POPR r25
 
 	/* back from ISR, jump to exit stub */
 	POPR r3
