@@ -231,10 +231,10 @@
 	sr r2, [_ARC_V2_EI_BASE]
 #endif
 
-	ld_s r0, [sp, ___isf_t_lp_count_OFFSET]
+	LDR r0, sp, ___isf_t_lp_count_OFFSET
 	mov lp_count, r0
-	ld_s r1, [sp, ___isf_t_lp_start_OFFSET]
-	ld_s r0, [sp, ___isf_t_lp_end_OFFSET]
+	LDR r1, sp, ___isf_t_lp_start_OFFSET
+	LDR r0, sp, ___isf_t_lp_end_OFFSET
 	sr r1, [_ARC_V2_LP_START]
 	sr r0, [_ARC_V2_LP_END]
 
