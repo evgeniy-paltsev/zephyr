@@ -291,10 +291,13 @@ irq_hint_handled:
 
 	sub r0, r0, 16
 
-	mov_s r1, _sw_isr_table
-	add3 r0, r1, r0   /* table entries are 8-bytes wide */
-
-	ld_s r1, [r0, 4] /* ISR into r1 */
+	MOVR r1, _sw_isr_table
+	/* SW ISR table entries are 8-bytes wide for 32bit ISA and
+	 * 16-bytes wide for 64bit ISA */
+	ASLR r0, r0, (ARC_REGSHIFT + 1)
+	ADDR r0, r1, r0
+	/* ISR into r1 */
+	LDR r1, r0, ARC_REGSZ
 	jl_s.d [r1]
 	ld_s r0, [r0] /* delay slot: ISR parameter into r0  */
 
