@@ -181,8 +181,8 @@
 
 	/* store these right away so we can use them if needed */
 
-	st_s r13, [sp, ___isf_t_r13_OFFSET]
-	st_s r12, [sp, ___isf_t_r12_OFFSET]
+	STR r13, sp, ___isf_t_r13_OFFSET
+	STR r12, sp, ___isf_t_r12_OFFSET
 	st   r11, [sp, ___isf_t_r11_OFFSET]
 	st   r10, [sp, ___isf_t_r10_OFFSET]
 	st   r9,  [sp, ___isf_t_r9_OFFSET]
@@ -197,11 +197,11 @@
 	st_s r0,  [sp, ___isf_t_r0_OFFSET]
 
 	mov r0, lp_count
-	st_s r0, [sp, ___isf_t_lp_count_OFFSET]
+	STR r0, sp, ___isf_t_lp_count_OFFSET
 	lr r1, [_ARC_V2_LP_START]
 	lr r0, [_ARC_V2_LP_END]
-	st_s r1, [sp, ___isf_t_lp_start_OFFSET]
-	st_s r0, [sp, ___isf_t_lp_end_OFFSET]
+	STR r1, sp, ___isf_t_lp_start_OFFSET
+	STR r0, sp, ___isf_t_lp_end_OFFSET
 
 #ifdef CONFIG_CODE_DENSITY
 	lr r1, [_ARC_V2_JLI_BASE]
