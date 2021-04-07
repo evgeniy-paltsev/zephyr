@@ -6,80 +6,80 @@
  */
 
 .macro MOVR, d, s
-	mov d, s
+	mov\&$suffix d, s
 .endm
 
-.macro MOVR.hi, d, s
-	mov.hi d, s
-.endm
-
-.macro MOVR.nz, d, s
-	mov.nz d, s
-.endm
+// .macro MOVR.hi, d, s
+// 	mov.hi d, s
+// .endm
+//
+// .macro MOVR.nz, d, s
+// 	mov.nz d, s
+// .endm
 
 .macro LDR, d, s, off
 	.if $narg == 2
-		ld  d, [s]
+		ld\&$suffix  d, [s]
 	.else
-		ld  d, [s, off]
+		ld\&$suffix  d, [s, off]
 	.endif
 .endm
 
-.macro LDR.ab, d, s, off
-	.if $narg == 2
-		ld.ab  d, [s]
-	.else
-		ld.ab  d, [s, off]
-	.endif
-.endm
-
-.macro LDR.as, d, s, off
-	.if $narg == 2
-		ld.as  d, [s]
-	.else
-		ld.as  d, [s, off]
-	.endif
-.endm
-
-.macro LDR.aw, d, s, off
-	.if $narg == 2
-		ld.aw  d, [s]
-	.else
-		ld.aw  d, [s, off]
-	.endif
-.endm
+// .macro LDR.ab, d, s, off
+// 	.if $narg == 2
+// 		ld.ab  d, [s]
+// 	.else
+// 		ld.ab  d, [s, off]
+// 	.endif
+// .endm
+//
+// .macro LDR.as, d, s, off
+// 	.if $narg == 2
+// 		ld.as  d, [s]
+// 	.else
+// 		ld.as  d, [s, off]
+// 	.endif
+// .endm
+//
+// .macro LDR.aw, d, s, off
+// 	.if $narg == 2
+// 		ld.aw  d, [s]
+// 	.else
+// 		ld.aw  d, [s, off]
+// 	.endif
+// .endm
 
 .macro STR, d, s, off
 	.if $narg == 2
-		st  d, [s]
+		st\&$suffix  d, [s]
 	.else
-		st  d, [s, off]
+		st\&$suffix  d, [s, off]
 	.endif
 .endm
 
-.macro STR.ab, d, s, off
-	.if $narg == 2
-		st.ab  d, [s]
-	.else
-		st.ab  d, [s, off]
-	.endif
-.endm
-
-.macro STR.as, d, s, off
-	.if $narg == 2
-		st.as  d, [s]
-	.else
-		st.as  d, [s, off]
-	.endif
-.endm
-
-.macro STR.aw, d, s, off
-	.if $narg == 2
-		st.aw  d, [s]
-	.else
-		st.aw  d, [s, off]
-	.endif
-.endm
+// .macro STR.ab, d, s, off
+// 	.if $narg == 2
+// 		st.ab  d, [s]
+// 	.else
+// 		st.ab  d, [s, off]
+// 	.endif
+// .endm
+//
+// .macro STR.as, d, s, off
+// 	.if $narg == 2
+// 		st.as  d, [s]
+// 	.else
+// 		st.as  d, [s, off]
+// 	.endif
+// .endm
+//
+// .macro STR.aw, d, s, off
+// 	.if $narg == 2
+// 		st.aw  d, [s]
+// 	.else
+// 		st.aw  d, [s, off]
+// 	.endif
+// .endm
 
 // .macro STR, d, s, off=0
 // 	; workaround assembler barfing for ST r, [@symb, 0]
@@ -127,21 +127,21 @@
 
 
 .macro ADDR, d, s, v
-	add d, s, v
+	add\&$suffix d, s, v
 .endm
 
-.macro ADDR.nz, d, s, v
-	add.nz d, s, v
-.endm
+// .macro ADDR.nz, d, s, v
+// 	add.nz d, s, v
+// .endm
 
 
 .macro ADD2R, d, s, v
-	add2 d, s, v
+	add2\&$suffix d, s, v
 .endm
 
-.macro ADD2R.nz, d, s, v
-	add2.nz d, s, v
-.endm
+// .macro ADD2R.nz, d, s, v
+// 	add2.nz d, s, v
+// .endm
 
 
 .macro ADD3R, d, s, v
@@ -164,13 +164,17 @@
 	asl d, s, v
 .endm
 
-.macro BRR.ne, d, s, lbl
-	br.ne d, s, lbl
+.macro BRR, d, s, lbl
+	br\&$suffix d, s, lbl
 .endm
 
-.macro BRR.eq, d, s, lbl
-	br.eq d, s, lbl
-.endm
+// .macro BRR.ne, d, s, lbl
+// 	br.ne d, s, lbl
+// .endm
+//
+// .macro BRR.eq, d, s, lbl
+// 	br.eq d, s, lbl
+// .endm
 
 .macro CMPR, op1, op2
 	cmp op1, op2
