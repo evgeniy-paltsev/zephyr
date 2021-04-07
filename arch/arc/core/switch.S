@@ -61,7 +61,7 @@ SECTION_FUNC(TEXT, z_arc_switch)
 	 * get old_thread from r1
 	 */
 
-	sub r2, r1, ___thread_t_switch_handle_OFFSET
+	SUBR r2, r1, ___thread_t_switch_handle_OFFSET
 
 	_st_huge_offset _CAUSE_COOP, r2, _thread_offset_to_relinquish_cause, r3
 
@@ -135,11 +135,11 @@ _switch_return_from_firq:
 	 * thread
 	 */
 
-	lr r3, [_ARC_V2_AUX_IRQ_ACT]
+	LRR r3, [_ARC_V2_AUX_IRQ_ACT]
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
 	or r3, r3, (1 << (ARC_N_IRQ_START_LEVEL - 1))
 #else
-	or r3, r3, (1 << (CONFIG_NUM_IRQ_PRIO_LEVELS - 1))
+	ORR r3, r3, (1 << (CONFIG_NUM_IRQ_PRIO_LEVELS - 1))
 #endif
 
 #ifdef CONFIG_ARC_NORMAL_FIRMWARE
@@ -148,7 +148,7 @@ _switch_return_from_firq:
 	mov_s r6, ARC_S_CALL_AUX_WRITE
 	sjli SJLI_CALL_ARC_SECURE
 #else
-	sr r3, [_ARC_V2_AUX_IRQ_ACT]
+	SRR r3, [_ARC_V2_AUX_IRQ_ACT]
 #endif
 #ifdef CONFIG_INSTRUMENT_THREAD_SWITCHING
 	PUSHR blink
