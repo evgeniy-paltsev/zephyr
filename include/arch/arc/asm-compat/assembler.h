@@ -29,7 +29,6 @@
 #define ARC_PTR		.xword
 #define REGSZASM	8
 #include "asm-macro-64-bit-gnu.h"
-  #error "asm-macro-64-bit.h usage!"
 #else
 #define ARC_PTR		.word
 #define REGSZASM	4
