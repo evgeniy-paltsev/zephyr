@@ -239,8 +239,8 @@ rirq_path:
 	j_s [r2]
 #endif
 #else
-	mov_s r3, _rirq_exit
-	mov_s r2, _rirq_enter
+	MOVR r3, _rirq_exit
+	MOVR r2, _rirq_enter
 	j_s [r2]
 #endif
 
