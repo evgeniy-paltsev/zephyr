@@ -308,7 +308,7 @@
 	ld.as MACRO_ARG(reg1), [_curr_cpu, MACRO_ARG(reg1)]
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), ___cpu_t_nested_OFFSET]
 #else
-	mov MACRO_ARG(reg1), _kernel
+	MOVR MACRO_ARG(reg1), _kernel
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), _kernel_offset_to_nested]
 #endif
 	add MACRO_ARG(reg2), MACRO_ARG(reg2), 1
@@ -330,7 +330,7 @@
 	ld.as MACRO_ARG(reg1), [_curr_cpu, MACRO_ARG(reg1)]
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), ___cpu_t_nested_OFFSET]
 #else
-	mov MACRO_ARG(reg1), _kernel
+	MOVR MACRO_ARG(reg1), _kernel
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), _kernel_offset_to_nested]
 #endif
 	sub MACRO_ARG(reg2), MACRO_ARG(reg2), 1
@@ -481,7 +481,7 @@
 /* macro to get next switch handle in assembly */
 .macro _get_next_switch_handle
 	PUSHR r2
-	mov r0, sp
+	MOVR r0, sp
 	bl z_arch_get_next_switch_handle
 	POPR  r2
 .endm
