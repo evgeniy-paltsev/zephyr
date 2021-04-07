@@ -104,6 +104,10 @@
 	breql \d, \s, \lbl
 .endm
 
+.macro CMPR op1, op2
+	cmpl \op1, \op2
+.endm
+
 /*
  * Abstraction for 64-bit load/store
  *  - ARC64 Baseline STL/LDL instructions
