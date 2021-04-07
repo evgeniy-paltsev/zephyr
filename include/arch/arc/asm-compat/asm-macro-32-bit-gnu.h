@@ -82,6 +82,10 @@
 	and \d, \s, \v
 .endm
 
+.macro ORR, d, s, v
+	or \d, \s, \v
+.endm
+
 .irp    cc,ne,eq
 .macro BRR\cc d, s, lbl
 	br\cc  \d, \s, \lbl

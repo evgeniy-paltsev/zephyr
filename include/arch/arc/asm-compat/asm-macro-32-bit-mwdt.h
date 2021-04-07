@@ -168,6 +168,10 @@
 	and d, s, v
 .endm
 
+.macro ORR, d, s, v
+	or d, s, v
+.endm
+
 .macro BRR, d, s, lbl
 	br\&$suffix d, s, lbl
 .endm
