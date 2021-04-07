@@ -351,3 +351,18 @@ config ARC_EXCEPTION_DEBUG
 	  strings.
 
 endmenu
+
+config TEST_EXTRA_STACKSIZE
+	default 512 if 64BIT
+
+config MAIN_STACK_SIZE
+	default 4096 if 64BIT
+
+config TEST_EXTRA_STACKSIZE
+	default 1024 if 64BIT
+
+config CMSIS_THREAD_MAX_STACK_SIZE
+	default 1024 if 64BIT
+
+config CMSIS_V2_THREAD_MAX_STACK_SIZE
+	default 1024 if 64BIT
