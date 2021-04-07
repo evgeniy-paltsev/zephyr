@@ -248,14 +248,14 @@ rirq_path:
 .macro exit_tickless_idle
 #if defined(CONFIG_PM)
 	clri r0 /* do not interrupt exiting tickless idle operations */
-	mov_s r1, _kernel
+	MOVR r1, _kernel
 	ld_s r3, [r1, _kernel_offset_to_idle] /* requested idle duration */
 	breq r3, 0, _skip_pm_save_idle_exit
 
 	st 0, [r1, _kernel_offset_to_idle] /* zero idle duration */
-	push_s blink
+	PUSHR blink
 	jl z_pm_save_idle_exit
-	pop_s blink
+	POPR blink
 
 _skip_pm_save_idle_exit:
 	seti r0
