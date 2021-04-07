@@ -85,9 +85,9 @@ _exc_entry:
 	 * and exception is raised, then here it's guaranteed that
 	 * exception handling has necessary stack to use
 	 */
-	mov ilink, sp
+	MOVR ilink, sp
 	_get_curr_cpu_irq_stack sp
-	sub sp, sp, (CONFIG_ISR_STACK_SIZE - CONFIG_ARC_EXCEPTION_STACK_SIZE)
+	SUBR sp, sp, (CONFIG_ISR_STACK_SIZE - CONFIG_ARC_EXCEPTION_STACK_SIZE)
 
 	/*
 	 * save caller saved registers
@@ -103,9 +103,9 @@ _exc_entry:
 	_save_exc_regs_into_stack
 
 	/* sp is parameter of _Fault */
-	mov_s r0, sp
+	MOVR r0, sp
 	/* ilink is the thread's original sp */
-	mov r1, ilink
+	MOVR r1, ilink
 	jl _Fault
 
 _exc_return:
@@ -119,9 +119,9 @@ _exc_return:
 
 	_get_next_switch_handle
 
-	breq r0, r2, _exc_return_from_exc
+	BREQR r0, r2, _exc_return_from_exc
 
-	mov_s r2, r0
+	MOVR r2, r0
 
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
 	/*
@@ -146,8 +146,8 @@ _exc_return:
 	 */
 	mov ilink, r2
 #endif
-	lr r3, [_ARC_V2_STATUS32]
-	and r3,r3,(~(_ARC_V2_STATUS32_AE | _ARC_V2_STATUS32_RB(7)))
+	LRR r3, [_ARC_V2_STATUS32]
+	ANDR r3, r3, (~(_ARC_V2_STATUS32_AE | _ARC_V2_STATUS32_RB(7)))
 	kflag r3
 	/* pretend lowest priority interrupt happened to use common handler
 	 * if exception is raised in irq, i.e., _ARC_V2_AUX_IRQ_ACT !=0,
@@ -159,7 +159,7 @@ _exc_return:
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
 	mov_s r3, (1 << (ARC_N_IRQ_START_LEVEL - 1))
 #else
-	mov_s r3, (1 << (CONFIG_NUM_IRQ_PRIO_LEVELS - 1))
+	MOVR r3, (1 << (CONFIG_NUM_IRQ_PRIO_LEVELS - 1))
 #endif
 
 #ifdef CONFIG_ARC_NORMAL_FIRMWARE
@@ -170,7 +170,7 @@ _exc_return:
 	sjli SJLI_CALL_ARC_SECURE
 	pop_s r2
 #else
-	sr r3, [_ARC_V2_AUX_IRQ_ACT]
+	SRR r3, [_ARC_V2_AUX_IRQ_ACT]
 #endif
 
 #if defined(CONFIG_ARC_FIRQ) && CONFIG_RGF_NUM_BANKS != 1
@@ -188,14 +188,14 @@ _exc_return_from_exc:
 	SRR r0, [_ARC_V2_ERET]
 
 	_pop_irq_stack_frame
-	mov sp, ilink
+	MOVR sp, ilink
 	rtie
 
 /* separated entry for trap which may be used by irq_offload, USERPSACE */
 SECTION_SUBSEC_FUNC(TEXT,__fault,__ev_trap)
 	/* get the id of trap_s */
 	LRR ilink, [_ARC_V2_ECR]
-	and ilink, ilink, 0x3f
+	ANDR ilink, ilink, 0x3f
 #ifdef CONFIG_USERSPACE
 	cmp ilink, _TRAP_S_CALL_SYSTEM_CALL
 	bne _do_non_syscall_trap
