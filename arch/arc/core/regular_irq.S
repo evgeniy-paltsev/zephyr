@@ -313,11 +313,11 @@ _rirq_switch_from_coop:
 	STR r13, sp, ___isf_t_r13_OFFSET
 
 #ifdef CONFIG_INSTRUMENT_THREAD_SWITCHING
-	push_s blink
+	PUSHR blink
 
 	bl z_thread_mark_switched_in
 
-	pop_s blink
+	POPR blink
 #endif
 	/* stack now has the IRQ stack frame layout, pointing to sp */
 	/* rtie will pop the rest from the stack */
@@ -330,11 +330,11 @@ _rirq_switch_from_rirq:
 	_set_misc_regs_irq_switch_from_irq
 
 #ifdef CONFIG_INSTRUMENT_THREAD_SWITCHING
-	push_s blink
+	PUSHR blink
 
 	bl z_thread_mark_switched_in
 
-	pop_s blink
+	POPR blink
 #endif
 _rirq_no_switch:
 	rtie

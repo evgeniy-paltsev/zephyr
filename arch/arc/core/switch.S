@@ -116,11 +116,11 @@ _switch_return_from_coop:
 	kflag r3    /* write status32 */
 
 #ifdef CONFIG_INSTRUMENT_THREAD_SWITCHING
-	push_s blink
+	PUSHR blink
 
 	bl z_thread_mark_switched_in
 
-	pop_s blink
+	POPR blink
 #endif
 	j_s [blink]
 
@@ -152,10 +152,10 @@ _switch_return_from_firq:
 	sr r3, [_ARC_V2_AUX_IRQ_ACT]
 #endif
 #ifdef CONFIG_INSTRUMENT_THREAD_SWITCHING
-	push_s blink
+	PUSHR blink
 
 	bl z_thread_mark_switched_in
 
-	pop_s blink
+	POPR blink
 #endif
 	rtie
