@@ -217,7 +217,7 @@ SECTION_FUNC(TEXT, _rirq_enter)
 	_check_and_inc_int_nest_counter r0, r1
 
 	bne.d rirq_nest
-	mov_s r0, sp
+	MOVR r0, sp
 
 	_get_curr_cpu_irq_stack sp
 rirq_nest:
@@ -252,7 +252,7 @@ SECTION_FUNC(TEXT, _rirq_exit)
 	 */
 	_get_next_switch_handle
 
-	cmp r0, r2
+	CMPR r0, r2
 	beq _rirq_no_switch
 
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
@@ -267,7 +267,7 @@ SECTION_FUNC(TEXT, _rirq_exit)
 	st _CAUSE_RIRQ, [r2, _thread_offset_to_relinquish_cause]
 
 	/* mov new thread (r0) to r2 */
-	mov r2, r0
+	MOVR r2, r0
 
 /* _rirq_newthread_switch required by exception handling */
 .align 4
@@ -296,7 +296,7 @@ _rirq_switch_from_coop:
 	 */
 
 	/* carve fake stack */
-	sub sp, sp, ___isf_t_pc_OFFSET
+	SUBR sp, sp, ___isf_t_pc_OFFSET
 
 
 	/* reset zero-overhead loops */
