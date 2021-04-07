@@ -383,12 +383,12 @@
 /* macro to push aux reg through reg */
 .macro PUSHAX, reg, aux
 	LRR MACRO_ARG(reg), [MACRO_ARG(aux)]
-	STR.aw MACRO_ARG(reg), sp, -4
+	PUSHR MACRO_ARG(reg)
 .endm
 
 /* macro to pop aux reg through reg */
 .macro POPAX, reg, aux
-	LDR.ab MACRO_ARG(reg), sp, 4
+	POPR MACRO_ARG(reg)
 	SRR MACRO_ARG(reg), [MACRO_ARG(aux)]
 .endm
 
