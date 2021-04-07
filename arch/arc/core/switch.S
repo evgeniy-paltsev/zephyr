@@ -70,7 +70,7 @@ SECTION_FUNC(TEXT, z_arc_switch)
 	 * Save status32 and blink on the stack before the callee-saved registers.
 	 * This is the same layout as the start of an IRQ stack frame.
 	 */
-	lr r3, [_ARC_V2_STATUS32]
+	LRR r3, [_ARC_V2_STATUS32]
 	PUSHR r3
 
 #ifdef CONFIG_ARC_HAS_SECURE
@@ -91,7 +91,7 @@ SECTION_FUNC(TEXT, z_arc_switch)
  */
 	_disable_stack_checking r3
 
-	mov_s r2, r0
+	MOVR r2, r0
 
 	_load_new_thread_callee_regs
 
