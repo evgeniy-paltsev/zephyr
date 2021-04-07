@@ -164,6 +164,10 @@
 	asl d, s, v
 .endm
 
+.macro ANDR, d, s, v
+	and d, s, v
+.endm
+
 .macro BRR, d, s, lbl
 	br\&$suffix d, s, lbl
 .endm
@@ -175,6 +179,10 @@
 // .macro BRR.eq, d, s, lbl
 // 	br.eq d, s, lbl
 // .endm
+
+.macro BREQR, d, s, lbl
+	breq d, s, lbl
+.endm
 
 .macro CMPR, op1, op2
 	cmp op1, op2

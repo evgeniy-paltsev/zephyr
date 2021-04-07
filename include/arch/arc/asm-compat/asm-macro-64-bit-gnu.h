@@ -90,11 +90,19 @@
 	asll \d, \s, \v
 .endm
 
+.macro ANDR d, s, v
+	andl \d, \s, \v
+.endm
+
 .irp    cc,ne,eq
 .macro BRR\cc d, s, lbl
 	br\cc\()l  \d, \s, \lbl
 .endm
 .endr
+
+.macro BREQR d, s, lbl
+	breql \d, \s, \lbl
+.endm
 
 /*
  * Abstraction for 64-bit load/store

@@ -78,11 +78,19 @@
 	asl \d, \s, \v
 .endm
 
+.macro ANDR d, s, v
+	and \d, \s, \v
+.endm
+
 .irp    cc,ne,eq
 .macro BRR\cc d, s, lbl
 	br\cc  \d, \s, \lbl
 .endm
 .endr
+
+.macro BREQR d, s, lbl
+	breq \d, \s, \lbl
+.endm
 
 .macro CMPR op1, op2
 	cmp \op1, \op2
