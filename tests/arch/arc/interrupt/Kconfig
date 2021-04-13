@@ -1,0 +1,7 @@
+# Copyright (c) 2021 Evgeniy Paltsev
+# SPDX-License-Identifier: Apache-2.0
+
+config FROM_COOP_THREAD
+	bool "Switch from COOP thread"
+
+source "Kconfig"

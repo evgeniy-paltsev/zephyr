@@ -1,0 +1,11 @@
+common:
+  arch_allow: arc
+  tags: interrupt
+  filter: not CONFIG_TRUSTED_EXECUTION_NONSECURE
+tests:
+  arc.interrupt.ctx-verify-from-coop:
+    extra_configs:
+      - CONFIG_FROM_COOP_THREAD=y
+  arc.interrupt.ctx-verify-from-preempt:
+    extra_configs:
+      - CONFIG_FROM_COOP_THREAD=n
