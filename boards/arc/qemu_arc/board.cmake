@@ -8,6 +8,9 @@ set(QEMU_FLAGS_${ARCH} -cpu arcem)
 elseif(${CONFIG_SOC_QEMU_ARC_HS})
 set(QEMU_CPU_TYPE_${ARCH} archs)
 set(QEMU_FLAGS_${ARCH} -cpu archs)
+elseif(${CONFIG_SOC_QEMU_ARC_HS6X})
+set(QEMU_CPU_TYPE_${ARCH} arc64)
+set(QEMU_FLAGS_${ARCH} -cpu hs6x)
 endif()
 
 list(APPEND QEMU_FLAGS_${ARCH}
