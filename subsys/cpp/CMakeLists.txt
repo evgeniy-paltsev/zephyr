@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
-zephyr_sources(
-  cpp_init_array.c
-  cpp_ctors.c
-  cpp_dtors.c
-)
+#zephyr_sources(
+#  cpp_init_array.c
+#  cpp_ctors.c
+#  cpp_dtors.c
+#)
 
 if (NOT CONFIG_LIB_CPLUSPLUS AND
         (NOT CONFIG_MINIMAL_LIBC OR

@@ -37,7 +37,7 @@
 	}
 	ASSERT(SIZEOF(initlevel_error) == 0, "Undefined initialization levels used.")
 
-#ifdef CONFIG_CPLUSPLUS
+#if defined(CONFIG_CPLUSPLUS) && !defined(__MWDT_LINKER_CMD__)
 	SECTION_PROLOGUE(_CTOR_SECTION_NAME,,)
 	{
 		/*

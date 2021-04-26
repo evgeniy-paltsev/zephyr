@@ -20,6 +20,8 @@
 extern "C" {
 #endif
 
+#define Z_C_GENERIC 0
+
 /* Determine if _Generic is supported.
  * In general it's a C11 feature but it was added also in:
  * - GCC 4.9.0 https://gcc.gnu.org/gcc-4.9/changes.html

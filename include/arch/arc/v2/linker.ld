@@ -87,7 +87,7 @@ SECTIONS {
  * zephyr_linker_sources() Cmake function.
  */
 #include <snippets-rom-start.ld>
-		*(.text .text.*)
+		*(.text .text* .text.*)
 		*(.gnu.linkonce.t.*)
 
 	. = ALIGN(4);
@@ -115,6 +115,32 @@ SECTIONS {
 
 #ifdef __MWDT_LINKER_CMD__
 /* TODO: add mwdt specific ROM C++ sections */
+
+	SECTION_PROLOGUE(_RODATA_SECTION_NAME,,) {
+		. = ALIGN(4);
+		_fctors = .;
+		KEEP(*(.ctors .ctors* .ctors.*))
+		_ectors = .;
+
+		. = ALIGN(4);
+		_fdtors = .;
+		KEEP(*(.dtors .dtors* .dtors.*))
+		_edtors = .;
+
+		. = ALIGN(4);
+		_feh_frame = .;
+		KEEP(*(.eh_frame .eh_frame* .eh_frame.*))
+		_eeh_frame = .;
+	} GROUP_LINK_IN(ROMABLE_REGION)
+
+	SECTION_PROLOGUE(.init,,ALIGN(4)) {
+		KEEP(*(.init*))
+	} GROUP_LINK_IN(ROMABLE_REGION)
+
+	SECTION_PROLOGUE(.fini,,ALIGN(4)) {
+		KEEP(*(.fini*))
+	} GROUP_LINK_IN(ROMABLE_REGION)
+
 #else
 #include <linker/cplusplus-rom.ld>
 #endif /* __MWDT_LINKER_CMD__ */

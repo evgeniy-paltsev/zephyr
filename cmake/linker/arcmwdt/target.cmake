@@ -110,13 +110,13 @@ macro(toolchain_ld_baremetal)
   zephyr_ld_options(
     -Hlld
     -Hnosdata
-    -Hnocrt
     -Xtimer0 # to suppress the warning message
     -Hnoxcheck_obj
     -Hnocplus
     -Hcl
     -Hheap=0
     -Hnoivt
+    -arcv2hs
   )
 
   # Funny thing is if this is set to =error, some architectures will
