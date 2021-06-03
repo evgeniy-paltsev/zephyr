@@ -117,7 +117,7 @@ set_compiler_property(PROPERTY cstd -std=)
 
 if (NOT CONFIG_NEWLIB_LIBC AND
     NOT CONFIG_NATIVE_APPLICATION)
-  set_compiler_property(PROPERTY nostdinc -Hno_default_include -Hnoarcexlib)
+  set_compiler_property(PROPERTY nostdinc -Hno_default_include -Hnoarcexlib -I${ARCMWDT_TOOLCHAIN_PATH}/MetaWare/arc/lib/src/c++/inc/)
   set_compiler_property(APPEND PROPERTY nostdinc_include ${NOSTDINC})
 endif()
 
@@ -171,7 +171,7 @@ set_compiler_property(PROPERTY security_canaries -fstack-protector-all)
 set_compiler_property(PROPERTY security_fortify "")
 
 # Required C++ flags when using mwdt
-set_property(TARGET compiler-cpp PROPERTY required "")
+set_property(TARGET compiler-cpp PROPERTY required "-Hcplus" "-Hoff=Stackcheck_alloca")
 
 #################################
 # This section covers asm flags #
