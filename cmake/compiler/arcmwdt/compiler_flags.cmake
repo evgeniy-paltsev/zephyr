@@ -125,10 +125,9 @@ endif()
 # C++ std options
 set_property(TARGET compiler-cpp PROPERTY dialect_cpp98 "-std=c++98")
 set_property(TARGET compiler-cpp PROPERTY dialect_cpp11 "-std=c++11")
-
-#no support of C++14, C++17, C++2a
-set_property(TARGET compiler-cpp PROPERTY dialect_cpp14 "")
-set_property(TARGET compiler-cpp PROPERTY dialect_cpp17 "")
+set_property(TARGET compiler-cpp PROPERTY dialect_cpp14 "-std=c++14")
+set_property(TARGET compiler-cpp PROPERTY dialect_cpp17 "-std=c++17")
+#no support of C++2a
 set_property(TARGET compiler-cpp PROPERTY dialect_cpp2a "")
 
 # Disable exeptions flag in C++
