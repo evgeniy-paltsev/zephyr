@@ -27,3 +27,9 @@ tests:
     tags: cpp
     extra_configs:
         - CONFIG_EXTERNAL_LIBC=y
+  cpp.libcxx.arcmwdtlib:
+    platform_allow: nsim_hs nsim_em
+    min_flash: 54
+    tags: cpp
+    extra_configs:
+        - CONFIG_ARCMWDT_LIBC=y
