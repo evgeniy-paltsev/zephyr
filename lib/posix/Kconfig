@@ -32,6 +32,22 @@ config MAX_PTHREAD_COUNT
 	help
 	  Maximum number of simultaneously active threads in a POSIX application.
 
+config AUTO_PTHREAD_ATTRS
+	bool "Automatically create pthread attributes if they aren't provided"
+	default y
+	help
+	  Allow to call pthread_create with 'attr' = NULL. In case of enabled
+	  we define stack for each pthread in compile time and use it if we
+	  don't specify attributes for pthread_create.
+
+config PTHREAD_DEFAULT_STACK_SIZE
+	int "Stack size of pthread threads if attributes aren't provided"
+	depends on AUTO_PTHREAD_ATTRS
+	default MAIN_STACK_SIZE
+	help
+	  Stack size of pthread threads if attributes aren't provided when
+	  pthread_create called.
+
 config SEM_VALUE_MAX
 	int "Maximum semaphore limit"
 	default 32767
