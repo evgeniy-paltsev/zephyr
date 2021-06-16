@@ -18,6 +18,9 @@ config NUM_IRQS
 config RGF_NUM_BANKS
 	default 2
 
+config ARC_HAS_ACCL_REGS
+	default y
+
 config SYS_CLOCK_HW_CYCLES_PER_SEC
 	default 5000000
 
