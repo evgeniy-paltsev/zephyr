@@ -33,3 +33,10 @@ tests:
     tags: cpp
     extra_configs:
         - CONFIG_ARCMWDT_LIBC=y
+  cpp.libcxx.arcmwdtlib.exceptions:
+    platform_allow: nsim_hs nsim_em
+    min_flash: 54
+    tags: cpp
+    extra_configs:
+        - CONFIG_ARCMWDT_LIBC=y
+        - CONFIG_EXCEPTIONS=y
