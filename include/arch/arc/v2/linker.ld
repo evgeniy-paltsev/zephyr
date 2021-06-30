@@ -192,6 +192,15 @@ SECTIONS {
 		*(".data.*")
 		*(".kernel.*")
 
+#if defined(CONFIG_EXCEPTIONS)
+		. = ALIGN(4);
+		KEEP(*(.gcc_except_table*))
+		. = ALIGN(4);
+		KEEP(*(.arc_unwind*))
+		. = ALIGN(4);
+		KEEP(*(.eh_frame*))
+#endif
+
 /* Located in generated directory. This file is populated by the
  * zephyr_linker_sources() Cmake function.
  */
@@ -247,7 +256,9 @@ SECTIONS {
 #if defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)
 		*(.dtors*)
 		*(.fini*)
+#if !defined(CONFIG_EXCEPTIONS)
 		*(.eh_frame*)
+#endif /* !CONFIG_EXCEPTIONS */
 #endif /* CONFIG_CPLUSPLUS && !CONFIG_CPP_STATIC_INIT_GNU && __MWDT_LINKER_CMD__ */
 		*(.note.GNU-stack)
 		*(.got.plt)
