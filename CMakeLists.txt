@@ -176,8 +176,10 @@ if(CONFIG_CPLUSPLUS)
   zephyr_compile_options($<$<COMPILE_LANGUAGE:CXX>:${STD_CPP_DIALECT_FLAGS}>)
 endif()
 
-if(NOT CONFIG_EXCEPTIONS)
-  # @Intent: Obtain compiler specific flags related to C++ Exceptions
+# @Intent: Obtain compiler specific flags related to C++ Exceptions
+if(CONFIG_EXCEPTIONS)
+  zephyr_compile_options($<$<COMPILE_LANGUAGE:CXX>:$<TARGET_PROPERTY:compiler-cpp,use_exceptions>>)
+else()
   zephyr_compile_options($<$<COMPILE_LANGUAGE:CXX>:$<TARGET_PROPERTY:compiler-cpp,no_exceptions>>)
 endif()
 

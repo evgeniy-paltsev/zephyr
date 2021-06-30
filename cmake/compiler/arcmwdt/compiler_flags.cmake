@@ -132,6 +132,7 @@ set_property(TARGET compiler-cpp PROPERTY dialect_cpp2a "")
 
 # Disable exeptions flag in C++
 set_property(TARGET compiler-cpp PROPERTY no_exceptions "-fno-exceptions")
+set_property(TARGET compiler-cpp PROPERTY use_exceptions "-fexceptions")
 
 # Disable rtti in C++
 set_property(TARGET compiler-cpp PROPERTY no_rtti "-fno-rtti")
