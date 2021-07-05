@@ -19,6 +19,7 @@ extern void test_posix_pthread_execution(void);
 extern void test_posix_pthread_error_condition(void);
 extern void test_posix_pthread_create_negative(void);
 extern void test_posix_pthread_termination(void);
+extern void test_posix_pthread_retval(void);
 extern void test_posix_multiple_threads_single_key(void);
 extern void test_posix_single_thread_multiple_keys(void);
 extern void test_nanosleep_NULL_NULL(void);
@@ -43,6 +44,7 @@ void test_main(void)
 			ztest_unit_test(test_posix_pthread_execution),
 			ztest_unit_test(test_posix_pthread_error_condition),
 			ztest_unit_test(test_posix_pthread_termination),
+			ztest_unit_test(test_posix_pthread_retval),
 			ztest_unit_test(test_posix_multiple_threads_single_key),
 			ztest_unit_test(test_posix_single_thread_multiple_keys),
 			ztest_unit_test(test_posix_clock),

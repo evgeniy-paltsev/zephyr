@@ -16,6 +16,7 @@
 
 #define N_THR_E 3
 #define N_THR_T 4
+#define N_THR_R 3
 #define BOUNCES 64
 #define STACKS (1024 + CONFIG_TEST_EXTRA_STACKSIZE)
 #define THREAD_PRIORITY 3
@@ -28,6 +29,7 @@
 
 K_THREAD_STACK_ARRAY_DEFINE(stack_e, N_THR_E, STACKS);
 K_THREAD_STACK_ARRAY_DEFINE(stack_t, N_THR_T, STACKS);
+K_THREAD_STACK_ARRAY_DEFINE(stack_r, N_THR_R, STACKS);
 K_THREAD_STACK_ARRAY_DEFINE(stack_1, 1, 32);
 
 void *thread_top_exec(void *p1);
@@ -559,4 +561,32 @@ void test_posix_pthread_create_negative(void)
 	pthread_attr_setstack(&attr1, &stack_1, 0);
 	ret = pthread_create(&pthread1, &attr1, create_thread1, (void *)1);
 	zassert_equal(ret, EINVAL, "create thread with 0 size");
+}
+
+void *thread_retval(void *p1)
+{
+	pthread_exit(p1);
+	return p1;
+}
+
+void test_posix_pthread_retval(void)
+{
+	pthread_t newthread[N_THR_R];
+
+	for (int i = 0; i < N_THR_R; i++) {
+		pthread_attr_t attr[N_THR_R];
+
+		pthread_attr_init(&attr[i]);
+		pthread_attr_setstack(&attr[i], &stack_r[i][0], STACKS);
+
+		pthread_create(&newthread[i], &attr[i], thread_retval,
+				INT_TO_POINTER(i));
+	}
+
+	for (int i = 0; i < N_THR_R; i++) {
+		void *retval;
+
+		pthread_join(newthread[i], &retval);
+		zassert_equal(i, POINTER_TO_INT(retval), "thread return value incorrect");
+	}
 }
