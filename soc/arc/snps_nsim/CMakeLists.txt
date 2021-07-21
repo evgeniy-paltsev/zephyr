@@ -3,7 +3,9 @@
 if(COMPILER STREQUAL gcc)
   # GNU compiler options
   zephyr_compile_options(-mcpu=${GCC_M_CPU})
-  if(NOT CONFIG_64BIT)
+  if(CONFIG_64BIT)
+    zephyr_compile_options(-ffixed-r13)
+  else()
     # ISA_ARCV2 & 32BIT
     zephyr_compile_options(-mno-sdata)
     zephyr_compile_options_ifdef(CONFIG_CPU_ARCEM -mmpy-option=wlh1)
