@@ -308,8 +308,11 @@
  */
 .macro _check_and_inc_int_nest_counter, reg1, reg2
 #ifdef CONFIG_SMP
+	/* get pointer to _cpu_t of this CPU */
 	_get_cpu_id MACRO_ARG(reg1)
-	ld.as MACRO_ARG(reg1), [_curr_cpu, MACRO_ARG(reg1)]
+	ASR MACRO_ARG(reg1), MACRO_ARG(reg1), ARC_REGSHIFT
+	LDR MACRO_ARG(reg1), MACRO_ARG(reg1), _curr_cpu
+	/* _cpu_t.nested is 32 bit despite of platform bittnes */
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), ___cpu_t_nested_OFFSET]
 #else
 	MOVR MACRO_ARG(reg1), _kernel
@@ -331,8 +334,11 @@
  */
 .macro _dec_int_nest_counter, reg1, reg2
 #ifdef CONFIG_SMP
+	/* get pointer to _cpu_t of this CPU */
 	_get_cpu_id MACRO_ARG(reg1)
-	ld.as MACRO_ARG(reg1), [_curr_cpu, MACRO_ARG(reg1)]
+	ASR MACRO_ARG(reg1), MACRO_ARG(reg1), ARC_REGSHIFT
+	LDR MACRO_ARG(reg1), MACRO_ARG(reg1), _curr_cpu
+	/* _cpu_t.nested is 32 bit despite of platform bittnes */
 	ld MACRO_ARG(reg2), [MACRO_ARG(reg1), ___cpu_t_nested_OFFSET]
 #else
 	MOVR MACRO_ARG(reg1), _kernel
@@ -377,9 +383,12 @@
  */
 .macro _get_curr_cpu_irq_stack, irq_sp
 #ifdef CONFIG_SMP
+	/* get pointer to _cpu_t of this CPU */
 	_get_cpu_id MACRO_ARG(irq_sp)
-	ld.as MACRO_ARG(irq_sp), [_curr_cpu, MACRO_ARG(irq_sp)]
-	ld MACRO_ARG(irq_sp), [MACRO_ARG(irq_sp), ___cpu_t_irq_stack_OFFSET]
+	ASR MACRO_ARG(irq_sp), MACRO_ARG(irq_sp), ARC_REGSHIFT
+	LDR MACRO_ARG(irq_sp), MACRO_ARG(irq_sp), @_curr_cpu
+	/* get pointer to irq_stack itself */
+	LDR MACRO_ARG(irq_sp), MACRO_ARG(irq_sp), ___cpu_t_irq_stack_OFFSET
 #else
 	MOVR MACRO_ARG(irq_sp), _kernel
 	LDR MACRO_ARG(irq_sp), MACRO_ARG(irq_sp), _kernel_offset_to_irq_stack
@@ -407,7 +416,7 @@
 	/* save old thread into switch handle which is required by
 	 * wait_for_switch
 	 */
-	st r2, [r2, ___thread_t_switch_handle_OFFSET]
+	STR r2, r2, ___thread_t_switch_handle_OFFSET
 #endif
 .endm
 
