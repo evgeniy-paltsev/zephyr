@@ -36,6 +36,17 @@ tests:
       regex:
         - "Hello with printf/newlib"
         - "Complete"
+  lib.cbprintf_fp.printf.arcmwdtlib:
+    toolchain_allow: arcmwdt
+    extra_configs:
+      - CONFIG_APP_FORMATTER_PRINTF=y
+      - CONFIG_ARCMWDT_LIBC=y
+    harness_config:
+      type: multi_line
+      ordered: true
+      regex:
+        - "Hello with printf"
+        - "Complete"
   lib.cbprintf_fp.printfcb:
     extra_configs:
       - CONFIG_APP_FORMATTER_PRINTFCB=y
