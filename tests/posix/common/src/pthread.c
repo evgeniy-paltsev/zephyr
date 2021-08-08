@@ -543,10 +543,6 @@ void test_posix_pthread_create_negative(void)
 	pthread_t pthread1;
 	pthread_attr_t attr1;
 
-	/* create pthread without attr initialized */
-	ret = pthread_create(&pthread1, NULL, create_thread1, (void *)1);
-	zassert_equal(ret, EINVAL, "create thread with NULL successful");
-
 	/* initialized attr without set stack to create thread */
 	ret = pthread_attr_init(&attr1);
 	zassert_false(ret, "attr1 initialized failed");
