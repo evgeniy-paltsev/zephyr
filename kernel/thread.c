@@ -824,7 +824,18 @@ bool z_spin_lock_valid(struct k_spinlock *l)
 {
 	uintptr_t thread_cpu = l->thread_cpu;
 
+	/**/
+	atomic_val_t locked_val = atomic_get(&l->locked);
+
+	if (locked_val != 0 && locked_val != 1) {
+		return false;
+	}
+
 	if (thread_cpu != 0U) {
+		if (locked_val != 1) {
+			return false;
+		}
+
 		if ((thread_cpu & 3U) == _current_cpu->id) {
 			return false;
 		}
@@ -834,6 +845,10 @@ bool z_spin_lock_valid(struct k_spinlock *l)
 
 bool z_spin_unlock_valid(struct k_spinlock *l)
 {
+	if (atomic_get(&l->locked) != 1) {
+		return false;
+	}
+
 	if (l->thread_cpu != (_current_cpu->id | (uintptr_t)_current)) {
 		return false;
 	}
