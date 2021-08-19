@@ -41,6 +41,7 @@ tests:
     extra_configs:
       - CONFIG_APP_FORMATTER_PRINTF=y
       - CONFIG_ARCMWDT_LIBC=y
+      - CONFIG_HEAP_MEM_POOL_SIZE=2048
     harness_config:
       type: multi_line
       ordered: true
