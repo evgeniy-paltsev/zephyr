@@ -26,4 +26,5 @@ tests:
     min_flash: 54
     tags: cpp
     extra_configs:
+        - CONFIG_HEAP_MEM_POOL_SIZE=2048
         - CONFIG_ARCMWDT_LIBC=y
