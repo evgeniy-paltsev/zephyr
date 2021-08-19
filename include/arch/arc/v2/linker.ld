@@ -94,7 +94,7 @@ SECTIONS {
 #include <linker/kobject-text.ld>
 	} GROUP_LINK_IN(ROMABLE_REGION)
 
-#if defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)
+#if (defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)) || defined(CONFIG_ARCMWDT_LIBC)
 	/* .init section with code iterating over static objects constructors */
 	SECTION_PROLOGUE(.init,,ALIGN(4)) {
 		KEEP(*(.init*))
@@ -119,7 +119,7 @@ SECTIONS {
 
 #include <linker/kobject-rom.ld>
 
-#if defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)
+#if (defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)) || defined(CONFIG_ARCMWDT_LIBC)
 		. = ALIGN(4);
 		_fctors = .;
 		KEEP(*(.ctors*))
@@ -249,7 +249,7 @@ SECTIONS {
 	}
 
 	/DISCARD/ : {
-#if defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)
+#if (defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)) || defined(CONFIG_ARCMWDT_LIBC)
 		*(.dtors*)
 		*(.fini*)
 		*(.eh_frame*)
