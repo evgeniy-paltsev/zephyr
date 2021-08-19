@@ -121,7 +121,7 @@ macro(toolchain_ld_baremetal)
   )
 
   # We only use CPP initialization code from crt
-  if(NOT CONFIG_CPLUSPLUS)
+  if((NOT CONFIG_CPLUSPLUS) AND (NOT CONFIG_ARCMWDT_LIBC))
     zephyr_ld_options(-Hnocrt)
   endif()
 
