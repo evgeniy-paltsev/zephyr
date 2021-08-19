@@ -202,6 +202,12 @@ static void bg_thread_main(void *unused1, void *unused2, void *unused3)
 	z_cpp_init_static();
 #endif
 
+/* FIXME: move to arch/arc code */
+#if defined(CONFIG_ARCMWDT_LIBC) && !defined(CONFIG_CPLUSPLUS)
+	void _init(void);
+	_init();
+#endif
+
 	/* Final init level before app starts */
 	z_sys_init_run_level(_SYS_INIT_LEVEL_APPLICATION);
 
