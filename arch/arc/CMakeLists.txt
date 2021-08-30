@@ -20,3 +20,4 @@ if(CONFIG_ISA_ARCV2)
 endif()
 
 add_subdirectory(core)
+add_subdirectory(arcmwdt)

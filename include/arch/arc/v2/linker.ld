@@ -94,15 +94,8 @@ SECTIONS {
 #include <linker/kobject-text.ld>
 	} GROUP_LINK_IN(ROMABLE_REGION)
 
-#if (defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)) || defined(CONFIG_ARCMWDT_LIBC)
-	/* .init section with code iterating over static objects constructors */
-	SECTION_PROLOGUE(.init,,ALIGN(4)) {
-		KEEP(*(.init*))
-	} GROUP_LINK_IN(ROMABLE_REGION)
-#endif /* CONFIG_CPLUSPLUS && !CONFIG_CPP_STATIC_INIT_GNU && __MWDT_LINKER_CMD__ */
-
-	_image_text_end = .;
-	_image_rodata_start = .;
+	__text_region_end = .;
+	__rodata_region_start = .;
 
 #include <linker/common-rom.ld>
 #include <linker/thread-local-storage.ld>

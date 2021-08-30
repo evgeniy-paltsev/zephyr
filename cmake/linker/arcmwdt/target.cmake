@@ -118,12 +118,8 @@ macro(toolchain_ld_baremetal)
     -Hhostlib=
     -Hheap=0
     -Hnoivt
+    -Hnocrt
   )
-
-  # We only use CPP initialization code from crt
-  if((NOT CONFIG_CPLUSPLUS) AND (NOT CONFIG_ARCMWDT_LIBC))
-    zephyr_ld_options(-Hnocrt)
-  endif()
 
   # There are two options:
   # - We have full MWDT libc support and we link MWDT libc - this is default
