@@ -234,7 +234,9 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 ({					\
 	unsigned int __ret;		\
 	__asm__ __volatile__(		\
+	"	dmb 0x3		\n"	\
 	"	ld.di %0, [%1]	\n"	\
+	"	dmb 0x3		\n"	\
 	: "=r"(__ret)			\
 	: "r"(ptr));			\
 	__ret;				\
@@ -244,7 +246,9 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 ({					\
 	unsigned int __ret;		\
 	__asm__ __volatile__(		\
+	"	dmb 0x3		\n"	\
 	"	ldb.di %0, [%1]	\n"	\
+	"	dmb 0x3		\n"	\
 	: "=r"(__ret)			\
 	: "r"(ptr));			\
 	__ret;				\
@@ -253,7 +257,9 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 #define arc_write_uncached_8(ptr, data)\
 ({					\
 	__asm__ __volatile__(		\
+	"	dmb 0x3		\n"	\
 	"	stb.di %0, [%1]	\n"	\
+	"	dmb 0x3		\n"	\
 	:				\
 	: "r"(data), "r"(ptr));		\
 })
@@ -261,7 +267,9 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 #define arc_write_uncached_32(ptr, data)\
 ({					\
 	__asm__ __volatile__(		\
+	"	dmb 0x3		\n"	\
 	"	st.di %0, [%1]	\n"	\
+	"	dmb 0x3		\n"	\
 	:				\
 	: "r"(data), "r"(ptr));		\
 })
