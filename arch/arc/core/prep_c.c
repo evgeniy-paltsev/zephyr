@@ -73,6 +73,21 @@ static void invalidate_dcache(void)
 }
 #endif
 
+
+#define ARC_CONNECT_CMD_CLN_PER0_BASE	2688
+#define ARC_CONNECT_CMD_CLN_PER0_SIZE	2689
+
+#define AUX_CLN_ADDR			0x640
+#define AUX_CLN_DATA			0x641
+
+static void setup_periph_apt(void)
+{
+	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CONNECT_CMD_CLN_PER0_BASE);
+	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 0xF00);
+	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CONNECT_CMD_CLN_PER0_SIZE);
+	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 1);
+}
+
 extern FUNC_NORETURN void z_cstart(void);
 /**
  *
@@ -85,6 +100,7 @@ extern FUNC_NORETURN void z_cstart(void);
 
 void _PrepC(void)
 {
+	setup_periph_apt();
 	z_bss_zero();
 	z_data_copy();
 	z_cstart();
