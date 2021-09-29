@@ -106,6 +106,13 @@ SECTIONS {
 
 #include <linker/kobject-rom.ld>
 
+		. = ALIGN(4);
+		__arc_isr_static_start = .;
+		KEEP(*(SORT(.arc_isr_static_[0-9]_*)));
+		KEEP(*(SORT(.arc_isr_static_[1-9][0-9]_*)));
+		KEEP(*(SORT(.arc_isr_static_[1-9][0-9][0-9]_*)));
+		__arc_isr_static_end = .;
+
 #if defined(CONFIG_CPLUSPLUS) && !defined(CONFIG_CPP_STATIC_INIT_GNU) && defined(__MWDT_LINKER_CMD__)
 		. = ALIGN(4);
 		_fctors = .;
