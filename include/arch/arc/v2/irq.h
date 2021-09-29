@@ -40,6 +40,21 @@ extern void z_irq_priority_set(unsigned int irq, unsigned int prio,
 extern void _isr_wrapper(void);
 extern void z_irq_spurious(const void *unused);
 
+
+struct arc_isr_sratic_data {
+	uint32_t irq;
+	uint32_t priority;
+};
+
+#define _ARC_ISR_STATIC_NAME(x)		__ARC_ISR_STATIC_NAME(x)
+#define __ARC_ISR_STATIC_NAME(x)	__arc_static_isr_ ## x ## _entry
+
+#define ARC_ISR_STATIC_DECLARE(irq_p, priority_p)					\
+	static Z_DECL_ALIGN(struct arc_isr_sratic_data) 				\
+		__attribute__((__section__(".arc_isr_static_"STRINGIFY(irq_p)"_")))	\
+		__used _ARC_ISR_STATIC_NAME(irq_p) = {irq_p, priority_p}
+
+
 /* Z_ISR_DECLARE will populate the .intList section with the interrupt's
  * parameters, which will then be used by gen_irq_tables.py to create
  * the vector table and the software ISR table. This is all done at
@@ -51,7 +66,7 @@ extern void z_irq_spurious(const void *unused);
 #define ARCH_IRQ_CONNECT(irq_p, priority_p, isr_p, isr_param_p, flags_p) \
 { \
 	Z_ISR_DECLARE(irq_p, 0, isr_p, isr_param_p); \
-	z_irq_priority_set(irq_p, priority_p, flags_p); \
+	ARC_ISR_STATIC_DECLARE(irq_p, priority_p); \
 }
 
 /**
