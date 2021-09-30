@@ -93,9 +93,8 @@ static void arc_v2_irq_init_prio(void)
  *
  * @return 0 for success
  */
-static int arc_v2_irq_unit_init(const struct device *unused)
+static int arc_per_core_irq_init(void)
 {
-	ARG_UNUSED(unused);
 	int irq; /* the interrupt index */
 
 	arc_v2_irq_init_prio();
@@ -114,6 +113,25 @@ static int arc_v2_irq_unit_init(const struct device *unused)
 	}
 
 	return 0;
+}
+
+static int arc_shared_irq_init(void)
+{
+	/*
+	 * Initialize all IDU interrupts:
+	 * - select round-robbin
+	 * - disable lines
+	 */
+}
+
+static int arc_irq_init(const struct device *unused)
+{
+	arc_shared_irq_init();
+	/*
+	 * We initialize per-core part for core 0 here,
+	 * for rest cores it will be initialized in slave_start
+	 */
+	arc_per_core_irq_init();
 }
 
 #ifdef CONFIG_PM_DEVICE
@@ -227,8 +245,8 @@ static int arc_v2_irq_unit_device_ctrl(const struct device *dev,
 	return ret;
 }
 
-SYS_DEVICE_DEFINE("arc_v2_irq_unit", arc_v2_irq_unit_init,
+SYS_DEVICE_DEFINE("arc_v2_irq_unit", arc_irq_init,
 		  arc_v2_irq_unit_device_ctrl, PRE_KERNEL_1, 0);
 #else
-SYS_INIT(arc_v2_irq_unit_init, PRE_KERNEL_1, 0);
+SYS_INIT(arc_irq_init, PRE_KERNEL_1, 0);
 #endif   /* CONFIG_PM_DEVICE */
