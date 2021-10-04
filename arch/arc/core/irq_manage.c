@@ -83,6 +83,38 @@ void z_arc_firq_stack_set(void)
 }
 #endif
 
+#ifdef CONFIG_ARC_CONNECT
+
+#define IRQ_NUM_TO_IDU_NUM(id)		((id) - ARC_CONNECT_IDU_IRQ_START)
+#define IRQ_IS_COMMON(id)		((id) >= ARC_CONNECT_IDU_IRQ_START)
+
+void arch_irq_enable(unsigned int irq)
+{
+	if (IRQ_IS_COMMON(irq)) {
+		z_arc_connect_idu_set_mask(IRQ_NUM_TO_IDU_NUM(irq), 0x0);
+	} else {
+		z_arc_v2_irq_unit_int_enable(irq);
+	}
+}
+
+void arch_irq_disable(unsigned int irq)
+{
+	if (IRQ_IS_COMMON(irq)) {
+		z_arc_connect_idu_set_mask(IRQ_NUM_TO_IDU_NUM(irq), 0x1);
+	} else {
+		z_arc_v2_irq_unit_int_disable(irq);
+	}
+}
+
+int arch_irq_is_enabled(unsigned int irq)
+{
+	if (IRQ_IS_COMMON(irq)) {
+		return !z_arc_connect_idu_read_mask(IRQ_NUM_TO_IDU_NUM(irq));
+	} else {
+		return z_arc_v2_irq_unit_int_enabled(irq);
+	}
+}
+#else
 /*
  * @brief Enable an interrupt line
  *
@@ -122,6 +154,7 @@ int arch_irq_is_enabled(unsigned int irq)
 {
 	return z_arc_v2_irq_unit_int_enabled(irq);
 }
+#endif /* CONFIG_ARC_CONNECT */
 
 /*
  * @internal
@@ -176,6 +209,10 @@ int arch_irq_connect_dynamic(unsigned int irq, unsigned int priority,
 			     void (*routine)(const void *parameter),
 			     const void *parameter, uint32_t flags)
 {
+#ifdef CONFIG_ARC_CONNECT
+	__ASSERT(!IRQ_IS_COMMON(irq), "common interrupts can't be dynamic");
+#endif /* CONFIG_ARC_CONNECT */
+
 	z_isr_install(irq, routine, parameter);
 	z_irq_priority_set(irq, priority, flags);
 	return irq;
