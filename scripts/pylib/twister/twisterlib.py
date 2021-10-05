@@ -2978,6 +2978,11 @@ class TestSuite(DisablePyTestCollectionMixin):
 
                         tc.parse_subcases(tc_path)
 
+                        if tc.timeout:
+                            tc.timeout *= 3
+                        else:
+                            tc.timeout = 180
+
                         if testcase_filter:
                             if tc.name and tc.name in testcase_filter:
                                 self.testcases[tc.name] = tc
