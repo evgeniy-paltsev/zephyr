@@ -55,6 +55,25 @@ extern "C" {
 #define ARCH_STACK_PTR_ALIGN	4
 #endif /* CONFIG_64BIT */
 
+BUILD_ASSERT(!(IS_ENABLED(CONFIG_ARC_FIRQ) && IS_ENABLED(CONFIG_ISA_ARCV3)),
+	"unsupported configuration");
+BUILD_ASSERT(!(IS_ENABLED(CONFIG_ARC_FIRQ) && CONFIG_NUM_IRQ_PRIO_LEVELS < 2),
+	"we don't allow the configuration with FIRQ enabled and only one"
+	"interrupt priority level (so all interrupts are FIRQ). Such"
+	"configuration isn't supported in software and it is not beneficial"
+	"from the performance point of view");
+BUILD_ASSERT(!(CONFIG_RGF_NUM_BANKS > 1 && !IS_ENABLED(CONFIG_ARC_FIRQ)),
+	"unsupported configuration");
+BUILD_ASSERT(!(CONFIG_RGF_NUM_BANKS > 1 && CONFIG_NUM_IRQ_PRIO_LEVELS < 2),
+	"it's required to have more than one interrupt priority level"
+	"to use second register bank - otherwise all interrupts will use"
+	"same register bank. Such configuration isn't supported in software"
+	"and it is not beneficial from the performance point of view");
+BUILD_ASSERT(!(IS_ENABLED(CONFIG_ARC_FIRQ_STACK) && !IS_ENABLED(CONFIG_ARC_FIRQ)),
+	"unsupported configuration");
+BUILD_ASSERT(!(IS_ENABLED(CONFIG_ARC_FIRQ_STACK) && CONFIG_RGF_NUM_BANKS < 2),
+	"unsupported configuration");
+
 /* Indicate, for a minimally sized MPU region, how large it must be and what
  * its base address must be aligned to.
  *
