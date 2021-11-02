@@ -26,5 +26,6 @@ if(COMPILER STREQUAL arcmwdt)
 
   if(CONFIG_64BIT)
     zephyr_compile_options(-Mxl)
+    zephyr_compile_options(-Wa,-offwarn=168)
   endif()
 endif()
