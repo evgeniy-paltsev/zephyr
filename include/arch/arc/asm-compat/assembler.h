@@ -29,7 +29,13 @@
 #define ARC_PTR		.xword
 #define ARC_REGSZ	8
 #define ARC_REGSHIFT	3
+
+#if defined(__CCAC__)
+#include "asm-macro-64-bit-mwdt.h"
+#else
 #include "asm-macro-64-bit-gnu.h"
+#endif /* defined(__CCAC__) */
+
 #else
 #define ARC_PTR		.word
 #define ARC_REGSZ	4
