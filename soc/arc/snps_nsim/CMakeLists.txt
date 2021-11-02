@@ -51,6 +51,11 @@ else()
 			       -Xtimer0 -Xtimer1)
 
   zephyr_ld_option_ifdef(CONFIG_SOC_NSIM_HS_MPUV6 -Hlib=hs38_full)
+
+  zephyr_compile_options_ifdef(CONFIG_SOC_NSIM_HS6X -arc64 -core0 -HL -Xatomic=1 -Xunaligned
+			       -Xmpy_cycles=3 -Xmpy_cycles=3 -Xtimer0 -Xtimer1 -Hld_cycles=2)
+
+  zephyr_ld_option_ifdef(CONFIG_SOC_NSIM_HS6X -Hlib=hs68_full)
 endif()
 
 zephyr_sources(
