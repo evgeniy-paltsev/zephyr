@@ -36,6 +36,14 @@
 #include "asm-macro-64-bit-gnu.h"
 #endif /* defined(__CCAC__) */
 
+#elseif defined(CONFIG_ISA_ARCV3) && !defined(CONFIG_64BIT)
+
+#if defined(__CCAC__)
+#include "asm-macro-32-bit-mwdt.h"
+#else
+#error "ARC GNU toolchain doesn't support building against ARCv3 32bit"
+#endif /* defined(__CCAC__) */
+
 #else
 #define ARC_PTR		.word
 #define ARC_REGSZ	4
