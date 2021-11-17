@@ -62,7 +62,7 @@ volatile static uint64_t last_time;
 volatile static uint64_t start_time;
 
 #else
-static uint32_t last_load;
+volatile static uint32_t last_load;
 
 
 /*
@@ -75,13 +75,13 @@ static uint32_t last_load;
  *
  * t = cycle_counter + elapsed();
  */
-static uint32_t cycle_count;
+volatile static uint32_t cycle_count;
 
 /*
  * This local variable holds the amount of elapsed HW cycles
  * that have been announced to the kernel.
  */
-static uint32_t announced_cycles;
+volatile static uint32_t announced_cycles;
 
 
 /*
