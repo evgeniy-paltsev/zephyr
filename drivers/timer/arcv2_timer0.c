@@ -313,6 +313,8 @@ int sys_clock_driver_init(const struct device *dev)
 
 void sys_clock_set_timeout(int32_t ticks, bool idle)
 {
+	// printk("scst ticks= %d %s\n", ticks, idle ? "idle" : "!idle");
+
 	/* If the kernel allows us to miss tick announcements in idle,
 	 * then shut off the counter. (Note: we can assume if idle==true
 	 * that interrupts are already disabled)
@@ -405,6 +407,7 @@ void sys_clock_set_timeout(int32_t ticks, bool idle)
 		last_load = MIN(delay, MAX_CYCLES);
 	}
 
+	// printk("scst limit= %u\n", last_load - 1);
 	timer0_limit_register_set(last_load - 1);
 	timer0_control_register_set(_ARC_V2_TMR_CTRL_NH | _ARC_V2_TMR_CTRL_IE);
 
