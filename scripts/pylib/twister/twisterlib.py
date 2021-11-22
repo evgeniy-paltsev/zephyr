@@ -7,6 +7,7 @@ import os
 import contextlib
 import string
 import mmap
+import math
 import sys
 import re
 import subprocess
@@ -397,7 +398,7 @@ class Handler:
 
         self.name = instance.name
         self.instance = instance
-        self.timeout = instance.testcase.timeout
+        self.timeout = math.ceil(instance.testcase.timeout * instance.platform.timeout_multiplier)
         self.sourcedir = instance.testcase.source_dir
         self.build_dir = instance.build_dir
         self.log = os.path.join(self.build_dir, "handler.log")
@@ -1554,6 +1555,7 @@ class Platform:
         # if no RAM size is specified by the board, take a default of 128K
         self.ram = 128
 
+        self.timeout_multiplier = 1.0
         self.ignore_tags = []
         self.only_tags = []
         self.default = False
@@ -1579,6 +1581,7 @@ class Platform:
         # if no RAM size is specified by the board, take a default of 128K
         self.ram = data.get("ram", 128)
         testing = data.get("testing", {})
+        self.timeout_multiplier = testing.get("timeout_multiplier", 1.0)
         self.ignore_tags = testing.get("ignore_tags", [])
         self.only_tags = testing.get("only_tags", [])
         self.default = testing.get("default", False)
