@@ -75,7 +75,7 @@ def read_intlist(intlist_path, syms):
     else:
         intlist_entry_fmt = prefix + "iiII"
     if "CONFIG_GEN_IRQ_PRIORITY_TABLE" in syms:
-        intlist_entry_fmt = intlist_entry_fmt + "B"
+        intlist_entry_fmt = intlist_entry_fmt + "I"
 
     with open(intlist_path, "rb") as fp:
         intdata = fp.read()
