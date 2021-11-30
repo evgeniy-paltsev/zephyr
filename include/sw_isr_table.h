@@ -55,7 +55,7 @@ struct _isr_list {
 	const void *param;
 #ifdef CONFIG_GEN_IRQ_PRIORITY_TABLE
 	/** IRQ line priority */
-	uint8_t priority;
+	uint32_t priority;
 #endif /* CONFIG_GEN_IRQ_PRIORITY_TABLE */
 } __packed __aligned(1);
 
