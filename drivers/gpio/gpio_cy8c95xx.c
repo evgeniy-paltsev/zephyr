@@ -311,7 +311,7 @@ static struct cy8c95xx_drv_data cy8c95xx_##idx##_drvdata = { \
 }; \
 DEVICE_DT_INST_DEFINE(idx, cy8c95xx_init, NULL, \
 				&cy8c95xx_##idx##_drvdata, &cy8c95xx_##idx##_cfg, \
-				POST_KERNEL, CONFIG_GPIO_CY8C95XX_INIT_PRIORITY, \
+				SMP, CONFIG_GPIO_CY8C95XX_INIT_PRIORITY, \
 				&api_table);
 
 DT_INST_FOREACH_STATUS_OKAY(GPIO_PORT_INIT)
