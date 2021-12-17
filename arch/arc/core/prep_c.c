@@ -97,6 +97,7 @@ static void invalidate_dcache(void)
 
 static void setup_periph_apt(void)
 {
+#ifdef CONFIG_ISA_ARCV3
 	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CONNECT_CMD_CLN_PER0_BASE);
 	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 0xF00);
 	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CONNECT_CMD_CLN_PER0_SIZE);
@@ -107,6 +108,7 @@ static void setup_periph_apt(void)
 	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 0x800);
 	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CLN_MST_NOC_0_0_SIZE);
 	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 1024);
+#endif /* CONFIG_ISA_ARCV3 */
 }
 
 extern FUNC_NORETURN void z_cstart(void);
