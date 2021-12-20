@@ -1,5 +1,6 @@
 tests:
   kernel.timer.monotonic:
+    timeout: 300
     tags: kernel timer
   kernel.timer.monotonic.linker_generator:
     platform_allow: qemu_cortex_m3
