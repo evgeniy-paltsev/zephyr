@@ -37,6 +37,9 @@
 #endif /* defined(__CCAC__) */
 
 #elif defined(CONFIG_ISA_ARCV3) && !defined(CONFIG_64BIT)
+#define ARC_PTR		.word
+#define ARC_REGSZ	4
+#define ARC_REGSHIFT	2
 
 #if defined(__CCAC__)
 #include "asm-macro-32-bit-mwdt.h"
