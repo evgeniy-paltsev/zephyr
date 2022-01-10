@@ -15,7 +15,7 @@ config NUM_IRQS
 	default 30
 
 config SYS_CLOCK_HW_CYCLES_PER_SEC
-	default 1000000
+	default 15000000
 
 config HARVARD
 	default n
@@ -30,6 +30,9 @@ config ARC_CONNECT
 	default y
 
 config MP_NUM_CPUS
-	default 2
+	default 4
+
+config ARCV2_TIMER_IRQ_PRIORITY
+	default 1
 
 endif # SOC_NSIM_HS5X_SMP

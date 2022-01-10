@@ -39,7 +39,7 @@
 
 	ddr0: memory@90000000 {
 		device_type = "memory";
-		reg = <0x80000000 DT_SIZE_M(256)>;
+		reg = <0x90000000 DT_SIZE_M(256)>;
 	};
 
 	iccm0: iccm@ICCM_ADDR {
@@ -54,7 +54,7 @@
 
 	uart0: uart@f0000000 {
 		compatible = "ns16550";
-		clock-frequency = <50000000>;
+		clock-frequency = <15000000>;
 		reg = <0xf0000000 0x400>;
 		current-speed = <115200>;
 		label = "UART_0";

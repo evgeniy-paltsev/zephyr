@@ -105,7 +105,7 @@ static void setup_periph_apt(void)
 
 
 	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CLN_MST_NOC_0_0_ADDR);
-	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 0x800);
+	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 0x900);
 	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CLN_MST_NOC_0_0_SIZE);
 	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 1024);
 #endif /* CONFIG_ISA_ARCV3 */
