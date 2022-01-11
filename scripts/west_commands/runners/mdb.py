@@ -58,7 +58,7 @@ def mdb_do_run(mdb_runner, command):
 
     mdb_runner.require(commander)
 
-    mdb_basic_options = ['-nooptions', '-nogoifmain',
+    mdb_basic_options = ['-nooptions', '-nogoifmain', '-off=exit_on_error',
                         '-toggle=include_local_symbols=1']
 
     # remove previous .sc.project folder which has temporary settings
