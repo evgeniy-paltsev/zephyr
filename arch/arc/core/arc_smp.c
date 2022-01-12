@@ -80,8 +80,7 @@ static void arc_connect_debug_mask_update(int cpu_num)
 	 * ARC_CONNECT_CMD_DEBUG_MASK_SH: Self halt.
 	 */
 	z_arc_connect_debug_mask_set(core_mask,	(ARC_CONNECT_CMD_DEBUG_MASK_SH
-		| ARC_CONNECT_CMD_DEBUG_MASK_BH | ARC_CONNECT_CMD_DEBUG_MASK_AH
-		| ARC_CONNECT_CMD_DEBUG_MASK_H));
+		| ARC_CONNECT_CMD_DEBUG_MASK_BH | ARC_CONNECT_CMD_DEBUG_MASK_AH));
 }
 #endif
 
