@@ -442,6 +442,7 @@ int pthread_join(pthread_t thread, void **status)
 			*status = pthread->retval;
 		}
 
+		k_thread_join((k_tid_t)pthread, K_FOREVER);
 		/* mark as terminated so it can be reused */
 		pthread->state = PTHREAD_TERMINATED;
 	} else if (pthread->state == PTHREAD_DETACHED) {
