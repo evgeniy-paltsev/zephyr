@@ -1,3 +1,4 @@
 tests:
   kernel.semaphore:
+    timeout: 420
     tags: kernel userspace ignore_faults

@@ -1,6 +1,6 @@
 tests:
   kernel.multiprocessing.smp:
-    timeout: 180
+    timeout: 780
     tags: kernel smp ignore_faults
     filter: (CONFIG_MP_NUM_CPUS > 1)
   kernel.multiprocessing.smp.linker_generator:

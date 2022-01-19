@@ -13,6 +13,6 @@ common:
 
 tests:
   sample.smp.pktqueue:
-    timeout: 120
+    timeout: 420
     tags: introduction
     filter: (CONFIG_MP_NUM_CPUS > 1)

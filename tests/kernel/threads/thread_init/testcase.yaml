@@ -1,3 +1,4 @@
 tests:
   kernel.threads.init:
+    timeout: 450
     tags: kernel threads userspace

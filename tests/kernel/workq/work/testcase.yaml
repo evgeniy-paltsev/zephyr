@@ -1,6 +1,7 @@
 tests:
   kernel.work.api:
     min_flash: 34
+    timeout: 180
     tags: kernel
   kernel.work.api.linker_generator:
     platform_allow: qemu_cortex_m3

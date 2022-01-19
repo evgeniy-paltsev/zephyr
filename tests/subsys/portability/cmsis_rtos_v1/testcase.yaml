@@ -1,5 +1,6 @@
 tests:
   portability.cmsis_rtos_v1:
     tags: cmsis_rtos
+    timeout: 460
     min_ram: 32
     min_flash: 34

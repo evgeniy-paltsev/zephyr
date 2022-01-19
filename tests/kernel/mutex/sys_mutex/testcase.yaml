@@ -4,5 +4,6 @@ tests:
     tags: kernel userspace
   system.mutex.nouser:
     tags: kernel
+    timeout: 180
     extra_configs:
       - CONFIG_TEST_USERSPACE=n
