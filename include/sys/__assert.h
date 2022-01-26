@@ -32,17 +32,23 @@
 #define __ASSERT_MSG_INFO(fmt, ...) __ASSERT_PRINT("\t" fmt "\n", ##__VA_ARGS__)
 #endif /* CONFIG_ASSERT_NO_MSG_INFO */
 
+#ifdef __CCAC__
+#define __AFILE__ "????"
+#else
+#define __AFILE__ __FILE__
+#endif
+
 #if !defined(CONFIG_ASSERT_NO_COND_INFO) && !defined(CONFIG_ASSERT_NO_FILE_INFO)
 #define __ASSERT_LOC(test)                              \
 	__ASSERT_PRINT("ASSERTION FAIL [%s] @ %s:%d\n", \
 		Z_STRINGIFY(test),                      \
-		__FILE__, __LINE__)
+		__AFILE__, __LINE__)
 #endif
 
 #if defined(CONFIG_ASSERT_NO_COND_INFO) && !defined(CONFIG_ASSERT_NO_FILE_INFO)
 #define __ASSERT_LOC(test)                         \
 	__ASSERT_PRINT("ASSERTION FAIL @ %s:%d\n", \
-		__FILE__, __LINE__)
+		__AFILE__, __LINE__)
 #endif
 
 #if !defined(CONFIG_ASSERT_NO_COND_INFO) && defined(CONFIG_ASSERT_NO_FILE_INFO)
@@ -74,7 +80,7 @@ void assert_post_action(void);
 #define __ASSERT_POST_ACTION() assert_post_action()
 #else  /* CONFIG_ASSERT_NO_FILE_INFO */
 void assert_post_action(const char *file, unsigned int line);
-#define __ASSERT_POST_ACTION() assert_post_action(__FILE__, __LINE__)
+#define __ASSERT_POST_ACTION() assert_post_action(__AFILE__, __LINE__)
 #endif /* CONFIG_ASSERT_NO_FILE_INFO */
 
 #ifdef __cplusplus

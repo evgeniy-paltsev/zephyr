@@ -97,9 +97,14 @@ static inline bool z_zassert(bool cond,
  * @param msg Optional, can be NULL. Message to print if @a cond is false.
  * @param default_msg Message to print if @a cond is false
  */
+#ifdef __CCAC__
+#define __AFILE__ "????"
+#else
+#define __AFILE__ __FILE__
+#endif
 #define zassert(cond, default_msg, msg, ...) do { \
 	bool _ret = z_zassert(cond, msg ? ("(" default_msg ")") : (default_msg), \
-			     __FILE__, __LINE__, __func__, \
+			     __AFILE__, __LINE__, __func__, \
 			     msg ? msg : "", ##__VA_ARGS__); \
 	if (!_ret) { \
 		/* If kernel but without multithreading return. */ \

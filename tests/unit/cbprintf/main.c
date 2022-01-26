@@ -413,8 +413,14 @@ static inline bool prf_check(const char *expected,
 	return true;
 }
 
+#ifdef __CCAC__
+#define __AFILE__ "????"
+#else
+#define __AFILE__ __FILE__
+#endif
+
 #define PRF_CHECK(expected, rv)	\
-	zassert_true(prf_check(expected, rv, __FILE__, __LINE__), \
+	zassert_true(prf_check(expected, rv, __AFILE__, __LINE__), \
 		     NULL)
 
 static void test_pct(void)
