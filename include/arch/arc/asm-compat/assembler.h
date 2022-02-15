@@ -44,7 +44,7 @@
 #if defined(__CCAC__)
 #include "asm-macro-32-bit-mwdt.h"
 #else
-#error "ARC GNU toolchain doesn't support building against ARCv3 32bit"
+#include "asm-macro-32-bit-gnu.h"
 #endif /* defined(__CCAC__) */
 
 #else
