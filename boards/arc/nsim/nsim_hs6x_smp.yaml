@@ -6,6 +6,7 @@ arch: arc
 toolchain:
   - cross-compile
   - zephyr
+  - arcmwdt
 testing:
   ignore_tags:
     - net
