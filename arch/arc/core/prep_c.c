@@ -22,6 +22,7 @@
 #include <arch/arc/v2/aux_regs.h>
 #include <kernel_structs.h>
 #include <kernel_internal.h>
+#include <devicetree.h>
 
 
 /* XXX - keep for future use in full-featured cache APIs */
@@ -105,9 +106,9 @@ static void setup_periph_apt(void)
 
 
 	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CLN_MST_NOC_0_0_ADDR);
-	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 0x900);
+	z_arc_v2_aux_reg_write(AUX_CLN_DATA, (DT_REG_ADDR(DT_CHOSEN(zephyr_sram)) >> 20));
 	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, ARC_CLN_MST_NOC_0_0_SIZE);
-	z_arc_v2_aux_reg_write(AUX_CLN_DATA, 1024);
+	z_arc_v2_aux_reg_write(AUX_CLN_DATA, (DT_REG_SIZE(DT_CHOSEN(zephyr_sram)) / (1024 * 1024)));
 #endif /* CONFIG_ISA_ARCV3 */
 }
 
