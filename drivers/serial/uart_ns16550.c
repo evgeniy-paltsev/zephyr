@@ -220,7 +220,8 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 	"	ld.di %0, [%1]	\n"	\
 	"	dmb 0x3		\n"	\
 	: "=r"(__ret)			\
-	: "r"(ptr));			\
+	: "r"(ptr)			\
+	: "memory");			\
 	__ret;				\
 })
 
@@ -233,7 +234,8 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 	"	ldb.di %0, [%1]	\n"	\
 	"	dmb 0x3		\n"	\
 	: "=r"(__ret)			\
-	: "r"(ptr));			\
+	: "r"(ptr)			\
+	: "memory");			\
 	__ret;				\
 })
 
@@ -244,7 +246,7 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 	"	stb.di %0, [%1]	\n"	\
 	"	dmb 0x3		\n"	\
 	:				\
-	: "r"(data), "r"(ptr));		\
+	: "r"(data), "r"(ptr) : "memory");		\
 })
 
 #define arc_write_uncached_32(ptr, data)\
@@ -254,7 +256,7 @@ BUILD_ASSERT(IS_ENABLED(CONFIG_PCIE), "NS16550(s) in DT need CONFIG_PCIE");
 	"	st.di %0, [%1]	\n"	\
 	"	dmb 0x3		\n"	\
 	:				\
-	: "r"(data), "r"(ptr));		\
+	: "r"(data), "r"(ptr) : "memory");		\
 })
 #endif /* CONFIG_ISA_ARCV3 */
 
