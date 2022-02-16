@@ -26,4 +26,7 @@ config CACHE_MANAGEMENT
 config ARC_HAS_ACCL_REGS
 	default y
 
+config ARCV2_TIMER_IRQ_PRIORITY
+	default 1
+
 endif # SOC_NSIM_HS5X
