@@ -52,6 +52,40 @@ SECTION_SUBSEC_FUNC(TEXT,_reset_and__start,__start)
 	mov_s r0, 0
 	kflag r0
 
+#ifdef CONFIG_ISA_ARCV3
+	MOVR	r0,  0
+	MOVR	r1,  0
+	MOVR	r2,  0
+	MOVR	r3,  0
+	MOVR	r4,  0
+	MOVR	r5,  0
+	MOVR	r6,  0
+	MOVR	r7,  0
+	MOVR	r8,  0
+	MOVR	r9,  0
+	MOVR	r10, 0
+	MOVR	r11, 0
+	MOVR	r12, 0
+	MOVR	r13, 0
+	MOVR	r14, 0
+	MOVR	r15, 0
+	MOVR	r16, 0
+	MOVR	r17, 0
+	MOVR	r18, 0
+	MOVR	r19, 0
+	MOVR	r20, 0
+	MOVR	r21, 0
+	MOVR	r22, 0
+	MOVR	r23, 0
+	MOVR	r24, 0
+	MOVR	r25, 0
+	MOVR	r26, 0
+	MOVR	r27, 0
+	MOVR	r28, 0 ;; SP (r28) is initialized
+	MOVR	ilink,0
+	MOVR	r30, 0
+#endif
+
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
 	sflag r0
 #endif
