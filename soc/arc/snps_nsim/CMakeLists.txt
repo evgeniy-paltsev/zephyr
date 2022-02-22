@@ -4,7 +4,6 @@ if(COMPILER STREQUAL gcc)
   # GNU compiler options
   zephyr_compile_options(-mcpu=${GCC_M_CPU})
   zephyr_compile_options(-mbitscan)
-  zephyr_compile_options(-mbrcc)
   zephyr_compile_options(-msimd)
   zephyr_compile_options(-mdiv-rem)
 
