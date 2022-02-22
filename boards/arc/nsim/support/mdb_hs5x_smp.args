@@ -61,3 +61,4 @@
 -connect_ici=2
 -noprofile
 -prop=nsim_mem-dev=uart0,kind=dwuart,base=0xf0000000,irq=24
+-instrs_per_pass=512
