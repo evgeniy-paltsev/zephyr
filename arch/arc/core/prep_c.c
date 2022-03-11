@@ -74,6 +74,26 @@ static void invalidate_dcache(void)
 }
 #endif
 
+#define ARC_CLN_CACHE_STATUS			209
+#define ARC_CLN_CACHE_STATUS_BUSY		BIT(23)
+#define ARC_CLN_CACHE_STATUS_DONE		BIT(24)
+#define ARC_CLN_CACHE_STATUS_EN			BIT(27)
+
+#define ARC_CLN_CACHE_CMD			208
+#define ARC_CLN_CACHE_CMD_OP_NOP		0b0000
+#define ARC_CLN_CACHE_CMD_OP_LOOKUP		0b0001
+#define ARC_CLN_CACHE_CMD_OP_PROBE		0b0010
+#define ARC_CLN_CACHE_CMD_OP_IDX_INV		0b0101
+#define ARC_CLN_CACHE_CMD_OP_IDX_CLN		0b0110
+#define ARC_CLN_CACHE_CMD_OP_IDX_CLN_INV	0b0111
+#define ARC_CLN_CACHE_CMD_OP_REG_INV		0b1001
+#define ARC_CLN_CACHE_CMD_OP_REG_CLN		0b1010
+#define ARC_CLN_CACHE_CMD_OP_REG_CLN_INV	0b1011
+#define ARC_CLN_CACHE_CMD_OP_ADDR_INV		0b1101
+#define ARC_CLN_CACHE_CMD_OP_ADDR_CLN		0b1110
+#define ARC_CLN_CACHE_CMD_OP_ADDR_CLN_INV	0b1111
+#define ARC_CLN_CACHE_CMD_INCR			BIT(4)
+
 
 #define ARC_CLN_MST_NOC_0_0_ADDR	292
 #define ARC_CLN_MST_NOC_0_0_SIZE	293
@@ -112,6 +132,43 @@ static void setup_periph_apt(void)
 #endif /* CONFIG_ISA_ARCV3 */
 }
 
+static inline unsigned int arc_cln_read_reg(unsigned int reg)
+{
+	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, reg);
+
+	return z_arc_v2_aux_reg_read(AUX_CLN_DATA);
+}
+
+static inline void arc_cln_write_reg(unsigned int reg, unsigned int data)
+{
+	z_arc_v2_aux_reg_write(AUX_CLN_ADDR, reg);
+
+	z_arc_v2_aux_reg_write(AUX_CLN_DATA, data);
+}
+
+void arc_cluster_scm_enable()
+{
+	/* Disable SCM, just in case. */
+	arc_cln_write_reg(ARC_CLN_CACHE_STATUS, 0);
+
+	/* Invalidate SCM before enabling. */
+	arc_cln_write_reg(ARC_CLN_CACHE_CMD, ARC_CLN_CACHE_CMD_OP_REG_INV |
+			  ARC_CLN_CACHE_CMD_INCR);
+	while (arc_cln_read_reg(ARC_CLN_CACHE_STATUS) &
+	       ARC_CLN_CACHE_STATUS_BUSY)
+		;
+
+	arc_cln_write_reg(ARC_CLN_CACHE_STATUS, ARC_CLN_CACHE_STATUS_EN);
+}
+
+static void setup_l2c(void)
+{
+#ifdef CONFIG_ISA_ARCV3
+	arc_cluster_scm_enable();
+#endif /* CONFIG_ISA_ARCV3 */
+}
+
+
 extern FUNC_NORETURN void z_cstart(void);
 /**
  *
@@ -125,6 +182,7 @@ extern FUNC_NORETURN void z_cstart(void);
 void _PrepC(void)
 {
 	setup_periph_apt();
+	setup_l2c();
 	z_bss_zero();
 	z_data_copy();
 	z_cstart();
