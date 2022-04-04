@@ -25,7 +25,7 @@ if(COMPILER STREQUAL arcmwdt)
   add_subdirectory(arcmwdt)
 
   if(CONFIG_64BIT)
-    zephyr_compile_options(-Mxl)
+    zephyr_compile_options(-Ml)
     zephyr_compile_options(-Wa,-offwarn=168)
   endif()
 endif()
