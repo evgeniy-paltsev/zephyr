@@ -146,7 +146,15 @@ __no_optimization void test_nop(void)
 	ztest_test_skip();
 #endif
 #elif defined(CONFIG_ARC)
-	/* do 7 nop instructions more to cost cycles */
+	/* do 14 nop instructions more to cost cycles */
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+	arch_nop();
+
 	arch_nop();
 	arch_nop();
 	arch_nop();
