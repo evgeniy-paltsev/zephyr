@@ -27,6 +27,6 @@ config ARC_CONNECT
 	default y
 
 config MP_NUM_CPUS
-	default 2
+	default 4
 
 endif # SOC_NSIM_HS5X_SMP
