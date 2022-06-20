@@ -104,6 +104,7 @@ def mdb_do_run(mdb_runner, command):
             # core will download the shared image.
                          ('-prop=download=2' if i > 0 else '')] +
                          mdb_basic_options + mdb_target + [mdb_runner.elf_name])
+            print("check_call: " + str(mdb_sub_cmd))
             mdb_runner.check_call(mdb_sub_cmd, cwd=mdb_runner.build_dir)
             mdb_multifiles += ('core{}'.format(mdb_runner.cores-1-i) if i == 0 else ',core{}'.format(mdb_runner.cores-1-i))
 
@@ -116,6 +117,9 @@ def mdb_do_run(mdb_runner, command):
     else:
         raise ValueError('unsupported cores {}'.format(mdb_runner.cores))
 
+    print("popen_ignore_int: " + str(mdb_cmd))
+    print("build_dir: " + str(mdb_runner.build_dir))
+    print("mdb_runner.cores: " + str(mdb_runner.cores))
     process = mdb_runner.popen_ignore_int(mdb_cmd, cwd=mdb_runner.build_dir)
     record_cld_pid(mdb_runner, process)
 
