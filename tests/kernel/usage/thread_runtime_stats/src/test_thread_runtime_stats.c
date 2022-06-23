@@ -6,7 +6,7 @@
 
 #include <ztest.h>
 
-#define HELPER_STACK_SIZE 500
+#define HELPER_STACK_SIZE (500 + CONFIG_TEST_EXTRA_STACK_SIZE)
 
 /**
  * @brief Verify @a va1 and @a val2 are within @a pcnt % of each other
