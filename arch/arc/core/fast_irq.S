@@ -152,7 +152,7 @@ SECTION_FUNC(TEXT, _firq_exit)
 	 */
 	_get_next_switch_handle
 
-	cmp r0, r2
+	cmp r0, 0
 	bne _firq_switch
 
 	/* fall to no switch */

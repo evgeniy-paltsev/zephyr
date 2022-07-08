@@ -412,12 +412,10 @@
 .macro _store_old_thread_callee_regs
 
 	_save_callee_saved_regs
-#ifdef CONFIG_SMP
 	/* save old thread into switch handle which is required by
 	 * wait_for_switch
 	 */
 	STR r2, r2, ___thread_t_switch_handle_OFFSET
-#endif
 .endm
 
 /* macro to store old thread call regs  in interrupt*/
