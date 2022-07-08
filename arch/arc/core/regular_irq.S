@@ -246,7 +246,8 @@ SECTION_FUNC(TEXT, _rirq_exit)
 	 */
 	_get_next_switch_handle
 
-	CMPR r0, r2
+	/* if z_get_next_switch_handle retval == NULL */
+	CMPR r0, 0
 	beq _rirq_no_switch
 
 #ifdef CONFIG_ARC_SECURE_FIRMWARE
