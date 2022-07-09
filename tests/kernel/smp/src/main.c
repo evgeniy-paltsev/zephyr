@@ -277,7 +277,7 @@ void test_coop_resched_threads(void)
 		      &thread_entry, THREAD_DELAY);
 
 	/* Wait for some time to let other core's thread run */
-	k_busy_wait(DELAY_US);
+	k_busy_wait(DELAY_US * 2);
 
 
 	/* Reassure that cooperative thread's are not preempted
