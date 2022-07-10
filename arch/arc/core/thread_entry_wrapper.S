@@ -35,3 +35,17 @@ z_thread_entry_wrapper1:
 	POPR r0
 	j z_thread_entry
 	nop
+
+
+#if !defined(CONFIG_MULTITHREADING)
+GTEXT(z_main_no_multithreading_entry_wrapper)
+
+/* void z_main_no_multithreading_entry_wrapper(*p1, *p2, *p3, *main_stack, *main_entry) */
+SECTION_FUNC(TEXT, z_main_no_multithreading_entry_wrapper)
+	MOVR sp, r3
+
+	/* *p1, *p2, *p3 are in r0, r1, r2 already */
+	j [r4]
+	nop
+
+#endif /* !CONFIG_MULTITHREADING */
