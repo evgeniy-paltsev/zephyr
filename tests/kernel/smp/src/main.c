@@ -273,7 +273,7 @@ void test_coop_resched_threads(void)
 	 * since we don't give up current CPU, last thread
 	 * will not get scheduled
 	 */
-	spawn_threads(K_PRIO_COOP(10), THREADS_NUM, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_COOP(15), THREADS_NUM, !EQUAL_PRIORITY,
 		      &thread_entry, THREAD_DELAY);
 
 	/* Wait for some time to let other core's thread run */
@@ -312,7 +312,7 @@ void test_preempt_resched_threads(void)
 	 * lower priority thread should
 	 * be preempted by higher ones
 	 */
-	spawn_threads(K_PRIO_PREEMPT(10), THREADS_NUM, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_PREEMPT(15), THREADS_NUM, !EQUAL_PRIORITY,
 		      &thread_entry, THREAD_DELAY);
 
 	spin_for_threads_exit();
@@ -343,7 +343,7 @@ void test_yield_threads(void)
 	 * of cores, so the last thread would be
 	 * pending.
 	 */
-	spawn_threads(K_PRIO_COOP(10), THREADS_NUM, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_COOP(15), THREADS_NUM, !EQUAL_PRIORITY,
 		      &thread_entry, !THREAD_DELAY);
 
 	k_yield();
@@ -370,7 +370,7 @@ void test_yield_threads(void)
  */
 void test_sleep_threads(void)
 {
-	spawn_threads(K_PRIO_COOP(10), THREADS_NUM, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_COOP(15), THREADS_NUM, !EQUAL_PRIORITY,
 		      &thread_entry, !THREAD_DELAY);
 
 	k_msleep(TIMEOUT);
@@ -451,7 +451,7 @@ static void check_wokeup_threads(int tnum)
 void test_wakeup_threads(void)
 {
 	/* Spawn threads to run on all remaining cores */
-	spawn_threads(K_PRIO_COOP(10), THREADS_NUM - 1, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_COOP(15), THREADS_NUM - 1, !EQUAL_PRIORITY,
 		      &thread_wakeup_entry, !THREAD_DELAY);
 
 	/* Check if all the threads have started, then call wakeup */
