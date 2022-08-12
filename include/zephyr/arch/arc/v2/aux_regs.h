@@ -174,14 +174,22 @@
 #if defined(__CCAC__)
 
 #define z_arc_v2_aux_reg_read(reg) _lr((volatile uint32_t)reg)
-#define z_arc_v2_aux_reg_write(reg, val) \
-	_sr((unsigned int)val, (volatile uint32_t)reg)
+#define z_arc_v2_aux_reg_write(reg, val) _sr((unsigned int)val, (volatile uint32_t)reg)
+
+#ifdef CONFIG_ISA_ARCV3
+#define z_arc_aux_reg_read_64(reg) _lrl((volatile uint32_t)reg)
+#define z_arc_aux_reg_write_64(reg, val) _srl((unsigned int)val, (volatile uint32_t)reg)
+#endif /*  CONFIG_ISA_ARCV3 */
 
 #else /* ! __CCAC__ */
 
 #define z_arc_v2_aux_reg_read(reg) __builtin_arc_lr((volatile uint32_t)reg)
-#define z_arc_v2_aux_reg_write(reg, val) \
-	__builtin_arc_sr((unsigned int)val, (volatile uint32_t)reg)
+#define z_arc_v2_aux_reg_write(reg, val) __builtin_arc_sr((unsigned int)val, (volatile uint32_t)reg)
+
+#ifdef CONFIG_ISA_ARCV3
+#define z_arc_aux_reg_read_64(reg) __builtin_arc_lrl((volatile uint32_t)reg)
+#define z_arc_aux_reg_write_64(reg, val) __builtin_arc_srl((unsigned int)val, (volatile uint32_t)reg)
+#endif /*  CONFIG_ISA_ARCV3 */
 
 #endif /* __CCAC__ */
 #endif /* _ASMLANGUAGE */
