@@ -6,4 +6,9 @@ if SOC_QEMU_ARC_HS5X
 config CPU_HS5X
 	default y
 
+config ARC_CONNECT
+	default y
+
+config MP_NUM_CPUS
+	default 2
 endif
