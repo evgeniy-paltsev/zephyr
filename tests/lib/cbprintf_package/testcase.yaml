@@ -2,6 +2,7 @@ common:
   platform_type:
     - qemu
     - native
+    - sim
   tags: cbprintf
   integration_platforms:
     - native_posix

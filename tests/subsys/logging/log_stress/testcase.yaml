@@ -1,5 +1,5 @@
 common:
-  filter: CONFIG_QEMU_TARGET and not CONFIG_SMP
+  filter: (CONFIG_QEMU_TARGET or CONFIG_SOC_NSIM) and not CONFIG_SMP
   tags: log_api logging
   integration_platforms:
     - qemu_x86
