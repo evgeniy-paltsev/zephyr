@@ -1,6 +1,7 @@
 common:
   platform_type:
     - qemu
+    - sim
     - native
   tags: log_api logging
   integration_platforms:
