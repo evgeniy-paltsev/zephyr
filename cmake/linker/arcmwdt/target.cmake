@@ -69,6 +69,35 @@ function(toolchain_ld_force_undefined_symbols)
   endforeach()
 endfunction()
 
+function(arcmwdt_build_libs)
+  if(${ZEPHYR_CURRENT_LINKER_PASS} EQUAL 0)
+  list(APPEND ARCMWDT_BUILDLIB_LIST "mw")
+
+  if(CONFIG_ARCMWDT_LIBC OR CONFIG_LIB_CPLUSPLUS)
+    list(APPEND ARCMWDT_BUILDLIB_LIST "c")
+  endif()
+
+  if(CONFIG_LIB_CPLUSPLUS)
+    list(APPEND ARCMWDT_BUILDLIB_LIST "c++")
+  endif()
+
+  string (REPLACE " " "," ARCMWDT_BUILDLIB_STR "${ARCMWDT_BUILDLIB_LIST}")
+
+  message("buildlib: libs selected: ${ARCMWDT_BUILDLIB_LIST}")
+
+  execute_process (
+    COMMAND ${CMAKE_ARCMWDT_BUILDLIB} -buildlib_dir "${PROJECT_BINARY_DIR}" -buildlib_name "arcmwdt_libs" -tcf=${TOOLCHAIN_HOME}/arc/tcf/hs38_slc_full.tcf -libs=${ARCMWDT_BUILDLIB_STR}
+    OUTPUT_VARIABLE buildlib_out
+  )
+
+  zephyr_ld_options(-Hlib="${PROJECT_BINARY_DIR}/arcmwdt_libs")
+
+  message("${buildlib_out}")
+
+  file(WRITE "${PROJECT_BINARY_DIR}/arcmwdt_buildlib.log" "${buildlib_out}")
+  endif()
+endfunction(arcmwdt_build_libs)
+
 # Link a target to given libraries with toolchain-specific argument order
 #
 # Usage:
@@ -89,32 +118,7 @@ function(toolchain_ld_link_elf)
     ${ARGN}                                                   # input args to parse
   )
 
-  if(${ZEPHYR_CURRENT_LINKER_PASS} EQUAL 0)
-    list(APPEND ARCMWDT_BUILDLIB_LIST "mw")
-
-    if(CONFIG_ARCMWDT_LIBC OR CONFIG_LIB_CPLUSPLUS)
-      list(APPEND ARCMWDT_BUILDLIB_LIST "c")
-    endif()
-
-    if(CONFIG_LIB_CPLUSPLUS)
-      list(APPEND ARCMWDT_BUILDLIB_LIST "c++")
-    endif()
-
-    string (REPLACE " " "," ARCMWDT_BUILDLIB_STR "${ARCMWDT_BUILDLIB_LIST}")
-
-    message("buildlib: libs selected: ${ARCMWDT_BUILDLIB_LIST}")
-
-    execute_process (
-      COMMAND ${CMAKE_ARCMWDT_BUILDLIB} -buildlib_dir "${PROJECT_BINARY_DIR}" -buildlib_name "arcmwdt_libs" -tcf=${TOOLCHAIN_HOME}/arc/tcf/hs38_slc_full.tcf -libs=${ARCMWDT_BUILDLIB_STR}
-      OUTPUT_VARIABLE buildlib_out
-    )
-
-    zephyr_ld_options(-Hlib="${PROJECT_BINARY_DIR}/arcmwdt_libs")
-
-    message("${buildlib_out}")
-
-    file(WRITE "${PROJECT_BINARY_DIR}/arcmwdt_buildlib.log" "${buildlib_out}")
-  endif()
+  arcmwdt_build_libs()
 
   target_link_libraries(
     ${TOOLCHAIN_LD_LINK_ELF_TARGET_ELF}
