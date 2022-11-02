@@ -2,6 +2,7 @@
 set_property(TARGET linker PROPERTY devices_start_symbol "__device_start")
 
 find_program(CMAKE_LINKER ${CROSS_COMPILE}lldac PATHS ${TOOLCHAIN_HOME} NO_DEFAULT_PATH)
+find_program(CMAKE_ARCMWDT_BUILDLIB ${CROSS_COMPILE}buildlib PATHS ${TOOLCHAIN_HOME} NO_DEFAULT_PATH)
 
 # the prefix to transfer linker options from compiler
 set_ifndef(LINKERFLAGPREFIX -Wl,)
@@ -87,6 +88,33 @@ function(toolchain_ld_link_elf)
     "LIBRARIES_PRE_SCRIPT;LIBRARIES_POST_SCRIPT;DEPENDENCIES" # list of names of list arguments
     ${ARGN}                                                   # input args to parse
   )
+
+  if(${ZEPHYR_CURRENT_LINKER_PASS} EQUAL 0)
+    list(APPEND ARCMWDT_BUILDLIB_LIST "mw")
+
+    if(CONFIG_ARCMWDT_LIBC OR CONFIG_LIB_CPLUSPLUS)
+      list(APPEND ARCMWDT_BUILDLIB_LIST "c")
+    endif()
+
+    if(CONFIG_LIB_CPLUSPLUS)
+      list(APPEND ARCMWDT_BUILDLIB_LIST "c++")
+    endif()
+
+    string (REPLACE " " "," ARCMWDT_BUILDLIB_STR "${ARCMWDT_BUILDLIB_LIST}")
+
+    message("buildlib: libs selected: ${ARCMWDT_BUILDLIB_LIST}")
+
+    execute_process (
+      COMMAND ${CMAKE_ARCMWDT_BUILDLIB} -buildlib_dir "${PROJECT_BINARY_DIR}" -buildlib_name "arcmwdt_libs" -tcf=${TOOLCHAIN_HOME}/arc/tcf/hs38_slc_full.tcf -libs=${ARCMWDT_BUILDLIB_STR}
+      OUTPUT_VARIABLE buildlib_out
+    )
+
+    zephyr_ld_options(-Hlib="${PROJECT_BINARY_DIR}/arcmwdt_libs")
+
+    message("${buildlib_out}")
+
+    file(WRITE "${PROJECT_BINARY_DIR}/arcmwdt_buildlib.log" "${buildlib_out}")
+  endif()
 
   target_link_libraries(
     ${TOOLCHAIN_LD_LINK_ELF_TARGET_ELF}
