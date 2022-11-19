@@ -549,8 +549,12 @@
  */
 .macro _st32_huge_offset, d, s, off, temp
 	.if MACRO_ARG(off) > 255 || MACRO_ARG(off) < -256
-		ADDR MACRO_ARG(temp), MACRO_ARG(s), MACRO_ARG(off)
-		st MACRO_ARG(d), [MACRO_ARG(temp)]
+		.if !(MACRO_ARG(off) % 4) && MACRO_ARG(off) <= 1020
+			st.as MACRO_ARG(d), [MACRO_ARG(s), MACRO_ARG(off) >> 2]
+		.else
+			ADDR MACRO_ARG(temp), MACRO_ARG(s), MACRO_ARG(off)
+			st MACRO_ARG(d), [MACRO_ARG(temp)]
+		.endif
 	.else
 		st MACRO_ARG(d), [MACRO_ARG(s), MACRO_ARG(off)]
 	.endif
