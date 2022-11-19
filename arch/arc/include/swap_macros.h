@@ -548,17 +548,32 @@
  * instruction. So we can use _st32_huge_offset macro instead
  */
 .macro _st32_huge_offset, d, s, off, temp
-	.if MACRO_ARG(off) > 255 || MACRO_ARG(off) < -256
-		.if !(MACRO_ARG(off) % 4) && MACRO_ARG(off) <= 1020
-			st.as MACRO_ARG(d), [MACRO_ARG(s), MACRO_ARG(off) >> 2]
-		.else
-			ADDR MACRO_ARG(temp), MACRO_ARG(s), MACRO_ARG(off)
-			st MACRO_ARG(d), [MACRO_ARG(temp)]
-		.endif
-	.else
+	.if MACRO_ARG(off) <= 255 && MACRO_ARG(off) >= -256
 		st MACRO_ARG(d), [MACRO_ARG(s), MACRO_ARG(off)]
+	.elseif !(MACRO_ARG(off) % 4) && MACRO_ARG(off) <= (255 << 2) && MACRO_ARG(off) >= 0
+		st.as MACRO_ARG(d), [MACRO_ARG(s), MACRO_ARG(off) >> 2]
+	.else
+		ADDR MACRO_ARG(temp), MACRO_ARG(s), MACRO_ARG(off)
+		st MACRO_ARG(d), [MACRO_ARG(temp)]
 	.endif
 .endm
+
+/*
+#define __z_arc_u9_max		(255)
+#define __z_arc_u9_min		(-256)
+#define __z_arc_ldst32_as_shift	2
+
+.macro _st32_huge_offset, d, s, off, temp
+	.if MACRO_ARG(off) <= __z_arc_u9_max && MACRO_ARG(off) >= __z_arc_u9_min
+		st MACRO_ARG(d), [MACRO_ARG(s), MACRO_ARG(off)]
+	.elseif !(MACRO_ARG(off) % (1 << __z_arc_ldst32_as_shift)) && MACRO_ARG(off) <= (__z_arc_u9_max << __z_arc_ldst32_as_shift) && MACRO_ARG(off) >= 0
+		st.as MACRO_ARG(d), [MACRO_ARG(s), MACRO_ARG(off) >> __z_arc_ldst32_as_shift]
+	.else
+		ADDR MACRO_ARG(temp), MACRO_ARG(s), MACRO_ARG(off)
+		st MACRO_ARG(d), [MACRO_ARG(temp)]
+	.endif
+.endm
+*/
 
 #endif /* _ASMLANGUAGE */
 
