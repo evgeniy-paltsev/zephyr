@@ -1,7 +1,7 @@
 	nsim_isa_family=av2hs
 	nsim_isa_core=2
 	arcver=0x52
-	nsim_isa_rgf_num_banks=2
+	nsim_isa_rgf_num_banks=1
 	nsim_isa_rgf_banked_regs=32
 	nsim_isa_rgf_num_regs=32
 	nsim_isa_rgf_num_wr_ports=2
@@ -30,7 +30,6 @@
 	nsim_isa_number_of_interrupts=72
 	nsim_isa_number_of_levels=2
 	nsim_isa_number_of_external_interrupts=70
-	nsim_isa_fast_irq=1
 	nsim_isa_intvbase_preset=0x0
 	dcache=65536,64,2,a
 	nsim_isa_dc_feature_level=2

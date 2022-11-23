@@ -1,7 +1,7 @@
 	-arcv2hs
 	-core2
 	-arcnum=3
-	-rgf_num_banks=2
+	-rgf_num_banks=1
 	-rgf_banked_regs=32
 	-rgf_num_wr_ports=2
 	-Xatomic
@@ -26,7 +26,6 @@
 	-interrupts=72
 	-interrupt_priorities=2
 	-ext_interrupts=70
-	-firq
 	-interrupt_base=0x0
 	-dcache=65536,64,2,a
 	-dcache_feature=2
