@@ -239,9 +239,7 @@ rirq_path:
 	j_s [r2]
 #endif
 #else
-	MOVR r3, _rirq_exit
-	MOVR r2, _rirq_enter
-	j_s [r2]
+	j _rirq_enter
 #endif
 
 /* r0, r1, and r3 will be used in exit_tickless_idle macro */
@@ -263,7 +261,6 @@ _skip_pm_save_idle_exit:
 
 /* when getting here, r3 contains the interrupt exit stub to call */
 SECTION_FUNC(TEXT, _isr_demux)
-	PUSHR r3
 
 /* according to ARCv2 ISA, r25, r30, r58, r59 are caller-saved
  * scratch registers, possibly used by interrupt handlers
@@ -322,6 +319,5 @@ irq_hint_handled:
 	POPR r25
 
 	/* back from ISR, jump to exit stub */
-	POPR r3
-	j_s [r3]
+	j _rirq_exit
 	nop_s

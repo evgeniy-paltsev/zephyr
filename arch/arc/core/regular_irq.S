@@ -272,8 +272,6 @@ _rirq_newthread_switch:
 
 	breq r3, _CAUSE_RIRQ, _rirq_switch_from_rirq
 	nop_s
-	breq r3, _CAUSE_FIRQ, _rirq_switch_from_firq
-	nop_s
 
 	/* fall through */
 

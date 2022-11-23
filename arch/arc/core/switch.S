@@ -97,8 +97,6 @@ SECTION_FUNC(TEXT, z_arc_switch)
 
 	breq r3, _CAUSE_RIRQ, _switch_return_from_rirq
 	nop_s
-	breq r3, _CAUSE_FIRQ, _switch_return_from_firq
-	nop_s
 
 	/* fall through to _switch_return_from_coop */
 
