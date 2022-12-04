@@ -52,8 +52,11 @@
 	_kobject_data_area_start = .;
 #endif
 
-	*(".kobject_data.data*")
-	*(".kobject_data.sdata*")
+	kobject_hash_renamed.o (".data*")
+	zephyr/kobject_hash_renamed.o (".data*")
+	kobject_hash_renamed.o (".sdata*")
+	zephyr/kobject_hash_renamed.o (".sdata*")
+
 
 #ifdef KOBJECT_DATA_ALIGN
 	_kobject_data_area_end = .;

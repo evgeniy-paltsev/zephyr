@@ -9,7 +9,8 @@
 	 * is moving backwards if the reserved room isn't large enough.
 	 */
 	_kobject_text_area_start = .;
-	*(".kobject_data.text*")
+	kobject_hash_renamed.o (".text*")
+	zephyr/kobject_hash_renamed.o (".text*")
 	_kobject_text_area_end = .;
 	_kobject_text_area_used = _kobject_text_area_end - _kobject_text_area_start;
 #ifndef LINKER_ZEPHYR_FINAL

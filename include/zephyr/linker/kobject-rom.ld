@@ -36,7 +36,8 @@
 	_kobject_rodata_area_start = .;
 #endif
 
-	*(".kobject_data.rodata*")
+	kobject_hash_renamed.o (".rodata*")
+	zephyr/kobject_hash_renamed.o (".rodata*")
 
 #ifdef KOBJECT_RODATA_ALIGN
 	_kobject_rodata_area_end = .;

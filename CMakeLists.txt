@@ -1286,17 +1286,26 @@ if(CONFIG_USERSPACE)
     PUBLIC $<TARGET_PROPERTY:zephyr_interface,INTERFACE_SYSTEM_INCLUDE_DIRECTORIES>
   )
 
+  # add_custom_command(
+  #   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${KOBJECT_HASH_OUTPUT_OBJ_RENAMED}
+  #   COMMAND $<TARGET_PROPERTY:bintools,elfconvert_command>
+  #           $<TARGET_PROPERTY:bintools,elfconvert_flag>
+  #           $<TARGET_PROPERTY:bintools,elfconvert_flag_section_rename>.data=.kobject_data.data
+  #           $<TARGET_PROPERTY:bintools,elfconvert_flag_section_rename>.sdata=.kobject_data.sdata
+  #           $<TARGET_PROPERTY:bintools,elfconvert_flag_section_rename>.text=.kobject_data.text
+  #           $<TARGET_PROPERTY:bintools,elfconvert_flag_section_rename>.rodata=.kobject_data.rodata
+  #           $<TARGET_PROPERTY:bintools,elfconvert_flag_infile>$<TARGET_OBJECTS:kobj_hash_output_lib>
+  #           $<TARGET_PROPERTY:bintools,elfconvert_flag_outfile>${KOBJECT_HASH_OUTPUT_OBJ_RENAMED}
+  #           $<TARGET_PROPERTY:bintools,elfconvert_flag_final>
+  #   DEPENDS kobj_hash_output_lib $<TARGET_OBJECTS:kobj_hash_output_lib>
+  #   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  #   COMMAND_EXPAND_LISTS
+  #   )
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${KOBJECT_HASH_OUTPUT_OBJ_RENAMED}
-    COMMAND $<TARGET_PROPERTY:bintools,elfconvert_command>
-            $<TARGET_PROPERTY:bintools,elfconvert_flag>
-            $<TARGET_PROPERTY:bintools,elfconvert_flag_section_rename>.data=.kobject_data.data
-            $<TARGET_PROPERTY:bintools,elfconvert_flag_section_rename>.sdata=.kobject_data.sdata
-            $<TARGET_PROPERTY:bintools,elfconvert_flag_section_rename>.text=.kobject_data.text
-            $<TARGET_PROPERTY:bintools,elfconvert_flag_section_rename>.rodata=.kobject_data.rodata
-            $<TARGET_PROPERTY:bintools,elfconvert_flag_infile>$<TARGET_OBJECTS:kobj_hash_output_lib>
-            $<TARGET_PROPERTY:bintools,elfconvert_flag_outfile>${KOBJECT_HASH_OUTPUT_OBJ_RENAMED}
-            $<TARGET_PROPERTY:bintools,elfconvert_flag_final>
+    COMMAND cp
+            $<TARGET_OBJECTS:kobj_hash_output_lib>
+            ${KOBJECT_HASH_OUTPUT_OBJ_RENAMED}
     DEPENDS kobj_hash_output_lib $<TARGET_OBJECTS:kobj_hash_output_lib>
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMAND_EXPAND_LISTS
