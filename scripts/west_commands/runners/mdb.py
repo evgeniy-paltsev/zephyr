@@ -93,7 +93,7 @@ def mdb_do_run(mdb_runner, command):
         # single core's mdb command is different with multicores
         mdb_cmd = ([commander] + mdb_basic_options + mdb_target +
                    mdb_run + [mdb_runner.elf_name])
-    elif 1 < mdb_runner.cores <= 4:
+    elif 1 < mdb_runner.cores <= 16:
         mdb_multifiles = '-multifiles='
         for i in range(mdb_runner.cores):
             # note that: mdb requires -pset starting from 1, not 0 !!!
