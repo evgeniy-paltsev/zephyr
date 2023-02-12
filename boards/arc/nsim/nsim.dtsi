@@ -37,7 +37,7 @@
 		compatible = "ns16550";
 		clock-frequency = <5000000>;
 		reg = <0xf0000000 0x400>;
-		current-speed = <115200>;
+		current-speed = <9600>;
 		interrupt-parent = <&intc>;
 		interrupts = <24 1>;
 		reg-shift = <2>;
