@@ -1,0 +1,11 @@
+# Virtual UART HOSTLINK driver option
+
+# Copyright (c) 2023 Synopsys
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig UART_HOSTLINK
+	bool "UART ARC HOSTLINK driver"
+	depends on ARC
+	select SERIAL_HAS_DRIVER
+	help
+	  This option enables access HOSTLINK channel as UART device.
