@@ -46,10 +46,9 @@ volatile __uncached char *_hl_message (uint32_t syscall, const char *format, ...
 volatile __uncached char *_hl_pack_int (volatile __uncached char *p, uint32_t x);
 volatile __uncached char *_hl_pack_ptr (volatile __uncached char *p, const void *s, uint16_t len);
 volatile __uncached char *_hl_pack_str (volatile __uncached char *p, const char *s);
-volatile __uncached char *_hl_unpack_int (volatile __uncached char *p, uint32_t *x);
+volatile __uncached char *_hl_unpack_int (volatile __uncached char *p, int32_t *x);
 volatile __uncached char *_hl_unpack_ptr (volatile __uncached char *p, void *s, uint32_t *plen);
 volatile __uncached char *_hl_unpack_str (volatile __uncached char *p, char *s);
-uint32_t _hl_get_ptr_len (volatile __uncached char *p);
 
 /* Low-level functions from hl_gw.  */
 extern uint32_t _hl_iochunk_size (void);
@@ -61,8 +60,8 @@ extern void _hl_delete (void);
 
 struct uart_hostlink_data {
 #ifdef CONFIG_UART_ASYNC_API
-	// uart_callback_t callback;
-	// void *user_data;
+	uart_callback_t callback;
+	void *user_data;
 #endif /* CONFIG_UART_ASYNC_API */
 };
 
@@ -138,13 +137,13 @@ volatile __uncached void * _hl_payload(void)
 /* Get hostlink payload size (iochunk + reserved space).  */
 static uint32_t _hl_payload_size(void)
 {
-  return sizeof (__HOSTLINK__.payload);
+	return sizeof (__HOSTLINK__.payload);
 }
 
 /* Get used space size in the payload.  */
-static uint32_t _hl_payload_used (volatile __uncached void *p)
+static uint32_t _hl_payload_used(volatile __uncached void *p)
 {
-  return (volatile __uncached char *)p - (volatile __uncached char *) _hl_payload();
+	return (volatile __uncached char *)p - (volatile __uncached char *) _hl_payload();
 }
 
 /* Fill hostlink packet header.  */
@@ -164,56 +163,52 @@ uint32_t _hl_iochunk_size(void)
 }
 
 /* Get free space size in the payload.  */
-uint32_t
-_hl_payload_left (volatile __uncached void *p)
+uint32_t _hl_payload_left (volatile __uncached void *p)
 {
-  return _hl_payload_size () - _hl_payload_used (p);
+	return _hl_payload_size() - _hl_payload_used(p);
 }
 
 /* Send hostlink packet to the host.  */
-void
-_hl_send (volatile __uncached void *p)
+void _hl_send(volatile __uncached void *p)
 {
-  volatile __uncached struct _hl_hdr *hdr = &__HOSTLINK__.hdr;
-  volatile __uncached struct _hl_pkt_hdr *pkt_hdr = &__HOSTLINK__.pkt_hdr;
+	volatile __uncached struct _hl_hdr *hdr = &__HOSTLINK__.hdr;
+	volatile __uncached struct _hl_pkt_hdr *pkt_hdr = &__HOSTLINK__.pkt_hdr;
 
-  _hl_pkt_init (pkt_hdr, _hl_payload_used (p));
+	_hl_pkt_init (pkt_hdr, _hl_payload_used (p));
 
-  hdr->buf_addr = (uint32_t) pkt_hdr;
-  hdr->payload_size = _hl_payload_size ();
-  hdr->host2target_addr = HL_NOADDRESS;
-  hdr->version = HL_VERSION;
-  hdr->options = 0;
-  hdr->break_to_mon_addr = 0;
+	hdr->buf_addr = (uint32_t) pkt_hdr;
+	hdr->payload_size = _hl_payload_size ();
+	hdr->host2target_addr = HL_NOADDRESS;
+	hdr->version = HL_VERSION;
+	hdr->options = 0;
+	hdr->break_to_mon_addr = 0;
 
-  /* This tells the debugger we have a command.
-   * It is responsibility of debugger to set this back to HL_NOADDRESS
-   * after receiving the packet.
-   * Please note that we don't wait here because some implementations
-   * use _hl_blockedPeek() function as a signal that we send a messege.
-   */
-  hdr->target2host_addr = hdr->buf_addr;
+	/* This tells the debugger we have a command.
+	* It is responsibility of debugger to set this back to HL_NOADDRESS
+	* after receiving the packet.
+	* Please note that we don't wait here because some implementations
+	* use _hl_blockedPeek() function as a signal that we send a messege.
+	*/
+	hdr->target2host_addr = hdr->buf_addr;
 }
 
 /*
  * Wait for host response and return pointer to hostlink payload.
  * Symbol _hl_blockedPeek() is used by the simulator as message signal.
  */
-volatile __uncached char * __noinline
-_hl_blockedPeek (void)
+volatile __uncached char * __noinline _hl_blockedPeek(void)
 {
-  while (__HOSTLINK__.hdr.host2target_addr == HL_NOADDRESS)
-    {
-      /* TODO: Timeout.  */
-    }
+	while (__HOSTLINK__.hdr.host2target_addr == HL_NOADDRESS) {
+		/* TODO: Timeout.  */
+	}
 
-  return _hl_payload ();
+	return _hl_payload();
 }
 
 /* Get message from host.  */
 volatile __uncached char * _hl_recv (void)
 {
-	return _hl_blockedPeek ();
+	return _hl_blockedPeek();
 }
 
 /* Mark hostlink buffer as "No message here".  */
@@ -232,9 +227,9 @@ void _hl_delete (void)
 
 /* Used internally to pass user hostlink parameters to _hl_message().  */
 struct _hl_user_info {
-  uint32_t vendor_id;
-  uint32_t opcode;
-  uint32_t result;
+	uint32_t vendor_id;
+	uint32_t opcode;
+	uint32_t result;
 };
 
 static volatile __uncached char *
@@ -335,24 +330,22 @@ _hl_message_va (uint32_t syscall, struct _hl_user_info *user,
  *     uint16 size  (4)
  *     uint32 value
  */
-volatile __uncached char *
-_hl_pack_int (volatile __uncached char *p, uint32_t x)
+volatile __uncached char * _hl_pack_int (volatile __uncached char *p, uint32_t x)
 {
-  volatile __uncached uint16_t *type = (volatile __uncached uint16_t *) p;
-  volatile __uncached uint16_t *size = (volatile __uncached uint16_t *)
-				       (p + 2);
-  volatile __uncached uint32_t *val = (volatile __uncached uint32_t *)
-				      (p + 4);
-  const uint32_t payload_used = 8;
+	volatile __uncached uint16_t *type = (volatile __uncached uint16_t *) p;
+	volatile __uncached uint16_t *size = (volatile __uncached uint16_t *) (p + 2);
+	volatile __uncached uint32_t *val = (volatile __uncached uint32_t *) (p + 4);
+	const uint32_t payload_used = 8;
 
-  if (_hl_payload_left (p) < payload_used)
-    return NULL;
+	if (_hl_payload_left (p) < payload_used){
+		return NULL;
+	}
 
-  *type = PAT_INT;
-  *size = 4;
-  *val = x;
+	*type = PAT_INT;
+	*size = 4;
+	*val = x;
 
-  return p + payload_used;
+	return p + payload_used;
 }
 
 /*
@@ -398,7 +391,7 @@ _hl_pack_str (volatile __uncached char *p, const char *s)
 }
 
 /* Unpack integer value (uint32_t) from a buffer.  */
-volatile __uncached char * _hl_unpack_int (volatile __uncached char *p, uint32_t *x)
+volatile __uncached char * _hl_unpack_int (volatile __uncached char *p, int32_t *x)
 {
 	volatile __uncached uint16_t *type = (volatile __uncached uint16_t *) p;
 	volatile __uncached uint16_t *size = (volatile __uncached uint16_t *) (p + 2);
@@ -461,20 +454,6 @@ volatile __uncached char * _hl_unpack_str (volatile __uncached char *p, char *s)
   return _hl_unpack_ptr (p, s, NULL);
 }
 
-/* Return length of packed data (PAT_STRING) if it is on top of the buffer.  */
-uint32_t
-_hl_get_ptr_len (volatile __uncached char *p)
-{
-  volatile __uncached uint16_t *type = (volatile __uncached uint16_t *) p;
-  volatile __uncached uint16_t *size = (volatile __uncached uint16_t *)
-				       (p + 2);
-
-  if (_hl_payload_left (p) < 4 || *type != PAT_STRING)
-    return 0;
-
-  return *size;
-}
-
 volatile __uncached char *
 _hl_message (uint32_t syscall, const char *format, ...)
 {
@@ -490,44 +469,75 @@ _hl_message (uint32_t syscall, const char *format, ...)
   return p;
 }
 
-static int32_t
-_hl_write (int fd, const char *buf, size_t nbyte)
+
+static int32_t _hl_pack_write(int fd, const char *buf, size_t nbyte, int32_t *nwrite)
 {
-  int32_t ret;
-  int32_t n;
-  uint32_t host_errno;
-  volatile __uncached char *p;
+	uint32_t host_errno;
+	volatile __uncached char *p = _hl_payload ();
 
-  p = _hl_message (HL_SYSCALL_WRITE, "ipi:ii",
-		   (uint32_t) fd,		/* i */
-		   buf, (uint32_t) nbyte,	/* p */
-		   (uint32_t) nbyte,		/* i */
-		   (uint32_t *) &n,		/* :i */
-		   (uint32_t *) &host_errno	/* :i */);
+	/*
+	 * Format:
+	 * in, int -> syscall (HL_SYSCALL_WRITE)
+	 * in, int -> file descriptor
+	 * in, ptr -> buffer
+	 * in, int -> bytes number
+	 * out, int -> bytes written
+	 * out, int, host errno
+	 */
 
-  if (p == NULL)
-    {
-      errno = ETIMEDOUT;
-      ret = -1;
-    }
-  else if (n < 0)
-    {
-      errno = host_errno;
-      ret = -1;
-    }
-  else
-    {
-      ret = n;
-    }
+	p = _hl_pack_int(p, HL_SYSCALL_WRITE);
+	if (p == NULL) {
+		return -1;
+	}
 
-  _hl_delete ();
+	p = _hl_pack_int(p, fd);
+	if (p == NULL) {
+		return -1;
+	}
 
-  return ret;
+	p = _hl_pack_ptr(p, buf, nbyte);
+	if (p == NULL) {
+		return -1;
+	}
+
+	p = _hl_pack_int(p, nbyte);
+	if (p == NULL) {
+		return -1;
+	}
+
+	_hl_send (p);
+	p = _hl_recv();
+
+	p = _hl_unpack_int(p, nwrite);
+	if (p == NULL) {
+		return -1;
+	}
+
+	p = _hl_unpack_int(p, &host_errno);
+	if (p == NULL) {
+		return -1;
+	}
+
+	return 0;
+}
+
+static int32_t _hl_write (int fd, const char *buf, size_t nbyte)
+{
+	int32_t nwrite = 0;
+
+	int32_t ret = _hl_pack_write(fd, buf, nbyte, &nwrite);
+
+	if (nwrite <= 0) {
+		ret = -1;
+	}
+
+	_hl_delete ();
+
+  	return ret;
 }
 
 /* Read one chunk.  Implements HL_SYSCALL_READ.  */
-static int32_t
-_hl_read (int fd, void *buf, size_t count)
+static int32_t _hl_read (int fd, void *buf, size_t count)
 {
   int32_t ret;
   int32_t hl_n;
@@ -608,123 +618,121 @@ static void uart_hostlink_poll_out(const struct device *dev, unsigned char c)
 	_hl_write(1, &c, 1);
 }
 
-// #ifdef CONFIG_UART_ASYNC_API
+#ifdef CONFIG_UART_ASYNC_API
 
-// static int uart_rtt_callback_set(const struct device *dev,
-// 				 uart_callback_t callback, void *user_data)
-// {
-// 	struct uart_hostlink_data *data = dev->data;
+static int uart_hostlink_callback_set(const struct device *dev,
+				 uart_callback_t callback, void *user_data)
+{
+	struct uart_hostlink_data *data = dev->data;
 
-// 	data->callback = callback;
-// 	data->user_data = user_data;
-// 	return 0;
-// }
+	data->callback = callback;
+	data->user_data = user_data;
+	return 0;
+}
 
-// static int uart_rtt_tx(const struct device *dev,
-// 		       const uint8_t *buf, size_t len, int32_t timeout)
-// {
-// 	const struct uart_rtt_config *cfg = dev->config;
-// 	struct uart_hostlink_data *data = dev->data;
-// 	unsigned int ch = cfg ? cfg->channel : 0;
+static int uart_hostlink_tx(const struct device *dev, const uint8_t *buf, size_t len, int32_t timeout)
+{
+	const struct uart_hostlink_config *cfg = dev->config;
+	struct uart_hostlink_data *data = dev->data;
+	unsigned int ch = cfg ? cfg->channel : 0;
 
-// 	ARG_UNUSED(timeout);
+	ARG_UNUSED(timeout);
 
-// 	/* RTT mutex cannot be claimed in ISRs */
-// 	if (k_is_in_isr()) {
-// 		return -ENOTSUP;
-// 	}
+	/* RTT mutex cannot be claimed in ISRs */
+	if (k_is_in_isr()) {
+		return -ENOTSUP;
+	}
 
-// 	/* Claim the RTT lock */
-// 	if (k_mutex_lock(&rtt_term_mutex, K_NO_WAIT) != 0) {
-// 		return -EBUSY;
-// 	}
+	/* Claim the RTT lock */
+	if (k_mutex_lock(&rtt_term_mutex, K_NO_WAIT) != 0) {
+		return -EBUSY;
+	}
 
-// 	/* Output the buffer */
-// 	SEGGER_RTT_WriteNoLock(ch, buf, len);
+	/* Output the buffer */
+	SEGGER_RTT_WriteNoLock(ch, buf, len);
 
-// 	/* Return RTT lock */
-// 	SEGGER_RTT_UNLOCK();
+	/* Return RTT lock */
+	SEGGER_RTT_UNLOCK();
 
-// 	/* Send the TX complete callback */
-// 	if (data->callback) {
-// 		struct uart_event evt = {
-// 			.type = UART_TX_DONE,
-// 			.data.tx.buf = buf,
-// 			.data.tx.len = len
-// 		};
-// 		data->callback(dev, &evt, data->user_data);
-// 	}
+	/* Send the TX complete callback */
+	if (data->callback) {
+		struct uart_event evt = {
+			.type = UART_TX_DONE,
+			.data.tx.buf = buf,
+			.data.tx.len = len
+		};
+		data->callback(dev, &evt, data->user_data);
+	}
 
-// 	return 0;
-// }
+	return 0;
+}
 
-// static int uart_rtt_tx_abort(const struct device *dev)
-// {
-// 	/* RTT TX is a memcpy, there is never a transmission to abort */
-// 	ARG_UNUSED(dev);
+static int uart_hostlink_tx_abort(const struct device *dev)
+{
+	/* There is never a transmission to abort */
+	ARG_UNUSED(dev);
 
-// 	return -EFAULT;
-// }
+	return -EFAULT;
+}
 
-// static int uart_rtt_rx_enable(const struct device *dev,
-// 			      uint8_t *buf, size_t len, int32_t timeout)
-// {
-// 	/* SEGGER RTT reception is implemented as a direct memory write to RAM
-// 	 * by a connected debugger. As such there is no hardware interrupt
-// 	 * or other mechanism to know when the debugger has added data to be
-// 	 * read. Asynchronous RX does not make sense in such a context, and is
-// 	 * therefore not supported.
-// 	 */
-// 	ARG_UNUSED(dev);
-// 	ARG_UNUSED(buf);
-// 	ARG_UNUSED(len);
-// 	ARG_UNUSED(timeout);
+static int uart_hostlink_rx_enable(const struct device *dev, uint8_t *buf, size_t len,
+				   int32_t timeout)
+{
+	/* SEGGER RTT reception is implemented as a direct memory write to RAM
+	 * by a connected debugger. As such there is no hardware interrupt
+	 * or other mechanism to know when the debugger has added data to be
+	 * read. Asynchronous RX does not make sense in such a context, and is
+	 * therefore not supported.
+	 */
+	ARG_UNUSED(dev);
+	ARG_UNUSED(buf);
+	ARG_UNUSED(len);
+	ARG_UNUSED(timeout);
 
-// 	return -ENOTSUP;
-// }
+	return -ENOTSUP;
+}
 
-// static int uart_rtt_rx_disable(const struct device *dev)
-// {
-// 	/* Asynchronous RX not supported, see uart_rtt_rx_enable */
-// 	ARG_UNUSED(dev);
+static int uart_hostlink_rx_disable(const struct device *dev)
+{
+	/* Asynchronous RX not supported, see uart_hostlink_rx_enable */
+	ARG_UNUSED(dev);
 
-// 	return -EFAULT;
-// }
+	return -EFAULT;
+}
 
-// static int uart_rtt_rx_buf_rsp(const struct device *dev,
-// 			       uint8_t *buf, size_t len)
-// {
-// 	/* Asynchronous RX not supported, see uart_rtt_rx_enable */
-// 	ARG_UNUSED(dev);
-// 	ARG_UNUSED(buf);
-// 	ARG_UNUSED(len);
+static int uart_hostlink_rx_buf_rsp(const struct device *dev,
+			       uint8_t *buf, size_t len)
+{
+	/* Asynchronous RX not supported, see uart_hostlink_rx_enable */
+	ARG_UNUSED(dev);
+	ARG_UNUSED(buf);
+	ARG_UNUSED(len);
 
-// 	return -ENOTSUP;
-// }
-
-// #endif /* CONFIG_UART_ASYNC_API */
+	return -ENOTSUP;
+}
+#endif /* CONFIG_UART_ASYNC_API */
 
 static const struct uart_driver_api uart_hostlink_driver_api = {
 	.poll_in = uart_hostlink_poll_in,
 	.poll_out = uart_hostlink_poll_out,
 #ifdef CONFIG_UART_ASYNC_API
-	// .callback_set = uart_rtt_callback_set,
-	// .tx = uart_rtt_tx,
-	// .tx_abort = uart_rtt_tx_abort,
-	// .rx_enable = uart_rtt_rx_enable,
-	// .rx_buf_rsp = uart_rtt_rx_buf_rsp,
-	// .rx_disable = uart_rtt_rx_disable,
+	.callback_set = uart_hostlink_callback_set,
+	.tx = uart_hostlink_tx,
+	.tx_abort = uart_hostlink_tx_abort,
+	.rx_enable = uart_hostlink_rx_enable,
+	.rx_buf_rsp = uart_hostlink_rx_buf_rsp,
+	.rx_disable = uart_hostlink_rx_disable,
 #endif /* CONFIG_UART_ASYNC_API */
 };
 
-#define UART_RTT(idx)                   DT_NODELABEL(hostlink)
+#define uart_hostlink(idx)                   DT_NODELABEL(hostlink)
 
-#define uart_hostlink_init(idx, config)					      \
-	struct uart_hostlink_data uart_rtt##idx##_data;			      \
-									      \
-	DEVICE_DT_DEFINE(UART_RTT(idx), uart_hostlink_init, NULL, \
-			    &uart_rtt##idx##_data, config,		      \
-			    PRE_KERNEL_1, CONFIG_SERIAL_INIT_PRIORITY,	      \
+#define uart_hostlink_init(idx, config)						\
+	struct uart_hostlink_data uart_hostlink##idx##_data;			\
+										\
+	DEVICE_DT_DEFINE(uart_hostlink(idx), uart_hostlink_init, NULL,		\
+			    &uart_hostlink##idx##_data, config,			\
+			    PRE_KERNEL_1, CONFIG_SERIAL_INIT_PRIORITY,		\
 			    &uart_hostlink_driver_api)
 
 uart_hostlink_init(0, NULL);
