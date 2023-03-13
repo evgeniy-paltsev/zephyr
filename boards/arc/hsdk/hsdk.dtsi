@@ -40,8 +40,13 @@
 
 	chosen {
 		zephyr,sram = &ddr0;
-		zephyr,console = &uart0;
-		zephyr,shell-uart = &uart0;
+		zephyr,console = &hostlink;
+		zephyr,shell-uart = &hostlink;
+	};
+
+	hostlink: hostlink {
+		compatible = "snps,hostlink-uart";
+		status = "okay";
 	};
 
 	arduino_header: connector {

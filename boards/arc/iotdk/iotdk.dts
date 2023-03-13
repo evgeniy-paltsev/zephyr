@@ -21,8 +21,13 @@
 	chosen {
 		zephyr,sram = &dccm0;
 		zephyr,flash = &flash0;
-		zephyr,console = &uart0;
-		zephyr,shell-uart = &uart0;
+		zephyr,console = &hostlink;
+		zephyr,shell-uart = &hostlink;
+	};
+
+	hostlink: hostlink {
+		compatible = "snps,hostlink-uart";
+		status = "okay";
 	};
 
 	xccm@c0000000 {
