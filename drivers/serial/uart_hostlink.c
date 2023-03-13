@@ -84,12 +84,42 @@ struct _hl_pkt_hdr {
 	uint32_t checksum;	/* For future use.  */
 } __uncached __packed;
 
+struct _hl_packed_int {
+	uint16_t type;
+	uint16_t size;
+	int32_t value;
+} __uncached __packed;
+
+struct _hl_packed_short_buff {
+	uint16_t type;
+	uint16_t size;
+	uint8_t payload_short[4];
+} __uncached __packed;
+
+BUILD_ASSERT(sizeof(struct _hl_packed_int) == sizeof(struct _hl_packed_short_buff));
+
+struct _hl_pkt_write_char_put {
+	struct _hl_packed_int syscall_nr;
+	struct _hl_packed_int fd;
+	struct _hl_packed_short_buff buff;
+	struct _hl_packed_int nbyte;
+} __uncached __packed;
+
+struct _hl_pkt_write_char_get {
+	struct _hl_packed_int byte_written;
+	struct _hl_packed_int host_errno;
+} __uncached __packed;
+
 /* Main hostlink structure.  */
 struct _hl {
 	volatile struct _hl_hdr hdr; /* General hostlink information.  */
 	/* Start of the hostlink buffer.  */
 	volatile struct _hl_pkt_hdr pkt_hdr;
-	volatile char payload[HL_IOCHUNK + HL_PAYLOAD_RESERVED];
+	union {
+		volatile char payload[HL_IOCHUNK + HL_PAYLOAD_RESERVED];
+		struct _hl_pkt_write_char_put pkt_write_char_put;
+		struct _hl_pkt_write_char_get pkt_write_char_get;
+	};
 } __aligned (HL_MAX_DCACHE_LINE) __uncached __packed;
 
 
@@ -111,6 +141,34 @@ volatile __uncached struct _hl __HOSTLINK__ = {
 	}
 };
 
+// static inline void _hl_write32(uintptr_t addr, uint32_t val)
+// {&__HOSTLINK__.pkt_write_char_
+
+static inline void _hl_write32(volatile void *addr, uint32_t val)
+{
+	*(volatile __uncached uint32_t *)addr = val;
+}
+
+static inline void _hl_write16(volatile void *addr, uint16_t val)
+{
+	*(volatile __uncached uint16_t *)addr = val;
+}
+
+static inline void _hl_write8(volatile void *addr, uint8_t val)
+{
+	*(volatile __uncached uint8_t *)addr = val;
+}
+
+static inline uint32_t _hl_read32(volatile void *addr)
+{
+	return *(volatile __uncached uint32_t *)addr;
+}
+
+static inline uint16_t _hl_read16(volatile void *addr)
+{
+	return *(volatile __uncached uint16_t *)addr;
+}
+
 /* Get hostlink payload pointer.  */
 static volatile __uncached void * _hl_payload(void)
 {
@@ -129,14 +187,25 @@ static uint32_t _hl_payload_used(volatile __uncached void *p)
 	return (volatile __uncached char *)p - (volatile __uncached char *) _hl_payload();
 }
 
+// static uint32_t _hl_static_payload_used(volatile __uncached void *p)
+// {
+// 	return (volatile __uncached char *)p - (volatile __uncached char *) _hl_payload();
+// }
+
 /* Fill hostlink packet header.  */
 static void _hl_pkt_init(volatile __uncached struct _hl_pkt_hdr *pkt, int size)
 {
-	pkt->packet_id = 1;
-	pkt->total_size = ALIGN(size, 4) + sizeof (*pkt);
-	pkt->priority = 0;
-	pkt->type = 0;
-	pkt->checksum = 0;
+	_hl_write32(&pkt->packet_id, 1);
+	_hl_write32(&pkt->total_size, ALIGN(size, 4) + sizeof(*pkt));
+	_hl_write32(&pkt->priority, 0);
+	_hl_write32(&pkt->type, 0);
+	_hl_write32(&pkt->checksum, 0);
+
+	// pkt->packet_id = 1;
+	// pkt->total_size = ALIGN(size, 4) + sizeof (*pkt);
+	// pkt->priority = 0;
+	// pkt->type = 0;
+	// pkt->checksum = 0;
 }
 
 /* Get free space size in the payload.  */
@@ -146,19 +215,23 @@ static uint32_t _hl_payload_left(volatile __uncached void *p)
 }
 
 /* Send hostlink packet to the host.  */
-static void _hl_send(volatile __uncached void *p)
+static void _hl_static_send(size_t payload_used)
 {
-	volatile __uncached struct _hl_hdr *hdr = &__HOSTLINK__.hdr;
-	volatile __uncached struct _hl_pkt_hdr *pkt_hdr = &__HOSTLINK__.pkt_hdr;
+	// volatile __uncached struct _hl_hdr *hdr = &__HOSTLINK__.hdr;
+	// volatile __uncached struct _hl_pkt_hdr *pkt_hdr = &__HOSTLINK__.pkt_hdr;
 
-	_hl_pkt_init(pkt_hdr, _hl_payload_used(p));
+	uint32_t buf_addr = (uint32_t)(&__HOSTLINK__.pkt_hdr);
 
-	hdr->buf_addr = (uint32_t) pkt_hdr;
-	hdr->payload_size = _hl_payload_size();
-	hdr->host2target_addr = HL_NOADDRESS;
-	hdr->version = HL_VERSION;
-	hdr->options = 0;
-	hdr->break_to_mon_addr = 0;
+	_hl_pkt_init(&__HOSTLINK__.pkt_hdr, payload_used);
+
+	_hl_write32(&__HOSTLINK__.hdr.buf_addr, buf_addr);
+	_hl_write32(&__HOSTLINK__.hdr.payload_size, _hl_payload_size());
+	_hl_write32(&__HOSTLINK__.hdr.host2target_addr, HL_NOADDRESS);
+	_hl_write32(&__HOSTLINK__.hdr.version, HL_VERSION);
+	_hl_write32(&__HOSTLINK__.hdr.options, 0);
+	_hl_write32(&__HOSTLINK__.hdr.break_to_mon_addr, 0);
+
+	compiler_barrier();
 
 	/* This tells the debugger we have a command.
 	 * It is responsibility of debugger to set this back to HL_NOADDRESS
@@ -166,32 +239,48 @@ static void _hl_send(volatile __uncached void *p)
 	 * Please note that we don't wait here because some implementations
 	 * use _hl_blockedPeek() function as a signal that we send a messege.
 	 */
-	hdr->target2host_addr = hdr->buf_addr;
+	_hl_write32(&__HOSTLINK__.hdr.target2host_addr, buf_addr);
+
+	compiler_barrier();
+}
+
+static void _hl_send(volatile __uncached void *p)
+{
+	_hl_static_send(_hl_payload_used(p));
 }
 
 /*
  * Wait for host response and return pointer to hostlink payload.
  * Symbol _hl_blockedPeek() is used by the simulator as message signal.
  */
-static volatile __uncached char * __noinline _hl_blockedPeek(void)
+static void __noinline _hl_blockedPeek(void)
 {
-	while (__HOSTLINK__.hdr.host2target_addr == HL_NOADDRESS) {
+	while (_hl_read32(&__HOSTLINK__.hdr.host2target_addr) == HL_NOADDRESS) {
 		/* TODO: Timeout.  */
 	}
-
-	return _hl_payload();
 }
 
 /* Get message from host.  */
 static volatile __uncached char * _hl_recv(void)
 {
-	return _hl_blockedPeek();
+	_hl_blockedPeek();
+
+	return _hl_payload();
+}
+
+static void _hl_static_recv(void)
+{
+	compiler_barrier();
+
+	_hl_blockedPeek();
+
+	compiler_barrier();
 }
 
 /* Mark hostlink buffer as "No message here".  */
 static void _hl_delete(void)
 {
-	__HOSTLINK__.hdr.target2host_addr = HL_NOADDRESS;
+	_hl_write32(&__HOSTLINK__.hdr.target2host_addr, HL_NOADDRESS);
 }
 
 /* Parameter types.  */
@@ -211,20 +300,61 @@ static void _hl_delete(void)
  */
 static volatile __uncached char * _hl_pack_int(volatile __uncached char *p, uint32_t x)
 {
-	volatile __uncached uint16_t *type = (volatile __uncached uint16_t *) p;
-	volatile __uncached uint16_t *size = (volatile __uncached uint16_t *) (p + 2);
-	volatile __uncached uint32_t *val = (volatile __uncached uint32_t *) (p + 4);
+	// volatile __uncached uint16_t *type = (volatile __uncached uint16_t *) p;
+	// volatile __uncached uint16_t *size = (volatile __uncached uint16_t *) (p + 2);
+	// volatile __uncached uint32_t *val = (volatile __uncached uint32_t *) (p + 4);
 	const uint32_t payload_used = 8;
 
 	if (_hl_payload_left(p) < payload_used){
 		return NULL;
 	}
 
-	*type = PAT_INT;
-	*size = 4;
-	*val = x;
+	/* type */
+	_hl_write16(p, PAT_INT);
+
+	/* size */
+	_hl_write16(p + 2, 4);
+
+	/* value */
+	_hl_write32(p + 4, x);
+
+	// *type = PAT_INT;
+	// *size = 4;
+	// *val = x;
 
 	return p + payload_used;
+}
+
+static void _hl_static_pack_int(volatile struct _hl_packed_int *pack, int32_t value)
+{
+	_hl_write16(&pack->type, PAT_INT);
+	_hl_write16(&pack->size, 4);
+	_hl_write32(&pack->value, value);
+}
+
+static void _hl_static_pack_char(volatile struct _hl_packed_short_buff *pack, unsigned char c)
+{
+	_hl_write16(&pack->type, PAT_STRING);
+	_hl_write16(&pack->size, 1);
+	_hl_write8(&pack->payload_short, c);
+}
+
+static int _hl_static_unpack_int(volatile struct _hl_packed_int *pack, int32_t *value)
+{
+	uint16_t type = _hl_read16(&pack->type);
+	uint16_t size = _hl_read16(&pack->size);
+
+	if (type != PAT_INT) {
+		return -1;
+	}
+
+	if (size != 4)  {
+		return -1;
+	}
+
+	*value = _hl_read32(&pack->value);
+
+	return 0;
 }
 
 /*
@@ -275,6 +405,7 @@ static volatile __uncached char * _hl_unpack_int(volatile __uncached char *p, in
 	return p + payload_used;
 }
 
+#ifdef CONFIG_UART_HOSTLINK_INPUT
 /* Unpack data from a buffer.  */
 static volatile __uncached char * _hl_unpack_ptr(volatile __uncached char *p, void *s, uint32_t *plen)
 {
@@ -308,11 +439,12 @@ static volatile __uncached char * _hl_unpack_ptr(volatile __uncached char *p, vo
 
 	return p + payload_used;
 }
+#endif
 
-static int32_t _hl_pack_write(int fd, const char *buf, size_t nbyte, int32_t *nwrite)
+#if 0
+static int _hl_pack_write(int fd, const char *buf, size_t nbyte, int32_t *nwrite)
 {
-	uint32_t host_errno;
-	volatile __uncached char *p = _hl_payload();
+	int ret = 0;
 
 	/*
 	 * Format:
@@ -324,38 +456,26 @@ static int32_t _hl_pack_write(int fd, const char *buf, size_t nbyte, int32_t *nw
 	 * out, int, host errno
 	 */
 
-	p = _hl_pack_int(p, HL_SYSCALL_WRITE);
-	if (p == NULL) {
-		return -1;
+	_hl_static_pack_int(&__HOSTLINK__.pkt_write_char_put.syscall_nr, HL_SYSCALL_WRITE);
+
+	_hl_static_pack_int(&__HOSTLINK__.pkt_write_char_put.fd, fd);
+
+	_hl_static_pack_char(&__HOSTLINK__.pkt_write_char_put.buff, *buf);
+
+	_hl_static_pack_int(&__HOSTLINK__.pkt_write_char_put.nbyte, nbyte);
+
+	_hl_static_send(sizeof(struct _hl_pkt_write_char_put));
+	_hl_static_recv();
+
+	ret = _hl_static_unpack_int(&__HOSTLINK__.pkt_write_char_get.byte_written, nwrite);
+	if (ret) {
+		return ret;
 	}
 
-	p = _hl_pack_int(p, fd);
-	if (p == NULL) {
-		return -1;
-	}
-
-	p = _hl_pack_ptr(p, buf, nbyte);
-	if (p == NULL) {
-		return -1;
-	}
-
-	p = _hl_pack_int(p, nbyte);
-	if (p == NULL) {
-		return -1;
-	}
-
-	_hl_send(p);
-	p = _hl_recv();
-
-	p = _hl_unpack_int(p, nwrite);
-	if (p == NULL) {
-		return -1;
-	}
-
-	p = _hl_unpack_int(p, &host_errno);
-	if (p == NULL) {
-		return -1;
-	}
+	/* we can get host errno here with:
+	 * _hl_static_unpack_int(&__HOSTLINK__.pkt_write_char_get.host_errno, &host_errno);
+	 * but won't need it for UART emulation.
+	 */
 
 	return 0;
 }
@@ -371,6 +491,47 @@ static int32_t _hl_write(int fd, const char *buf, size_t nbyte)
 	}
 
 	_hl_delete ();
+
+  	return ret;
+}
+#endif
+
+static int32_t _hl_write_char(int fd, const char c)
+{
+	/*
+	 * Format:
+	 * in, int -> syscall (HL_SYSCALL_WRITE)
+	 * in, int -> file descriptor
+	 * in, ptr -> buffer
+	 * in, int -> bytes number
+	 * out, int -> bytes written
+	 * out, int, host errno
+	 */
+
+	_hl_static_pack_int(&__HOSTLINK__.pkt_write_char_put.syscall_nr, HL_SYSCALL_WRITE);
+
+	_hl_static_pack_int(&__HOSTLINK__.pkt_write_char_put.fd, fd);
+
+	_hl_static_pack_char(&__HOSTLINK__.pkt_write_char_put.buff, c);
+
+	_hl_static_pack_int(&__HOSTLINK__.pkt_write_char_put.nbyte, 1);
+
+	_hl_static_send(sizeof(struct _hl_pkt_write_char_put));
+	_hl_static_recv();
+
+	int32_t nwrite = 0;
+	int ret = _hl_static_unpack_int(&__HOSTLINK__.pkt_write_char_get.byte_written, &nwrite);
+
+	/* we can get host errno here with:
+	 * _hl_static_unpack_int(&__HOSTLINK__.pkt_write_char_get.host_errno, &host_errno);
+	 * but we don't need it for UART emulation.
+	 */
+
+	if (nwrite <= 0) {
+		ret = -1;
+	}
+
+	_hl_delete();
 
   	return ret;
 }
@@ -474,7 +635,8 @@ static void uart_hostlink_poll_out(const struct device *dev, unsigned char c)
 {
 	ARG_UNUSED(dev);
 
-	_hl_write(1, &c, 1);
+	// _hl_write(1, &c, 1);
+	_hl_write_char(1, c);
 }
 
 static const struct uart_driver_api uart_hostlink_driver_api = {
