@@ -97,9 +97,16 @@ struct _hl {
  * Main structure.  Do not rename because simulator will look for the
  * '__HOSTLINK__' symbol.
  */
-volatile struct _hl __HOSTLINK__ = {
+// volatile __uncached struct _hl __HOSTLINK__ = {
+// 	.hdr = {
+// 		.version = 1,
+// 		.target2host_addr = HL_NOADDRESS
+// 	}
+// };
+
+volatile __uncached struct _hl __HOSTLINK__ = {
 	.hdr = {
-		.version = 1 ,
+		.version = 1,
 		.target2host_addr = HL_NOADDRESS
 	}
 };
@@ -154,11 +161,11 @@ static void _hl_send(volatile __uncached void *p)
 	hdr->break_to_mon_addr = 0;
 
 	/* This tells the debugger we have a command.
-	* It is responsibility of debugger to set this back to HL_NOADDRESS
-	* after receiving the packet.
-	* Please note that we don't wait here because some implementations
-	* use _hl_blockedPeek() function as a signal that we send a messege.
-	*/
+	 * It is responsibility of debugger to set this back to HL_NOADDRESS
+	 * after receiving the packet.
+	 * Please note that we don't wait here because some implementations
+	 * use _hl_blockedPeek() function as a signal that we send a messege.
+	 */
 	hdr->target2host_addr = hdr->buf_addr;
 }
 
@@ -182,7 +189,7 @@ static volatile __uncached char * _hl_recv(void)
 }
 
 /* Mark hostlink buffer as "No message here".  */
-static void _hl_delete (void)
+static void _hl_delete(void)
 {
 	__HOSTLINK__.hdr.target2host_addr = HL_NOADDRESS;
 }
@@ -368,6 +375,7 @@ static int32_t _hl_write(int fd, const char *buf, size_t nbyte)
   	return ret;
 }
 
+#ifdef CONFIG_UART_HOSTLINK_INPUT
 static volatile __uncached char * _hl_pack_read(int fd, size_t count, int32_t *hl_n)
 {
 	volatile __uncached char *p = _hl_payload();
@@ -425,6 +433,7 @@ static int32_t _hl_read(int fd, void *buf, size_t count)
 
 	return ret;
 }
+#endif
 
 static int uart_hostlink_init(const struct device *dev)
 {
@@ -446,9 +455,13 @@ static int uart_hostlink_poll_in(const struct device *dev, unsigned char *c)
 {
 	ARG_UNUSED(dev);
 
+#ifdef CONFIG_UART_HOSTLINK_INPUT
 	unsigned int ret = _hl_read(1, c, 1);
 
 	return ret > 0 ? 0 : -1;
+#else
+	return -1;
+#endif
 }
 
 /**
