@@ -1229,3 +1229,16 @@ ZTEST(test_c_lib, test_exit)
 	k_thread_abort(tid);
 	zassert_equal(a, 0, "exit failed");
 }
+
+ZTEST(test_c_lib, test_clock)
+{
+	clock_t then;
+	clock_t now;
+
+	then = clock();
+	zassert_not_equal((clock_t)-1, then, "clock() failed");
+	k_usleep(USEC_PER_SEC);
+	now = clock();
+	zassert_not_equal((clock_t)-1, now, "clock() failed");
+	zassert_true(now > then, "expected now (%u) > then (%u)", now, then);
+}
