@@ -65,3 +65,8 @@ config COMMON_LIBC_STRNLEN
 	bool
 	help
 	  common implementation of strnlen().
+
+config COMMON_LIBC_CLOCK
+	bool
+	help
+	  common implementation of clock().
