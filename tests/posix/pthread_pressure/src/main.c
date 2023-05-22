@@ -11,7 +11,7 @@
 #include <zephyr/sys/util.h>
 #include <zephyr/ztest.h>
 
-#define STACK_SIZE K_THREAD_STACK_LEN(CONFIG_TEST_STACK_SIZE)
+#define STACK_SIZE K_THREAD_STACK_LEN(CONFIG_TEST_STACK_SIZE + 1024)
 
 /* update interval for printing stats */
 #if CONFIG_TEST_DURATION_S < 10
