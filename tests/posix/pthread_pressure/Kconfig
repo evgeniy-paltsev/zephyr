@@ -16,7 +16,7 @@ config TEST_NUM_CPUS
 config TEST_DURATION_S
 	int "Number of seconds to run the test"
 	range 1 21600
-	default 500
+	default 8000
 	help
 	   Duration for the test, in seconds. The range has a reblatively high
 	   upper bound because we should expect that pthread_create() and
