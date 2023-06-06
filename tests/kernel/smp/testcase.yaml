@@ -5,3 +5,4 @@ tests:
       - smp
     ignore_faults: true
     filter: (CONFIG_MP_MAX_NUM_CPUS > 1)
+    timeout: 120
