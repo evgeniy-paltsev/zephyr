@@ -404,6 +404,12 @@ void smp_timer_init(void)
 }
 #endif
 
+#if defined(CONFIG_TICKLESS_KERNEL)
+#define FIRST_LOAD	COUNTER_MAX
+#else
+#define FIRST_LOAD	CYC_PER_TICK
+#endif
+
 /**
  *
  * @brief Initialize and enable the system clock
@@ -420,22 +426,19 @@ static int sys_clock_driver_init(void)
 	timer0_control_register_set(0);
 
 #if SMP_TIMER_DRIVER
-	IRQ_CONNECT(IRQ_TIMER0, CONFIG_ARCV2_TIMER_IRQ_PRIORITY,
-		    timer_int_handler, NULL, 0);
-
-	timer0_limit_register_set(CYC_PER_TICK - 1);
 	last_time = z_arc_connect_gfrc_read();
 	start_time = last_time;
 #else
-	last_load = CYC_PER_TICK;
+	last_load = FIRST_LOAD;
 	overflow_cycles = 0;
 	announced_cycles = 0;
+#endif
 
 	IRQ_CONNECT(IRQ_TIMER0, CONFIG_ARCV2_TIMER_IRQ_PRIORITY,
 		    timer_int_handler, NULL, 0);
 
-	timer0_limit_register_set(last_load - 1);
-#endif
+	timer0_limit_register_set(FIRST_LOAD - 1);
+
 	timer0_count_register_set(0);
 	timer0_control_register_set(_ARC_V2_TMR_CTRL_NH | _ARC_V2_TMR_CTRL_IE);
 
