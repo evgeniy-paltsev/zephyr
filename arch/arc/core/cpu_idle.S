@@ -45,7 +45,7 @@ SECTION_FUNC(TEXT, arch_cpu_idle)
 	/* z_arc_cpu_sleep_mode is 32 bit despite of platform bittnes */
 	ld r1, [z_arc_cpu_sleep_mode]
 	or r1, r1, (1 << 4) /* set IRQ-enabled bit */
-	sleep r1
+	wevt r1
 	j_s [blink]
 	nop
 
@@ -67,6 +67,6 @@ SECTION_FUNC(TEXT, arch_cpu_atomic_idle)
 	/* z_arc_cpu_sleep_mode is 32 bit despite of platform bittnes */
 	ld r1, [z_arc_cpu_sleep_mode]
 	or r1, r1, (1 << 4) /* set IRQ-enabled bit */
-	sleep r1
+	wevt r1
 	j_s.d [blink]
 	seti r0
