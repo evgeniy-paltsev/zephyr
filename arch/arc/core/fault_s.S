@@ -84,7 +84,6 @@ _exc_entry:
 	 */
 	MOVR ilink, sp
 	_get_curr_cpu_irq_stack sp
-	SUBR sp, sp, (CONFIG_ISR_STACK_SIZE - CONFIG_ARC_EXCEPTION_STACK_SIZE)
 
 	/*
 	 * save caller saved registers
