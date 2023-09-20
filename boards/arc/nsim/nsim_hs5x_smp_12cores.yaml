@@ -11,7 +11,7 @@ toolchain:
 supported:
   - smp
 testing:
-  timeout_multiplier: 4
+  timeout_multiplier: 5
   ignore_tags:
     - net
     - bluetooth
