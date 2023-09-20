@@ -1,11 +1,13 @@
 tests:
   kernel.multiprocessing.smp:
+    timeout: 120
     tags:
       - kernel
       - smp
     ignore_faults: true
     filter: (CONFIG_MP_MAX_NUM_CPUS > 1)
   kernel.multiprocessing.smp.minimallibc:
+    timeout: 120
     tags:
       - kernel
       - smp
