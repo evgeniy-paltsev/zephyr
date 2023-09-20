@@ -209,7 +209,7 @@ static void thread_entry_fn(void *p1, void *p2, void *p3)
 	tinfo[thread_num].cpu_id = curr_cpu();
 
 	while (count++ < 5) {
-		k_busy_wait(DELAY_US);
+		k_busy_wait(DELAY_US * 8);
 	}
 }
 
@@ -372,12 +372,13 @@ ZTEST(smp, test_coop_resched_threads)
 	 * since we don't give up current CPU, last thread
 	 * will not get scheduled
 	 */
-	spawn_threads(K_PRIO_COOP(10), num_threads, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_COOP(16), num_threads, !EQUAL_PRIORITY,
 		      &thread_entry_fn, THREAD_DELAY);
 
-	/* Wait for some time to let other core's thread run */
-	k_busy_wait(DELAY_US);
-
+	/* Wait for some time to let other core's thread run. More threads we need to spawn more
+	 * time we need to wait.
+	 */
+	k_busy_wait(DELAY_US * 4);
 
 	/* Reassure that cooperative thread's are not preempted
 	 * by checking last thread's execution
@@ -413,7 +414,7 @@ ZTEST(smp, test_preempt_resched_threads)
 	 * lower priority thread should
 	 * be preempted by higher ones
 	 */
-	spawn_threads(K_PRIO_PREEMPT(10), num_threads, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_PREEMPT(16), num_threads, !EQUAL_PRIORITY,
 		      &thread_entry_fn, THREAD_DELAY);
 
 	spin_for_threads_exit();
@@ -446,7 +447,7 @@ ZTEST(smp, test_yield_threads)
 	 * of cores, so the last thread would be
 	 * pending.
 	 */
-	spawn_threads(K_PRIO_COOP(10), num_threads, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_COOP(16), num_threads, !EQUAL_PRIORITY,
 		      &thread_entry_fn, !THREAD_DELAY);
 
 	k_yield();
@@ -475,7 +476,7 @@ ZTEST(smp, test_sleep_threads)
 {
 	unsigned int num_threads = arch_num_cpus();
 
-	spawn_threads(K_PRIO_COOP(10), num_threads, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_COOP(16), num_threads, !EQUAL_PRIORITY,
 		      &thread_entry_fn, !THREAD_DELAY);
 
 	k_msleep(TIMEOUT);
@@ -558,7 +559,7 @@ ZTEST(smp, test_wakeup_threads)
 	unsigned int num_threads = arch_num_cpus();
 
 	/* Spawn threads to run on all remaining cores */
-	spawn_threads(K_PRIO_COOP(10), num_threads - 1, !EQUAL_PRIORITY,
+	spawn_threads(K_PRIO_COOP(16), num_threads - 1, !EQUAL_PRIORITY,
 		      &thread_wakeup_entry, !THREAD_DELAY);
 
 	/* Check if all the threads have started, then call wakeup */
