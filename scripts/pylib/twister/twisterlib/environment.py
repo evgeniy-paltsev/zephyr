@@ -196,6 +196,9 @@ Artificially long but functional example:
         help="""Only run device tests with current artifacts, do not build
              the code""")
 
+    test_or_build.add_argument("--timeout-multiplier", type=float, default=1,
+        help="""Global test-case timeout multiplier""")
+
     test_xor_subtest.add_argument(
         "-s", "--test", action="append",
         help="Run only the specified testsuite scenario. These are named by "
