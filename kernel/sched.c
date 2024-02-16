@@ -378,7 +378,8 @@ static void ready_thread(struct k_thread *thread)
 
 		queue_thread(thread);
 		update_cache(0);
-		flag_ipi();
+
+		flag_ipi(ipi_mask_create(thread));
 	}
 }
 
@@ -735,7 +736,7 @@ bool z_thread_prio_set(struct k_thread *thread, int prio)
 				queue_thread(thread);
 
 				if (old_prio > prio) {
-					flag_ipi();
+					flag_ipi(ipi_mask_create(thread));
 				}
 			} else {
 				/*
@@ -751,7 +752,7 @@ bool z_thread_prio_set(struct k_thread *thread, int prio)
 
 				cpu = thread_active_elsewhere(thread);
 				if ((cpu != NULL) && (old_prio < prio)) {
-					flag_ipi();
+					flag_ipi(IPI_CPU_MASK(cpu->id));
 				}
 			}
 
