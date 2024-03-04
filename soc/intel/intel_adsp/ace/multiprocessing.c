@@ -20,6 +20,7 @@
 #include <adsp_interrupt.h>
 #include <zephyr/irq.h>
 #include <zephyr/cache.h>
+#include <ipi.h>
 
 #define CORE_POWER_CHECK_NUM 128
 
@@ -178,7 +179,7 @@ void soc_mp_startup(uint32_t cpu)
 #endif /* CONFIG_ADSP_IDLE_CLOCK_GATING */
 }
 
-void arch_sched_ipi(void)
+static void send_ipi(uint32_t msg, uint32_t cpu_bitmap)
 {
 	uint32_t curr = arch_proc_id();
 
@@ -186,10 +187,21 @@ void arch_sched_ipi(void)
 	unsigned int num_cpus = arch_num_cpus();
 
 	for (int core = 0; core < num_cpus; core++) {
-		if (core != curr && soc_cpus_active[core]) {
-			IDC[core].agents[1].ipc.idr = INTEL_ADSP_IPC_BUSY;
+		if ((core != curr) && soc_cpus_active[core] &&
+		    ((cpu_bitmap & BIT(core)) != 0)) {
+			IDC[core].agents[1].ipc.idr = msg | INTEL_ADSP_IPC_BUSY;
 		}
 	}
+}
+
+void arch_sched_broadcast_ipi(void)
+{
+	send_ipi(0, IPI_ALL_CPUS_MASK);
+}
+
+void arch_sched_directed_ipi(uint32_t cpu_bitmap)
+{
+	send_ipi(0, cpu_bitmap);
 }
 
 #if CONFIG_MP_MAX_NUM_CPUS > 1
