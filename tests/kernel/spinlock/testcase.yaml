@@ -29,4 +29,3 @@ tests:
       - smp
     extra_configs:
       - CONFIG_SCHED_CPU_MASK=y
-      - CONFIG_TICKET_SPINLOCKS=y

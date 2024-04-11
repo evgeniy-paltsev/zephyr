@@ -5,5 +5,4 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(spinlock)
 
 target_sources(app PRIVATE src/main.c)
-target_sources(app PRIVATE src/spinlock_error_case.c)
 target_sources(app PRIVATE src/spinlock_fairness.c)
