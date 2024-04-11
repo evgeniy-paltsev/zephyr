@@ -150,6 +150,9 @@ ZTEST(spinlock, test_spinlock_fairness)
 			"CPU%d starved on a spinlock: acquired %u times, expected %u\n",
 			core_id, spinlock_grabbed[core_id], FAIRNESS_TEST_CYCLES_PER_CORE);
 	}
+
+	zassert_false(false, "print\n");
+	zassert_false(true, "print\n");
 }
 
 #endif /* CONFIG_SCHED_CPU_MASK */
