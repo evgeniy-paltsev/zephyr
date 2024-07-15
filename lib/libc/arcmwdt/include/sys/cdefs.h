@@ -4,4 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* MWDT has no it's own cdefs. Add this one for satisfy dependencies */
+#ifdef CONFIG_ARC
+/* MWDT ARC classic has no it's own cdefs. Add this empty one for satisfy dependencies */
+#else
+#include_next <sys/cdefs.h>
+#endif
