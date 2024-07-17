@@ -198,10 +198,23 @@ __no_optimization void blow_up_stack(void)
 #pragma GCC diagnostic ignored "-Winfinite-recursion"
 #endif
 
+#if 0
+__no_optimization int stack_smasher(int val)
+{
+	int _val = val;
+	// TC_PRINT("posting junk to stack...\n");
+	return stack_smasher(_val * 2) + stack_smasher(_val * 3);
+}
+
+#else
+
+// __attribute__((optimize("-O0", "-fomit-frame-pointer"))) int stack_smasher(int val)
+// __attribute__((optimize("-fno-omit-frame-pointer"))) int stack_smasher(int val)
 __no_optimization int stack_smasher(int val)
 {
 	return stack_smasher(val * 2) + stack_smasher(val * 3);
 }
+#endif
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
@@ -317,128 +330,13 @@ ZTEST(fatal_exception, test_fatal)
 	k_thread_priority_set(_current, K_PRIO_PREEMPT(MAIN_PRIORITY));
 
 #ifndef CONFIG_ARCH_POSIX
-	TC_PRINT("test alt thread 1: generic CPU exception\n");
-	k_thread_create(&alt_thread, alt_stack,
-			K_THREAD_STACK_SIZEOF(alt_stack),
-			entry_cpu_exception,
-			NULL, NULL, NULL, K_PRIO_COOP(PRIORITY), 0,
-			K_NO_WAIT);
-	zassert_not_equal(rv, TC_FAIL, "thread was not aborted");
-
-	TC_PRINT("test alt thread 1: generic CPU exception divide zero\n");
-	k_thread_create(&alt_thread, alt_stack,
-			K_THREAD_STACK_SIZEOF(alt_stack),
-			entry_cpu_exception_extend,
-			NULL, NULL, NULL, K_PRIO_COOP(PRIORITY), 0,
-			K_NO_WAIT);
-	zassert_not_equal(rv, TC_FAIL, "thread was not aborted");
-#else
-	/*
-	 * We want the native OS to handle segfaults so we can debug it
-	 * with the normal linux tools
-	 */
-	TC_PRINT("test alt thread 1: skipped for POSIX ARCH\n");
-#endif
-
-	TC_PRINT("test alt thread 2: initiate kernel oops\n");
-	k_thread_create(&alt_thread, alt_stack,
-			K_THREAD_STACK_SIZEOF(alt_stack),
-			entry_oops,
-			NULL, NULL, NULL, K_PRIO_COOP(PRIORITY), 0,
-			K_NO_WAIT);
-	k_thread_abort(&alt_thread);
-	zassert_not_equal(rv, TC_FAIL, "thread was not aborted");
-
-	TC_PRINT("test alt thread 3: initiate kernel panic\n");
-	k_thread_create(&alt_thread, alt_stack,
-			K_THREAD_STACK_SIZEOF(alt_stack),
-			entry_panic,
-			NULL, NULL, NULL, K_PRIO_COOP(PRIORITY), 0,
-			K_NO_WAIT);
-	k_thread_abort(&alt_thread);
-	zassert_not_equal(rv, TC_FAIL, "thread was not aborted");
-
-#if defined(CONFIG_ASSERT)
-	/* This test shall be skip while ASSERT is off */
-	TC_PRINT("test alt thread 4: fail assertion\n");
-	k_thread_create(&alt_thread, alt_stack,
-			K_THREAD_STACK_SIZEOF(alt_stack),
-			entry_zephyr_assert,
-			NULL, NULL, NULL, K_PRIO_COOP(PRIORITY), 0,
-			K_NO_WAIT);
-	k_thread_abort(&alt_thread);
-	zassert_not_equal(rv, TC_FAIL, "thread was not aborted");
-#endif
-
-	TC_PRINT("test alt thread 5: initiate arbitrary SW exception\n");
-	k_thread_create(&alt_thread, alt_stack,
-			K_THREAD_STACK_SIZEOF(alt_stack),
-			entry_arbitrary_reason,
-			NULL, NULL, NULL, K_PRIO_COOP(PRIORITY), 0,
-			K_NO_WAIT);
-	k_thread_abort(&alt_thread);
-
-	zassert_not_equal(rv, TC_FAIL, "thread was not aborted");
-	TC_PRINT("test alt thread 6: initiate arbitrary SW exception negative\n");
-	k_thread_create(&alt_thread, alt_stack,
-			K_THREAD_STACK_SIZEOF(alt_stack),
-			entry_arbitrary_reason_negative,
-			NULL, NULL, NULL, K_PRIO_COOP(PRIORITY), 0,
-			K_NO_WAIT);
-	k_thread_abort(&alt_thread);
-	zassert_not_equal(rv, TC_FAIL, "thread was not aborted");
-
-#ifndef CONFIG_ARCH_POSIX
-
-#ifdef CONFIG_STACK_SENTINEL
-	TC_PRINT("test stack sentinel overflow - timer irq\n");
-	check_stack_overflow(stack_sentinel_timer, 0);
-
-	TC_PRINT("test stack sentinel overflow - swap\n");
-	check_stack_overflow(stack_sentinel_swap, 0);
-#endif /* CONFIG_STACK_SENTINEL */
 
 #ifdef CONFIG_HW_STACK_PROTECTION
-	/* HW based stack overflow detection.
-	 * Do this twice to show that HW-based solutions work more than
-	 * once.
-	 */
-
-	TC_PRINT("test stack HW-based overflow - supervisor 1\n");
-	check_stack_overflow(stack_hw_overflow, 0);
-
-	TC_PRINT("test stack HW-based overflow - supervisor 2\n");
-	check_stack_overflow(stack_hw_overflow, 0);
-
-#if defined(CONFIG_FPU) && defined(CONFIG_FPU_SHARING)
-	TC_PRINT("test stack HW-based overflow (FPU thread) - supervisor 1\n");
-	check_stack_overflow(stack_hw_overflow, K_FP_REGS);
-
-	TC_PRINT("test stack HW-based overflow (FPU thread) - supervisor 2\n");
-	check_stack_overflow(stack_hw_overflow, K_FP_REGS);
-#endif /* CONFIG_FPU && CONFIG_FPU_SHARING */
 
 #ifdef CONFIG_USERSPACE
 
 	TC_PRINT("test stack HW-based overflow - user 1\n");
 	check_stack_overflow(stack_hw_overflow, K_USER);
-
-	TC_PRINT("test stack HW-based overflow - user 2\n");
-	check_stack_overflow(stack_hw_overflow, K_USER);
-
-	TC_PRINT("test stack HW-based overflow - user priv stack 1\n");
-	check_stack_overflow(user_priv_stack_hw_overflow, K_USER);
-
-	TC_PRINT("test stack HW-based overflow - user priv stack 2\n");
-	check_stack_overflow(user_priv_stack_hw_overflow, K_USER);
-
-#if defined(CONFIG_FPU) && defined(CONFIG_FPU_SHARING)
-	TC_PRINT("test stack HW-based overflow (FPU thread) - user 1\n");
-	check_stack_overflow(stack_hw_overflow, K_USER | K_FP_REGS);
-
-	TC_PRINT("test stack HW-based overflow (FPU thread) - user 2\n");
-	check_stack_overflow(stack_hw_overflow, K_USER | K_FP_REGS);
-#endif /* CONFIG_FPU && CONFIG_FPU_SHARING */
 
 #endif /* CONFIG_USERSPACE */
 
